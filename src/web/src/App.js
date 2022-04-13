@@ -18,14 +18,10 @@ const useStyles = makeStyles({
 const App = () => {
   const classes = useStyles();
   return (
-    <div className={classes.container}>
-      <div>
-        <NavBar />
-      </div>
-      <div>
-        <Router />
-      </div>
-    </div>
+    <body>
+      <NavBar />
+      <Router />
+    </body>
   );
 };
 

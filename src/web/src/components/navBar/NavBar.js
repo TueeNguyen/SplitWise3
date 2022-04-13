@@ -4,7 +4,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const useStyles = makeStyles({
   navBar: {
-    height: '2rem',
+    top: 0,
+    position: 'sticky'
+  },
+  toolBar: {
     backgroundColor: '#FFFFFF',
     color: '#000000'
   },
@@ -18,8 +21,8 @@ const NavBar = () => {
   const classes = useStyles();
   return (
     <div className={classes.navBar}>
-      <AppBar position="fixed">
-        <Toolbar className={classes.navBar}>
+      <AppBar position="static">
+        <Toolbar className={classes.toolBar}>
           <Box sx={{ flexGrow: 1 }}></Box>
           <IconButton>
             <Avatar
