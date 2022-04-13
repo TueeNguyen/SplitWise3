@@ -12,13 +12,17 @@ const useStyles = makeStyles({
   navBar: {
     height: '2rem',
     backgroundColor: 'blue'
+  },
+  body: {
+    height: '100%',
+    backgroundColor: '#ECECEC'
   }
 });
 
 const App = () => {
   const classes = useStyles();
   return (
-    <body>
+    <body className={classes.body}>
       <NavBar />
       <Router />
     </body>
