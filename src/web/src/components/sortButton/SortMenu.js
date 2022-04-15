@@ -7,8 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
 import ContentCut from '@mui/icons-material/ContentCut';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import ContentPaste from '@mui/icons-material/ContentPaste';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import Cloud from '@mui/icons-material/Cloud';
 import { makeStyles } from '@mui/styles';
 
@@ -39,13 +38,6 @@ export default function SortMenu() {
           <Typography variant="body1" color="text.primary">
             Sort by Created
           </Typography>
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <Cloud fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Web Clipboard</ListItemText>
         </MenuItem>
       </MenuList>
     </Paper>

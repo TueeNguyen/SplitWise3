@@ -3,7 +3,9 @@ import { makeStyles } from '@mui/styles';
 import Expenses from '../../components/expenses/Expenses';
 
 const useStyles = makeStyles({
-  home: {}
+  home: {
+    scrollBehavior: 'smooth'
+  }
 });
 
 const Home = () => {
