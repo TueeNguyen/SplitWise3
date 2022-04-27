@@ -1,16 +1,7 @@
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Divider,
-  IconButton,
-  Pagination,
-  Tooltip
-} from '@mui/material';
+import { Pagination } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Expense from './Expense';
 import { makeStyles } from '@mui/styles';
-import SortButton from '../sortButton/SortButton';
 
 const testDatas = [
   {
@@ -141,7 +132,6 @@ const Expenses = () => {
   };
   return (
     <div>
-      <SortButton />
       <div className={classes.expenseContainer}>
         {paginatedData.map((data) => (
           <Expense data={data} />

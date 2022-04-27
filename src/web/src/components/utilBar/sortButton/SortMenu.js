@@ -1,17 +1,15 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import Typography from '@mui/material/Typography';
-import ContentCut from '@mui/icons-material/ContentCut';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import Cloud from '@mui/icons-material/Cloud';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
+  menu: {
+    width: '320px',
+    maxWidth: '100%'
+  },
   menuList: {
     padding: '10px'
   },
@@ -22,19 +20,19 @@ const useStyles = makeStyles({
 export default function SortMenu() {
   const classes = useStyles();
   return (
-    <Paper sx={{ width: 320, maxWidth: '100%' }}>
+    <Paper className={classes.menu}>
       <MenuList className={classes.menuList}>
         <MenuItem className={classes.menuItem}>
           <Typography variant="body1" color="text.primary">
             Sort by Date
           </Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem className={classes.menuItem}>
           <Typography variant="body1" color="text.primary">
             Sort by Alphabet
           </Typography>
         </MenuItem>
-        <MenuItem>
+        <MenuItem className={classes.menuItem}>
           <Typography variant="body1" color="text.primary">
             Sort by Created
           </Typography>

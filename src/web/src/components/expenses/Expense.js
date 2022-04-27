@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 
 const ExpenseCard = styled(Card)(({ theme }) => ({
   height: '350px',
+  boxShadow: '0px 3px 6px #C0C0C0',
   [theme.breakpoints.up('xl')]: {
     flexBasis: 'calc(20% - 20px)'
   },
@@ -19,9 +20,10 @@ const ExpenseCard = styled(Card)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     flexBasis: '100%'
   },
-  transition: 'transform 0.2s',
+  transition: 'transform 0.4s',
   '&:hover': {
-    transform: 'scale(1.05)'
+    transform: 'scale(1.05)',
+    boxShadow: '0px 3px 6px #A2A2A2'
   }
 }));
 
@@ -30,7 +32,7 @@ const Expense = (data) => {
     <ExpenseCard>
       <CardMedia
         component="img"
-        sx={{ objectFit: 'contain' }}
+        sx={{ objectFit: 'cover' }}
         height="70%"
         image={data.data.img}
         alt="Expense Img"

@@ -3,18 +3,14 @@ import { makeStyles } from '@mui/styles';
 import Expenses from '../../components/expenses/Expenses';
 
 const useStyles = makeStyles({
-  container: {
+  conatiner: {
     scrollBehavior: 'smooth'
   }
 });
 
-const Home = () => {
+const Search = () => {
   const classes = useStyles();
-  return (
-    <div className={classes.container}>
-      <Expenses />
-    </div>
-  );
+  return <div className={classes.container}>Hi</div>;
 };
 
-export default Home;
+export default Search;

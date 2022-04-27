@@ -1,20 +1,20 @@
-import { IconButton, Tooltip, Popper, Box, Popover, Typography } from '@mui/material';
-import React from 'react';
+import { IconButton, Tooltip, Popover, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import SortIcon from '@mui/icons-material/Sort';
 import { makeStyles } from '@mui/styles';
 import SortMenu from './SortMenu';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: '5px 10px'
-  }
+  sortButton: ({ pathname }) => ({
+    marginLeft: pathname === '/search' ? 'auto' : '0'
+  })
 });
 
 const SortButton = () => {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { pathname } = useLocation();
+  const classes = useStyles({ pathname });
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -22,9 +22,9 @@ const SortButton = () => {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popper' : undefined;
+  const id = open ? 'menu-poper' : undefined;
   return (
-    <div className={classes.container}>
+    <div className={classes.sortButton}>
       <Tooltip title="Sort" placement="right">
         <IconButton aria-describedby={id} type="button" onClick={handleClick}>
           <SortIcon />
