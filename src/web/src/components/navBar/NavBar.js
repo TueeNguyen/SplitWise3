@@ -1,6 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import { AppBar, Toolbar, IconButton, Typography, Box, Button, Avatar } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, IconButton, Box, Avatar } from '@mui/material';
 
 const useStyles = makeStyles({
   navBar: {
@@ -13,7 +12,8 @@ const useStyles = makeStyles({
   },
   avatar: {
     width: '48px',
-    height: '48px'
+    height: '48px',
+    border: 'solid 1px'
   }
 });
 

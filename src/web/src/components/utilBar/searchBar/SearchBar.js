@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   searchButton: {
     borderRadius: '20px',
-    transform: 'translate(-95%) scale(0.8)'
+    transform: 'translate(-97%) scale(0.8)'
   },
   [theme.breakpoints.down('md')]: {
     searchBar: {
@@ -32,7 +32,7 @@ const SearchBar = () => {
   return (
     <div className={classes.searchBar}>
       <form>
-        <input className={classes.searchInput} />
+        <input placeholder="Search for expense card(s)" className={classes.searchInput} />
       </form>
       <Button className={classes.searchButton} variant="contained">
         <SearchOutlinedIcon />
