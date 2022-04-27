@@ -7,7 +7,6 @@ import UtilBar from './components/utilBar/UtilBar';
 const App = () => {
   return (
     <div>
-      <NavBar />
       <Router />
     </div>
   );

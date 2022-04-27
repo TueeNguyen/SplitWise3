@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Home from '../../pages/home/Home';
 import Search from '../../pages/search/Search';
+import NavBar from '../navBar/NavBar';
 import UtilBar from '../utilBar/UtilBar';
 
 const Router = () => {
   return (
     <BrowserRouter>
+      <NavBar />
       <UtilBar />
       <Route exact path="/search">
         <Search />
