@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Home from '../../pages/home/Home';
 import Search from '../../pages/search/Search';
+import Expense from '../expenses/Expense';
 import NavBar from '../navBar/NavBar';
 import UtilBar from '../utilBar/UtilBar';
 
@@ -10,6 +11,9 @@ const Router = () => {
     <BrowserRouter>
       <NavBar />
       <UtilBar />
+      <Route exact path="/expense/:id">
+        <Expense />
+      </Route>
       <Route exact path="/search">
         <Search />
       </Route>

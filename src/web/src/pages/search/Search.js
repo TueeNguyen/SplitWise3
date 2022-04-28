@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import Expenses from '../../components/expenses/Expenses';
 
 const useStyles = makeStyles({
   conatiner: {
