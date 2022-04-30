@@ -1,4 +1,4 @@
-import { Popover, Button } from '@mui/material';
+import { Popover, Button, Popper } from '@mui/material';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddReceiptForm from './AddReceiptForm';
@@ -19,7 +19,7 @@ const AddReceiptButton = () => {
       <Button aria-describedby={id} type="button" onClick={handleClick} variant="outlined">
         Add Receipt Image
       </Button>
-      <Popover
+      <Popper
         id={id}
         open={open}
         anchorEl={anchorEl}
@@ -34,7 +34,7 @@ const AddReceiptButton = () => {
         }}
       >
         <AddReceiptForm />
-      </Popover>
+      </Popper>
     </div>
   );
 };

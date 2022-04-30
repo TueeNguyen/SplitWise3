@@ -1,6 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import ImgTable from './ImgTable';
+import ReceiptTable from './ReceiptTable';
 
 const useStyles = makeStyles({
   container: {
@@ -16,6 +17,7 @@ const Expense = () => {
   return (
     <div className={classes.container}>
       <ImgTable />
+      <ReceiptTable />
     </div>
   );
 };
