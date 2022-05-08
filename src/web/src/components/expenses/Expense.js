@@ -3,7 +3,6 @@ import React from 'react';
 import ImgTable from './ImgTable';
 import DivisionTable from './DivisionTable';
 import ReceiptTable from './ReceiptTable';
-import { Divider } from '@mui/material';
 
 const useStyles = makeStyles({
   container: {
