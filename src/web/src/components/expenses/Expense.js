@@ -1,7 +1,9 @@
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import ImgTable from './ImgTable';
+import DivisionTable from './DivisionTable';
 import ReceiptTable from './ReceiptTable';
+import { Divider } from '@mui/material';
 
 const useStyles = makeStyles({
   container: {
@@ -18,6 +20,7 @@ const Expense = () => {
     <div className={classes.container}>
       <ImgTable />
       <ReceiptTable />
+      <DivisionTable />
     </div>
   );
 };

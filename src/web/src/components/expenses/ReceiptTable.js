@@ -1,7 +1,7 @@
+import React from 'react';
 import {
   Avatar,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -10,61 +10,262 @@ import {
   TableRow,
   TextField
 } from '@mui/material';
-import React from 'react';
 import { makeStyles } from '@mui/styles';
-import IosSwitchMaterialUi from 'ios-switch-material-ui';
 import { AntSwitch } from '../../styles/styles';
 
 const useStyles = makeStyles((theme) => ({
-  user: {
+  item: {
+    minWidth: '400px'
+  },
+  price: {
     minWidth: '150px'
   },
-  owned: {
-    minWidth: '250px'
-  },
-  fixed: {
-    minWidth: '50px'
-  },
-  note: {
+  description: {
     minWidth: '500px'
   },
   tableWrapper: {
+    margin: '40px 0 0 0',
     width: 'calc(100vw - 20px)',
     [theme.breakpoints.down('md')]: {
       width: '100vw'
     }
+  },
+  tableContainer: {
+    maxHeight: '70vh',
+    border: 'solid 1px'
   }
 }));
-
 const ReceiptTable = () => {
   const classes = useStyles();
   return (
     <div className={classes.tableWrapper}>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer className={classes.tableContainer} component={Paper}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>User</TableCell>
-              <TableCell>Owned</TableCell>
-              <TableCell>Fixed</TableCell>
-              <TableCell>Note</TableCell>
+              <TableCell>Item</TableCell>
+              <TableCell>Price (CAD)</TableCell>
+              <TableCell>Description</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell className={classes.user}>
-                <div>
-                  <Avatar src="https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d" />
-                  Tue
-                </div>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
               </TableCell>
-              <TableCell className={classes.owned}>
-                <TextField value={123} />
+              <TableCell className={classes.price}>
+                <TextField type="number" />
               </TableCell>
-              <TableCell className={classes.fixed}>
-                <AntSwitch onChange={(e) => console.log(e.target.checked)} />
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
               </TableCell>
-              <TableCell className={classes.note}>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
+                <TextField fullWidth />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className={classes.item}>
+                <TextField fullWidth value="10 cups of starbuck" />
+              </TableCell>
+              <TableCell className={classes.price}>
+                <TextField type="number" />
+              </TableCell>
+              <TableCell className={classes.description}>
                 <TextField fullWidth />
               </TableCell>
             </TableRow>

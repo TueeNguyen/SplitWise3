@@ -5,7 +5,8 @@ import { NavLink } from 'react-router-dom';
 const useStyles = makeStyles({
   navBar: {
     top: 0,
-    position: 'sticky'
+    position: 'sticky',
+    zIndex: '999'
   },
   toolBar: {
     backgroundColor: '#FFFFFF',
