@@ -11,7 +11,6 @@ import {
   TextField
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { AntSwitch } from '../../styles/styles';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -25,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tableWrapper: {
     margin: '40px 0 0 0',
-    width: 'calc(100vw - 20px)',
+    width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
       width: '100vw'
     }
