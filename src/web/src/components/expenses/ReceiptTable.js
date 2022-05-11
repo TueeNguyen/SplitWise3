@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Button,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -13,17 +14,30 @@ import {
   Typography
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   item: {
     minWidth: '400px'
   },
+  removeItemBtn: {
+    visibility: 'hidden',
+    color: 'red'
+  },
   price: {
-    minWidth: '150px'
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    minWidth: '250px',
+    '&:hover': {
+      '& $removeItemBtn': {
+        visibility: 'visible'
+      }
+    }
   },
   description: {
-    minWidth: '500px'
+    minWidth: '600px'
   },
   tableWrapper: {
     margin: '40px 0 0 0',
@@ -64,6 +78,9 @@ const ReceiptTable = () => {
               </TableCell>
               <TableCell className={classes.price}>
                 <TextField type="number" />
+                <IconButton className={classes.removeItemBtn}>
+                  <CloseIcon />
+                </IconButton>
               </TableCell>
               <TableCell className={classes.description}>
                 <TextField fullWidth />
@@ -75,6 +92,11 @@ const ReceiptTable = () => {
               </TableCell>
               <TableCell className={classes.price}>
                 <TextField type="number" />
+                <Tooltip placement="bottom" title="Remove receipt item">
+                  <IconButton className={classes.removeItemBtn}>
+                    <CloseIcon />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
               <TableCell className={classes.description}>
                 <TextField fullWidth />
