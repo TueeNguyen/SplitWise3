@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Button,
   Paper,
   Table,
   TableBody,
@@ -7,8 +8,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +35,13 @@ const useStyles = makeStyles((theme) => ({
   tableContainer: {
     maxHeight: '70vh',
     border: 'solid 1px'
+  },
+  receiptUtil: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  addItemBtn: {
+    marginLeft: 'auto'
   }
 }));
 const ReceiptTable = () => {
@@ -49,7 +60,7 @@ const ReceiptTable = () => {
           <TableBody>
             <TableRow>
               <TableCell className={classes.item}>
-                <TextField fullWidth value="10 cups of starbuck" />
+                <TextField fullWidth />
               </TableCell>
               <TableCell className={classes.price}>
                 <TextField type="number" />
@@ -270,6 +281,14 @@ const ReceiptTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <br />
+
+      <div className={classes.receiptUtil}>
+        <Typography variant="h4">Total:</Typography>
+        <Button className={classes.addItemBtn} variant="outlined">
+          Add receipt item
+        </Button>
+      </div>
     </div>
   );
 };

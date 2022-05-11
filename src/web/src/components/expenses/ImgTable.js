@@ -11,7 +11,7 @@ import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 const useStyles = makeStyles({
   tableContainer: {
-    width: '99vw',
+    width: 'calc(100vw - 40px)',
     border: 'solid 1px'
   }
 });

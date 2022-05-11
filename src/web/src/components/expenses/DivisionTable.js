@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '500px'
   },
   tableWrapper: {
-    margin: '40px 0 0 0',
+    margin: '40px 40px',
     width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
       width: '100vw'
@@ -48,11 +48,7 @@ const DivisionTable = () => {
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <Typography fontSize="1.24rem" type="h1">
-                  User
-                </Typography>
-              </TableCell>
+              <TableCell>User</TableCell>
               <TableCell>Owned</TableCell>
               <TableCell>Fixed</TableCell>
               <TableCell>Note</TableCell>
