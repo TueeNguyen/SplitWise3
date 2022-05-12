@@ -30,16 +30,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
   }
 }));
 const datas = [
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg',
   'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg'
 ];
 const ImgTable = () => {
@@ -58,10 +48,10 @@ const ImgTable = () => {
                     image={data}
                     alt="Expense Img"
                   />
+                  <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
+                    <Typography variant="body">Receipt</Typography>
+                  </CardContent>
                 </StyledCard>
-                <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
-                  <Typography variant="body">Receipt</Typography>
-                </CardContent>
               </TableCell>
             ))}
           </TableRow>
