@@ -1,5 +1,5 @@
 import { Pagination } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ExpenseCard from './ExpenseCard';
 import { makeStyles } from '@mui/styles';
 

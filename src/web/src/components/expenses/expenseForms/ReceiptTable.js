@@ -16,6 +16,7 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
+import { useFormikContext } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto'
   }
 }));
-const ReceiptTable = () => {
+const ReceiptTable = ({ values, insert, remove, push, handleChange, handleReceiptChange }) => {
   const classes = useStyles();
   return (
     <div className={classes.tableWrapper}>
@@ -72,20 +73,37 @@ const ReceiptTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell className={classes.item}>
-                <TextField fullWidth />
-              </TableCell>
-              <TableCell className={classes.price}>
-                <TextField type="number" />
-                <IconButton className={classes.removeItemBtn}>
-                  <CloseIcon />
-                </IconButton>
-              </TableCell>
-              <TableCell className={classes.description}>
-                <TextField fullWidth />
-              </TableCell>
-            </TableRow>
+            {values.receipt.map((data, index) => (
+              <TableRow>
+                <TableCell className={classes.item}>
+                  <TextField
+                    className="item-input"
+                    value={values.receipt[index].item}
+                    name={`receipt.${index}.item`}
+                    onChange={(e) => handleReceiptChange(e, index)}
+                    fullWidth
+                  />
+                </TableCell>
+                <TableCell className={classes.price}>
+                  <TextField
+                    value={values.receipt[index].price}
+                    name={`receipt.${index}.price`}
+                    onChange={(e) => handleReceiptChange(e, index)}
+                    type="number"
+                  />
+                  <IconButton className={classes.removeItemBtn} onClick={() => remove(index)}>
+                    <CloseIcon />
+                  </IconButton>
+                </TableCell>
+                <TableCell className={classes.description}>
+                  <TextField
+                    value={values.receipt[index].desc}
+                    name={`receipt.${index}.desc`}
+                    fullWidth
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -93,7 +111,11 @@ const ReceiptTable = () => {
 
       <div className={classes.receiptUtil}>
         <Typography variant="h4">Total:</Typography>
-        <Button className={classes.addItemBtn} variant="outlined">
+        <Button
+          className={classes.addItemBtn}
+          variant="outlined"
+          onClick={() => push({ item: '', price: 0, desc: '' })}
+        >
           Add receipt item
         </Button>
       </div>

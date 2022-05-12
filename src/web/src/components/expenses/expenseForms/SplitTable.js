@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import { AntSwitch } from '../../styles/styles';
+import { AntSwitch } from '../../../styles/styles';
 
 const useStyles = makeStyles((theme) => ({
   user: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const DivisionTable = () => {
+const SplitTable = () => {
   const classes = useStyles();
   return (
     <div className={classes.tableWrapper}>
@@ -78,4 +78,4 @@ const DivisionTable = () => {
   );
 };
 
-export default DivisionTable;
+export default SplitTable;
