@@ -108,7 +108,7 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
           </TableHead>
           <TableBody>
             {values.receipt.map((data, index) => (
-              <TableRow>
+              <TableRow key={index}>
                 <TableCell className={classes.item}>
                   <TextField
                     className="item-input"

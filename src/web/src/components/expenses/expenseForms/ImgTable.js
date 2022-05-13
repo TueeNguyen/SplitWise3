@@ -39,9 +39,9 @@ const ImgTable = () => {
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>
-            {datas.map((data, i) => (
-              <TableCell>
-                <StyledCard key={i}>
+            {datas.map((data, index) => (
+              <TableCell key={index}>
+                <StyledCard>
                   <CardMedia
                     component="img"
                     sx={{ objectFit: 'cover' }}
