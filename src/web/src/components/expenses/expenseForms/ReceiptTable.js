@@ -59,8 +59,42 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 'auto'
   }
 }));
-const ReceiptTable = ({ values, insert, remove, push, handleChange, handleReceiptChange }) => {
+
+const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
+
+  const updateTotal = (e, index) => {
+    // handleChange is async so we need to replace the price of index
+    setFieldValue(
+      'total',
+      values.receipt.reduce((curr, prev, i) => {
+        if (i === index) {
+          return Number(curr + e.target.value);
+        }
+        return Number(curr + prev.price);
+      }, 0)
+    );
+  };
+
+  const handlePriceChange = (e, index) => {
+    if (!e.target.value || e.target.value < 0) {
+      e.target.value = 0;
+    }
+    handleChange(e);
+    updateTotal(e, index);
+  };
+
+  const addRemoveReceiptItem = (e, arrayHelper, index) => {
+    const buttonName = e.target.name;
+    if (buttonName === 'removeReceiptItem') {
+      arrayHelper(index);
+      updateTotal(e, index);
+    }
+    if (buttonName === 'addReceiptItem') {
+      arrayHelper({ item: '', price: 0, desc: '' });
+    }
+  };
+
   return (
     <div className={classes.tableWrapper}>
       <TableContainer className={classes.tableContainer} component={Paper}>
@@ -80,25 +114,35 @@ const ReceiptTable = ({ values, insert, remove, push, handleChange, handleReceip
                     className="item-input"
                     value={values.receipt[index].item}
                     name={`receipt.${index}.item`}
-                    onChange={(e) => handleReceiptChange(e, index)}
+                    onChange={handleChange}
+                    type="text"
                     fullWidth
                   />
                 </TableCell>
+
                 <TableCell className={classes.price}>
                   <TextField
                     value={values.receipt[index].price}
                     name={`receipt.${index}.price`}
-                    onChange={(e) => handleReceiptChange(e, index)}
+                    onChange={(e) => handlePriceChange(e, index)}
                     type="number"
                   />
-                  <IconButton className={classes.removeItemBtn} onClick={() => remove(index)}>
-                    <CloseIcon />
+                  <IconButton
+                    name="removeReceiptItem"
+                    className={classes.removeItemBtn}
+                    onClick={(e) => addRemoveReceiptItem(e, remove, index)}
+                  >
+                    {/* to preven clicking on the icon*/}
+                    <CloseIcon sx={{ pointerEvents: 'none' }} />
                   </IconButton>
                 </TableCell>
+
                 <TableCell className={classes.description}>
                   <TextField
                     value={values.receipt[index].desc}
                     name={`receipt.${index}.desc`}
+                    onChange={handleChange}
+                    type="text"
                     fullWidth
                   />
                 </TableCell>
@@ -110,11 +154,12 @@ const ReceiptTable = ({ values, insert, remove, push, handleChange, handleReceip
       <br />
 
       <div className={classes.receiptUtil}>
-        <Typography variant="h4">Total:</Typography>
+        <Typography variant="h4">Total: {values.total}</Typography>
         <Button
+          name="addReceiptItem"
           className={classes.addItemBtn}
           variant="outlined"
-          onClick={() => push({ item: '', price: 0, desc: '' })}
+          onClick={(e) => addRemoveReceiptItem(e, push)}
         >
           Add receipt item
         </Button>

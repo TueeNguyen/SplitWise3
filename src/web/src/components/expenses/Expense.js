@@ -17,28 +17,15 @@ const useStyles = makeStyles({
 const Expense = () => {
   const classes = useStyles();
   const initialValues = {
-    receipt: [{ item: 'asd', price: 123, desc: 'asd' }],
+    receipt: [{ item: '', price: 0, desc: '' }],
     total: 0,
     split: [{ user: '', owned: '', note: '' }]
-  };
-  // const formik = useFormik({
-  //   initialValues: initialValues
-  // });
-  const handleReceiptChange = (e, index) => {
-    const inputName = e.target.name;
-    if (inputName.includes('item')) {
-      console.log('item');
-    }
-    if (inputName.includes('price')) {
-    }
-    if (inputName.includes('desc')) {
-    }
   };
   return (
     <div className={classes.container}>
       <ImgTable />
       <Formik initialValues={initialValues}>
-        {({ values, touched, errors, handleChange, handleBlur, isValid }) => (
+        {({ values, handleChange, setFieldValue }) => (
           <Form>
             <FieldArray name="receipt">
               {({ push, remove }) => {
@@ -47,7 +34,7 @@ const Expense = () => {
                   push,
                   remove,
                   handleChange,
-                  handleReceiptChange
+                  setFieldValue
                 };
                 return <ReceiptTable {...props} />;
               }}
