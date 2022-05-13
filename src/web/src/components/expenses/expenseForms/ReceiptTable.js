@@ -111,7 +111,6 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
               <TableRow key={index}>
                 <TableCell className={classes.item}>
                   <TextField
-                    className="item-input"
                     value={values.receipt[index].item}
                     name={`receipt.${index}.item`}
                     onChange={handleChange}

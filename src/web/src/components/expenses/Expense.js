@@ -19,7 +19,7 @@ const Expense = () => {
   const initialValues = {
     receipt: [{ item: '', price: 0, desc: '' }],
     total: 0,
-    split: [{ user: '', owned: '', note: '' }]
+    splitForm: [{ user: '', owned: '', fixed: false, note: '' }]
   };
   return (
     <div className={classes.container}>
@@ -39,10 +39,19 @@ const Expense = () => {
                 return <ReceiptTable {...props} />;
               }}
             </FieldArray>
+            <FieldArray name="splitForm">
+              {({ push, remove }) => {
+                const props = {
+                  values,
+                  handleChange,
+                  setFieldValue
+                };
+                return <SplitTable {...props} />;
+              }}
+            </FieldArray>
           </Form>
         )}
       </Formik>
-      <SplitTable />
     </div>
   );
 };
