@@ -19,7 +19,11 @@ const Expense = () => {
   const initialValues = {
     receipt: [{ item: '', price: 0, desc: '' }],
     total: 0,
-    splitForm: [{ user: '', owned: '', fixed: false, note: '' }]
+    splitForm: [
+      { user: '', owned: 0, fixed: false, note: '' },
+      { user: '', owned: 0, fixed: false, note: '' },
+      { user: '', owned: 0, fixed: false, note: '' }
+    ]
   };
   return (
     <div className={classes.container}>

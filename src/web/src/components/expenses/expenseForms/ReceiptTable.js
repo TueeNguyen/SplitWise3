@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '600px'
   },
   tableWrapper: {
-    margin: '40px 0 0 0',
+    margin: '40px',
     width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
       width: '100vw'
@@ -64,16 +64,19 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
   const classes = useStyles();
 
   const updateTotal = (e, index) => {
+    const newTotal = values.receipt.reduce((prev, curr, i) => {
+      if (i === index) {
+        return Number(prev + e.target.value);
+      }
+      return Number(prev + curr.price);
+    }, 0);
     // handleChange is async so we need to replace the price of index
-    setFieldValue(
-      'total',
-      values.receipt.reduce((curr, prev, i) => {
-        if (i === index) {
-          return Number(curr + e.target.value);
-        }
-        return Number(curr + prev.price);
-      }, 0)
-    );
+    setFieldValue('total', newTotal);
+    const newSplitForm = values.splitForm.map((data, i) => ({
+      ...data,
+      owned: Number(Number(newTotal / values.splitForm.length).toFixed(2))
+    }));
+    setFieldValue('splitForm', newSplitForm);
   };
 
   const handlePriceChange = (e, index) => {

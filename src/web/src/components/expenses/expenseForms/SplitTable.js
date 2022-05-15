@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: '500px'
   },
   tableWrapper: {
-    margin: '40px 40px',
+    margin: '40px',
     width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
       width: '100vw'
@@ -42,8 +42,31 @@ const useStyles = makeStyles((theme) => ({
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
   console.log(values);
-  const toggleSwitch = (index) => {
-    setFieldValue('re');
+  const handleOwnedChange = (e, index) => {
+    if (!values.splitForm[index].fixed) {
+      // TODO: add a snack bar that says must be fixed to change
+      return;
+    }
+    if (e.target.value < 0 || !e.target.value) {
+      // TODO: add a snack bar saying "Invalid value can't be < 0 or null"
+      return;
+    }
+    const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
+      if (curr.fixed) {
+        return prev + curr.owned;
+      }
+      return prev;
+    }, 0);
+    const newOwnedSum = values.splitForm.reduce((prev, curr, i) => {
+      if (i === index) {
+        return prev + e.target.value;
+      }
+    });
+    if (e.target.value > values.total - fixedOwnedSum) {
+      // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
+      return;
+    }
+    handleChange(e);
   };
   return (
     <div className={classes.tableWrapper}>
@@ -70,7 +93,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
                   <TextField
                     value={values.splitForm[index].owned}
                     name={`splitForm.${index}.owned`}
-                    onChange={handleChange}
+                    onChange={(e) => handleOwnedChange(e, index)}
                     type="number"
                   />
                 </TableCell>
