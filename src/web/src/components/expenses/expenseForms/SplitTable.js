@@ -12,10 +12,18 @@ import {
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { AntSwitch } from '../../../styles/styles';
+import { padding } from '@mui/system';
 
 const useStyles = makeStyles((theme) => ({
   user: {
-    minWidth: '150px'
+    minWidth: '150px',
+  },
+  userInfo: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  name: {
+    marginLeft: '10px',
   },
   owned: {
     minWidth: '250px'
@@ -84,9 +92,9 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
             {values.splitForm.map((data, index) => (
               <TableRow>
                 <TableCell className={classes.user}>
-                  <div>
+                  <div className={classes.userInfo}>
                     <Avatar src="https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d" />
-                    Tue
+                    <span className={classes.name}> Tue</span>
                   </div>
                 </TableCell>
                 <TableCell className={classes.owned}>
