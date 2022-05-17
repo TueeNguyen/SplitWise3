@@ -11,6 +11,9 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     gap: '1em'
+  },
+  expenseForm: {
+    width: '100vw'
   }
 });
 
@@ -30,7 +33,7 @@ const Expense = () => {
       <ImgTable />
       <Formik initialValues={initialValues}>
         {({ values, handleChange, setFieldValue }) => (
-          <Form>
+          <Form className={classes.expenseForm}>
             <FieldArray name="receipt">
               {({ push, remove }) => {
                 const props = {

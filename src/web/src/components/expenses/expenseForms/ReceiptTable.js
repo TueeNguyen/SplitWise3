@@ -42,9 +42,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tableWrapper: {
     margin: '40px',
-    width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
-      width: '100vw'
+      margin: '5px'
     }
   },
   tableContainer: {
