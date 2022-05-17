@@ -16,14 +16,14 @@ import { padding } from '@mui/system';
 
 const useStyles = makeStyles((theme) => ({
   user: {
-    minWidth: '150px',
+    minWidth: '150px'
   },
   userInfo: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   name: {
-    marginLeft: '10px',
+    marginLeft: '10px'
   },
   owned: {
     minWidth: '250px'
@@ -36,9 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tableWrapper: {
     margin: '40px',
-    width: 'calc(100vw - 100px)',
     [theme.breakpoints.down('md')]: {
-      width: '100vw'
+      margin: '5px'
     }
   },
   tableContainer: {
