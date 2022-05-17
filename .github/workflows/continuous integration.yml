@@ -1,0 +1,11 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  # Confirm that prettier was run on the changes
+  prettier:
+    uses: TueeNguyen/SplitWise3/.github/workflows/prettier-ci.yml@master
