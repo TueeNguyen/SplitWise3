@@ -5,7 +5,8 @@
   "scripts": {
     "start:front-end": "cd src/web && npm run start",
     "prepare": "husky install",
-    "pre-commit": "pretty-quick --staged"
+    "pre-commit": "pretty-quick --staged",
+    "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\""
   },
   "repository": {
     "type": "git",
