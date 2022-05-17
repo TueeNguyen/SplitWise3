@@ -20,3 +20,5 @@ The repo tries to follow monorepo structure. Most of the code will be in `src/` 
 
 - `cd src/web`
 - `npm run start`
+
+I don't care
