@@ -13,10 +13,8 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
-import { useFormikContext } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -65,16 +63,20 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
   const updateTotal = (e, index) => {
     const newTotal = values.receipt.reduce((prev, curr, i) => {
       if (i === index) {
-        return Number(prev + e.target.value);
+        return Number(Number(prev) + Number(e.target.value));
       }
       return Number(prev + curr.price);
     }, 0);
     // handleChange is async so we need to replace the price of index
     setFieldValue('total', newTotal);
-    const newSplitForm = values.splitForm.map((data, i) => ({
-      ...data,
-      owned: Number(Number(newTotal / values.splitForm.length).toFixed(2))
-    }));
+    const newSplitForm = values.splitForm.map((data, i) =>
+      data.fixed
+        ? data
+        : {
+            ...data,
+            owned: Number(Number(newTotal / values.splitForm.length).toFixed(2))
+          }
+    );
     setFieldValue('splitForm', newSplitForm);
   };
 
@@ -82,6 +84,26 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
     if (!e.target.value || e.target.value < 0) {
       e.target.value = 0;
     }
+
+    const newTotal = values.receipt.reduce((prev, curr, i) => {
+      if (i === index) {
+        return Number(prev + e.target.value);
+      }
+      return Number(prev + curr.price);
+    }, 0);
+
+    const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
+      if (curr.fixed) {
+        return prev + curr.owned;
+      }
+      return prev;
+    }, 0);
+
+    if (newTotal < fixedOwnedSum) {
+      // TODO: display error message
+      return;
+    }
+
     handleChange(e);
     updateTotal(e, index);
   };
@@ -89,6 +111,24 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
   const addRemoveReceiptItem = (e, arrayHelper, index) => {
     const buttonName = e.target.name;
     if (buttonName === 'removeReceiptItem') {
+      const newTotal = values.receipt.reduce((prev, curr, i) => {
+        if (i === index) {
+          return Number(prev + e.target.value);
+        }
+        return Number(prev + curr.price);
+      }, 0);
+
+      const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
+        if (curr.fixed) {
+          return prev + curr.owned;
+        }
+        return prev;
+      }, 0);
+
+      if (newTotal < fixedOwnedSum) {
+        // TODO: display error message
+        return;
+      }
       arrayHelper(index);
       updateTotal(e, index);
     }

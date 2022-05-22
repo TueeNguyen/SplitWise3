@@ -49,13 +49,16 @@ const useStyles = makeStyles((theme) => ({
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
   console.log(values);
+
   const handleOwnedChange = (e, index) => {
     if (!values.splitForm[index].fixed) {
       // TODO: add a snack bar that says must be fixed to change
+      console.log('must be fixed to change');
       return;
     }
     if (e.target.value < 0 || !e.target.value) {
       // TODO: add a snack bar saying "Invalid value can't be < 0 or null"
+      console.log("Invalid value can't be < 0 or null");
       return;
     }
     const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
@@ -68,13 +71,32 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       if (i === index) {
         return prev + e.target.value;
       }
-    });
-    if (e.target.value > values.total - fixedOwnedSum) {
+      return prev;
+    }, 0);
+    if (newOwnedSum > values.total) {
       // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
+      console.log('newOwnedSum > values.total');
       return;
     }
-    handleChange(e);
+    const newSplitForm = values.splitForm.map((data, i) => {
+      if (data.fixed) {
+        if (i === index) {
+          return {
+            ...data,
+            owned: e.target.value
+          };
+        }
+        return data;
+      }
+      return {
+        ...data,
+        owned: Number(newOwnedSum).toFixed(2)
+      };
+    });
+    console.log(newSplitForm);
+    setFieldValue('splitForm', newSplitForm);
   };
+
   return (
     <div className={classes.tableWrapper}>
       <TableContainer className={classes.tableContainer} component={Paper}>
