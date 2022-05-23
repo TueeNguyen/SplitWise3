@@ -48,9 +48,29 @@ const useStyles = makeStyles((theme) => ({
 
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
-  console.log(values);
+  // console.log(values);
 
+  const handleToggle = (e) => {
+    const fixedCnt = values.splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
+      }
+      return prev;
+    }, 0);
+    if (fixedCnt === values.splitForm.length - 1) {
+      console.log('not all user can be fixed');
+      return;
+    }
+    handleChange(e);
+  };
+  /**
+   *
+   * @param {*} e
+   * @param {*} index
+   * @returns
+   */
   const handleOwnedChange = (e, index) => {
+    console.log({ targetValue: e.target.value });
     if (!values.splitForm[index].fixed) {
       // TODO: add a snack bar that says must be fixed to change
       console.log('must be fixed to change');
@@ -61,39 +81,54 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       console.log("Invalid value can't be < 0 or null");
       return;
     }
-    const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
+    const fixedSum = values.splitForm.reduce((prev, curr, i) => {
       if (curr.fixed) {
+        if (i === index) {
+          return prev + e.target.value;
+        }
         return prev + curr.owned;
       }
       return prev;
     }, 0);
-    const newOwnedSum = values.splitForm.reduce((prev, curr, i) => {
+    const newSum = values.splitForm.reduce((prev, curr, i) => {
+      console.log(prev);
       if (i === index) {
-        return prev + e.target.value;
+        return Number(Number(prev) + Number(e.target.value));
+      }
+      return Number(Number(prev) + Number(curr.owned));
+    }, 0);
+    console.log({ newSum });
+    if (fixedSum > values.total) {
+      // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
+      console.log('fixedSum > values.total');
+      return;
+    }
+    const fixedCnt = values.splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
       }
       return prev;
     }, 0);
-    if (newOwnedSum > values.total) {
-      // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
-      console.log('newOwnedSum > values.total');
-      return;
-    }
+    const notFixedSum = values.total - fixedSum;
+    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
+    console.log({ fixedCnt });
+    console.log({ notFixedSum });
+    console.log({ newSplit });
     const newSplitForm = values.splitForm.map((data, i) => {
       if (data.fixed) {
         if (i === index) {
           return {
             ...data,
-            owned: e.target.value
+            owned: Number(e.target.value).toFixed(2)
           };
         }
-        return data;
+        return { ...data };
       }
       return {
         ...data,
-        owned: Number(newOwnedSum).toFixed(2)
+        owned: Number(newSplit).toFixed(2)
       };
     });
-    console.log(newSplitForm);
     setFieldValue('splitForm', newSplitForm);
   };
 
@@ -130,7 +165,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
                   <AntSwitch
                     value={values.splitForm[index].fixed}
                     name={`splitForm.${index}.fixed`}
-                    onChange={handleChange}
+                    onChange={handleToggle}
                     type="checkbox"
                   />
                 </TableCell>

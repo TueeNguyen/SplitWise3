@@ -60,47 +60,83 @@ const useStyles = makeStyles((theme) => ({
 const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
 
-  const updateTotal = (e, index) => {
-    const newTotal = values.receipt.reduce((prev, curr, i) => {
+  /**
+   *
+   * @param {*} index
+   * @param {*} targetValue
+   * @returns
+   */
+  const getNewTotal = (index, targetValue) =>
+    values.receipt.reduce((prev, curr, i) => {
       if (i === index) {
-        return Number(Number(prev) + Number(e.target.value));
+        return prev + targetValue;
       }
-      return Number(prev + curr.price);
+      return prev + Number(curr.price);
     }, 0);
+
+  /**
+   *
+   * @returns
+   */
+  const getFixedSum = () =>
+    values.splitForm.reduce((prev, curr) => {
+      if (curr.fixed) {
+        return prev + Number(curr.owned);
+      }
+      return prev;
+    }, 0);
+
+  /**
+   * Update the total value of the form and also update the split amount
+   * @param {*} targetValue
+   * @param {*} index
+   */
+  const updateTotal = (targetValue, index) => {
     // handleChange is async so we need to replace the price of index
+    const newTotal = getNewTotal();
     setFieldValue('total', newTotal);
-    const newSplitForm = values.splitForm.map((data, i) =>
+
+    const fixedSum = getFixedSum();
+    const notFixedSum = newTotal - fixedSum;
+    const fixedCnt = values.splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
+      }
+      return prev;
+    }, 0);
+    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
+    console.log({ newSplit, notFixedSum, fixedSum, newTotal });
+    const newSplitForm = values.splitForm.map((data) =>
       data.fixed
         ? data
         : {
             ...data,
-            owned: Number(Number(newTotal / values.splitForm.length).toFixed(2))
+            owned: Number(newSplit).toFixed(2)
           }
     );
     setFieldValue('splitForm', newSplitForm);
   };
 
+  /**
+   *
+   * @param {*} e
+   * @param {*} index
+   * @returns
+   */
   const handlePriceChange = (e, index) => {
-    if (!e.target.value || e.target.value < 0) {
+    const targetValue = Number(e.target.value);
+
+    if (!targetValue || targetValue < 0) {
       e.target.value = 0;
+      console.log("price of an item can't be null or < 0");
+      return;
     }
 
-    const newTotal = values.receipt.reduce((prev, curr, i) => {
-      if (i === index) {
-        return Number(prev + e.target.value);
-      }
-      return Number(prev + curr.price);
-    }, 0);
+    const newTotal = getNewTotal(index, targetValue);
+    const fixedSum = getFixedSum();
 
-    const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
-      if (curr.fixed) {
-        return prev + curr.owned;
-      }
-      return prev;
-    }, 0);
-
-    if (newTotal < fixedOwnedSum) {
-      // TODO: display error message
+    if (newTotal < fixedSum) {
+      console.log('newTotal < fixedSum');
       return;
     }
 
@@ -113,20 +149,21 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
     if (buttonName === 'removeReceiptItem') {
       const newTotal = values.receipt.reduce((prev, curr, i) => {
         if (i === index) {
-          return Number(prev + e.target.value);
+          return prev;
         }
         return Number(prev + curr.price);
       }, 0);
 
       const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
         if (curr.fixed) {
-          return prev + curr.owned;
+          return Number(prev + curr.owned);
         }
         return prev;
       }, 0);
-
+      console.log({ newTotal, fixedOwnedSum });
       if (newTotal < fixedOwnedSum) {
         // TODO: display error message
+        console.log("can't remove this item because some users have fixed owned amount");
         return;
       }
       arrayHelper(index);
