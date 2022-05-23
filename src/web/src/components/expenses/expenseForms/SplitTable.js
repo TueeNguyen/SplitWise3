@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
-  // console.log(values);
+  console.log(values);
 
   const handleToggle = (e) => {
     const fixedCnt = values.splitForm.reduce((prev, current) => {
@@ -57,6 +57,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       }
       return prev;
     }, 0);
+    console.log(fixedCnt);
     if (fixedCnt === values.splitForm.length - 1) {
       console.log('not all user can be fixed');
       return;
@@ -163,9 +164,10 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
                 </TableCell>
                 <TableCell className={classes.fixed}>
                   <AntSwitch
+                    checked={values.splitForm[index].fixed}
                     value={values.splitForm[index].fixed}
                     name={`splitForm.${index}.fixed`}
-                    onChange={handleToggle}
+                    onChange={(e) => handleToggle(e)}
                     type="checkbox"
                   />
                 </TableCell>
