@@ -8,12 +8,18 @@ import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/system';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
+import AddReceiptButton from '../../expenses/addReceiptImg/AddReceiptButton';
 
 const useStyles = makeStyles({
   tableContainer: {
-    width: 'calc(100vw - 40px)',
+    width: 'calc(100vw - 100px)',
     border: 'solid 1px',
     margin: '20px 0'
+  },
+  addReceiptButton: {
+    display: 'flex',
+    width: 'calc(100vw - 100px)',
+    justifyContent: 'flex-end'
   }
 });
 
@@ -35,29 +41,34 @@ const datas = [
 const ImgTable = () => {
   const classes = useStyles();
   return (
-    <TableContainer className={classes.tableContainer} component={Paper}>
-      <Table aria-label="simple table">
-        <TableBody>
-          <TableRow>
-            {datas.map((data, index) => (
-              <TableCell key={index}>
-                <StyledCard>
-                  <CardMedia
-                    component="img"
-                    sx={{ objectFit: 'cover' }}
-                    image={data}
-                    alt="Expense Img"
-                  />
-                  <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
-                    <Typography variant="body">Receipt</Typography>
-                  </CardContent>
-                </StyledCard>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer className={classes.tableContainer} component={Paper}>
+        <Table aria-label="simple table">
+          <TableBody>
+            <TableRow>
+              {datas.map((data, index) => (
+                <TableCell key={index}>
+                  <StyledCard>
+                    <CardMedia
+                      component="img"
+                      sx={{ objectFit: 'cover' }}
+                      image={data}
+                      alt="Expense Img"
+                    />
+                    <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
+                      <Typography variant="body">Receipt</Typography>
+                    </CardContent>
+                  </StyledCard>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <div className={classes.addReceiptButton}>
+        <AddReceiptButton />
+      </div>
+    </>
   );
 };
 
