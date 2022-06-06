@@ -60,13 +60,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
-
-  useEffect(() => {
-    if (values) {
-      const getTotal = () => values.receipt.reduce((prev, curr) => prev + curr, 0);
-      setFieldValue('total', getTotal());
-    }
-  }, [values.length]);
   /**
    *
    * @param {*} targetValue
@@ -174,6 +167,7 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
         return;
       }
       arrayHelper(index);
+      updateTotal(0, index);
     }
     if (buttonName === 'addReceiptItem') {
       arrayHelper({ item: '', price: 0, desc: '' });
