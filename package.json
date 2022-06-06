@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A web app that allows you to split bills between friends",
   "scripts": {
-    "start:front-end": "cd src/web && npm run start",
+    "start:fe": "cd src/web && npm run start",
     "prepare": "husky install",
     "pre-commit": "pretty-quick --staged",
     "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\""

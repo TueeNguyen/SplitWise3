@@ -1,11 +1,10 @@
 import React from 'react';
 import SortButton from './sortButton/SortButton';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import SearchBar from './searchBar/SearchBar';
-import AddReceiptButton from '../expenses/addReceiptImg/AddReceiptButton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,12 +30,11 @@ const UtilBar = () => {
     if (pathname.match('/expense/w*')) {
       return (
         <>
-          <AddReceiptButton />
           <Tooltip title="Search" placement="left">
             <IconButton onClick={() => history.push('/search')}>
               <SearchRoundedIcon />
             </IconButton>
-          </Tooltip>{' '}
+          </Tooltip>
         </>
       );
     }

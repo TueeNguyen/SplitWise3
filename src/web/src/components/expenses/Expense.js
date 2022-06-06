@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: '1em'
   },
+
   expenseForm: {
     width: '100vw'
   },
@@ -21,6 +22,11 @@ const useStyles = makeStyles({
     display: 'flex',
     alignSelf: 'end',
     margin: '0px 40px 20px 0px'
+
+
+  imgTable: {
+    width: 'calc(100vw - 100px)'
+
   }
 });
 
@@ -37,7 +43,9 @@ const Expense = () => {
   };
   return (
     <div className={classes.container}>
-      <ImgTable />
+      <div className={classes.imgTable}>
+        <ImgTable />
+      </div>
       <Formik initialValues={initialValues}>
         {({ values, resetForm, handleChange, setFieldValue }) => (
           <Form className={classes.expenseForm}>
