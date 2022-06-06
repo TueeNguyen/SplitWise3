@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   IconButton,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
+import { useFormikContext } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -60,13 +61,19 @@ const useStyles = makeStyles((theme) => ({
 const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
 
+  useEffect(() => {
+    if (values) {
+      const getTotal = () => values.receipt.reduce((prev, curr) => prev + curr, 0);
+      setFieldValue('total', getTotal());
+    }
+  }, [values.length]);
   /**
    *
-   * @param {*} index
    * @param {*} targetValue
+   * @param {*} index
    * @returns
    */
-  const getNewTotal = (index, targetValue) =>
+  const getNewTotal = (targetValue, index) =>
     values.receipt.reduce((prev, curr, i) => {
       if (i === index) {
         return prev + targetValue;
@@ -93,7 +100,7 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
    */
   const updateTotal = (targetValue, index) => {
     // handleChange is async so we need to replace the price of index
-    const newTotal = getNewTotal();
+    const newTotal = getNewTotal(targetValue, index);
     setFieldValue('total', newTotal);
 
     const fixedSum = getFixedSum();
@@ -139,9 +146,9 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
       console.log('newTotal < fixedSum');
       return;
     }
-
+    console.log(e);
     handleChange(e);
-    updateTotal(e, index);
+    updateTotal(targetValue, index);
   };
 
   const addRemoveReceiptItem = (e, arrayHelper, index) => {
@@ -167,7 +174,6 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
         return;
       }
       arrayHelper(index);
-      updateTotal(e, index);
     }
     if (buttonName === 'addReceiptItem') {
       arrayHelper({ item: '', price: 0, desc: '' });

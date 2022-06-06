@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
-  console.log(values);
 
   const handleToggle = (e) => {
     const fixedCnt = values.splitForm.reduce((prev, current) => {
