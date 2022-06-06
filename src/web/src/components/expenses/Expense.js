@@ -1,5 +1,7 @@
 import { makeStyles } from '@mui/styles';
 import React from 'react';
+import { Button } from '@mui/material';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ImgTable from './expenseForms/ImgTable';
 import SplitTable from './expenseForms/SplitTable';
 import ReceiptTable from './expenseForms/ReceiptTable';
@@ -14,6 +16,12 @@ const useStyles = makeStyles({
   },
   expenseForm: {
     width: '100vw'
+  }
+  ,
+  box: {
+    display: 'flex',
+    alignSelf: 'end',
+    margin: '0px 40px 20px 0px'
   }
 });
 
@@ -32,7 +40,7 @@ const Expense = () => {
     <div className={classes.container}>
       <ImgTable />
       <Formik initialValues={initialValues}>
-        {({ values, handleChange, setFieldValue }) => (
+        {({ values,resetForm, handleChange, setFieldValue }) => (
           <Form className={classes.expenseForm}>
             <FieldArray name="receipt">
               {({ push, remove }) => {
@@ -56,6 +64,20 @@ const Expense = () => {
                 return <SplitTable {...props} />;
               }}
             </FieldArray>
+            <div className={classes.container}>
+              <Button
+                type="button"
+                startIcon={<RestartAltIcon fontSize="large" />}
+                variant="contained"
+                color="error"
+                className={classes.box}
+                onClick={() => {
+                  resetForm();
+                }}
+              >
+                Reset
+              </Button>
+            </div>
           </Form>
         )}
       </Formik>
