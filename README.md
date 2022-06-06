@@ -8,7 +8,7 @@ The repo tries to follow monorepo structure. Most of the code will be in `src/` 
 
 # Features and roadmap (to be added)
 
-## How to start the app:
+# How to start the app:
 
 ### Front-end:
 
