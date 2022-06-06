@@ -16,9 +16,8 @@ const useStyles = makeStyles({
   },
   expenseForm: {
     width: '100vw'
-  }
-  ,
-  box: {
+  },
+  resetBtn: {
     display: 'flex',
     alignSelf: 'end',
     margin: '0px 40px 20px 0px'
@@ -40,7 +39,7 @@ const Expense = () => {
     <div className={classes.container}>
       <ImgTable />
       <Formik initialValues={initialValues}>
-        {({ values,resetForm, handleChange, setFieldValue }) => (
+        {({ values, resetForm, handleChange, setFieldValue }) => (
           <Form className={classes.expenseForm}>
             <FieldArray name="receipt">
               {({ push, remove }) => {
@@ -70,7 +69,7 @@ const Expense = () => {
                 startIcon={<RestartAltIcon fontSize="large" />}
                 variant="contained"
                 color="error"
-                className={classes.box}
+                className={classes.resetBtn}
                 onClick={() => {
                   resetForm();
                 }}
