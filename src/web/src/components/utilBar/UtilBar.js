@@ -5,6 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import SearchBar from './searchBar/SearchBar';
+import UserButton from './userButton/UserButton';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -48,6 +49,7 @@ const UtilBar = () => {
   };
   return (
     <div className={classes.container}>
+      <UserButton/> 
       {renderBasedOnPathname()}
       <SortButton />
     </div>
