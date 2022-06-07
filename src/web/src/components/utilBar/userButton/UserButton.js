@@ -65,7 +65,7 @@ export default function UserButton() {
       {['right'].map((anchor) => (
         <React.Fragment key={anchor}>
           <IconButton  type="button" onClick={toggleDrawer(anchor, true)}>
-              {/* <PersonOutlineIcon></PersonOutlineIcon> */}
+              <PersonOutlineIcon></PersonOutlineIcon>
           </IconButton>
           <Drawer
             anchor={anchor}
