@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button,
   IconButton,
@@ -10,12 +10,10 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip,
   Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
-import { useFormikContext } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -60,12 +58,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
-  /**
-   *
-   * @param {*} targetValue
-   * @param {*} index
-   * @returns
-   */
+
   const getNewTotal = (targetValue, index) =>
     values.receipt.reduce((prev, curr, i) => {
       if (i === index) {
@@ -74,10 +67,6 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
       return prev + Number(curr.price);
     }, 0);
 
-  /**
-   *
-   * @returns
-   */
   const getFixedSum = () =>
     values.splitForm.reduce((prev, curr) => {
       if (curr.fixed) {
@@ -86,11 +75,14 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
       return prev;
     }, 0);
 
-  /**
-   * Update the total value of the form and also update the split amount
-   * @param {*} targetValue
-   * @param {*} index
-   */
+  const getFixecCnt = () =>
+    values.splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
+      }
+      return prev;
+    }, 0);
+
   const updateTotal = (targetValue, index) => {
     // handleChange is async so we need to replace the price of index
     const newTotal = getNewTotal(targetValue, index);
@@ -98,14 +90,8 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
 
     const fixedSum = getFixedSum();
     const notFixedSum = newTotal - fixedSum;
-    const fixedCnt = values.splitForm.reduce((prev, current) => {
-      if (current.fixed) {
-        return ++prev;
-      }
-      return prev;
-    }, 0);
+    const fixedCnt = getFixecCnt();
     const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
-    console.log({ newSplit, notFixedSum, fixedSum, newTotal });
     const newSplitForm = values.splitForm.map((data) =>
       data.fixed
         ? data
@@ -117,17 +103,11 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
     setFieldValue('splitForm', newSplitForm);
   };
 
-  /**
-   *
-   * @param {*} e
-   * @param {*} index
-   * @returns
-   */
+  // functions handling form events
   const handlePriceChange = (e, index) => {
     const targetValue = Number(e.target.value);
 
-    if (!targetValue || targetValue < 0) {
-      e.target.value = 0;
+    if ((!targetValue && targetValue !== 0) || targetValue < 0) {
       console.log("price of an item can't be null or < 0");
       return;
     }
@@ -139,33 +119,23 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
       console.log('newTotal < fixedSum');
       return;
     }
-    console.log(e);
     handleChange(e);
     updateTotal(targetValue, index);
   };
 
   const addRemoveReceiptItem = (e, arrayHelper, index) => {
     const buttonName = e.target.name;
-    if (buttonName === 'removeReceiptItem') {
-      const newTotal = values.receipt.reduce((prev, curr, i) => {
-        if (i === index) {
-          return prev;
-        }
-        return Number(prev + curr.price);
-      }, 0);
 
-      const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
-        if (curr.fixed) {
-          return Number(prev + curr.owned);
-        }
-        return prev;
-      }, 0);
-      console.log({ newTotal, fixedOwnedSum });
-      if (newTotal < fixedOwnedSum) {
+    if (buttonName === 'removeReceiptItem') {
+      const newTotal = getNewTotal(0, index);
+      const fixedSum = getFixedSum();
+
+      if (newTotal < fixedSum) {
         // TODO: display error message
         console.log("can't remove this item because some users have fixed owned amount");
         return;
       }
+
       arrayHelper(index);
       updateTotal(0, index);
     }
