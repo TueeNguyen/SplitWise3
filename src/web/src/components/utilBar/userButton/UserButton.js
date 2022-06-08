@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { IconButton } from '@mui/material';
@@ -13,8 +13,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 export default function UserButton() {
-  const [state, setState] = React.useState({
-    right: false,
+  const [showMembers, setShowMembers] = useState({
+    right: false
   });
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -22,7 +22,7 @@ export default function UserButton() {
       return;
     }
 
-    setState({ ...state, [anchor]: open });
+    setShowMembers({ ...showMembers, [anchor]: open });
   };
 
   const list = (anchor) => (
@@ -36,9 +36,7 @@ export default function UserButton() {
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -49,9 +47,7 @@ export default function UserButton() {
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -63,18 +59,14 @@ export default function UserButton() {
   return (
     <div>
       {['right'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <IconButton  type="button" onClick={toggleDrawer(anchor, true)}>
-              <PersonOutlineIcon></PersonOutlineIcon>
+        <div>
+          <IconButton type="button" onClick={toggleDrawer(anchor, true)}>
+            <PersonOutlineIcon></PersonOutlineIcon>
           </IconButton>
-          <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-          >
+          <Drawer anchor={anchor} open={showMembers[anchor]} onClose={toggleDrawer(anchor, false)}>
             {list(anchor)}
           </Drawer>
-        </React.Fragment>
+        </div>
       ))}
     </div>
   );

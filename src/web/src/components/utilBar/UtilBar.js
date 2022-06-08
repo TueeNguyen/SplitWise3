@@ -31,6 +31,7 @@ const UtilBar = () => {
     if (pathname.match('/expense/w*')) {
       return (
         <>
+          <UserButton />
           <Tooltip title="Search" placement="left">
             <IconButton onClick={() => history.push('/search')}>
               <SearchRoundedIcon />
@@ -49,7 +50,6 @@ const UtilBar = () => {
   };
   return (
     <div className={classes.container}>
-      <UserButton/> 
       {renderBasedOnPathname()}
       <SortButton />
     </div>
