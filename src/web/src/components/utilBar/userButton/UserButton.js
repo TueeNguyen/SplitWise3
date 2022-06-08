@@ -13,7 +13,7 @@ const UserButton = () => {
           setShowMembers(true);
         }}
       >
-        <PersonOutlineIcon></PersonOutlineIcon>
+        <PersonOutlineIcon />
       </IconButton>
       <Drawer
         anchor="right"
