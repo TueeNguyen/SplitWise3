@@ -12,7 +12,6 @@ import {
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { AntSwitch } from '../../../styles/styles';
-import { padding } from '@mui/system';
 
 const useStyles = makeStyles((theme) => ({
   user: {
@@ -49,20 +48,61 @@ const useStyles = makeStyles((theme) => ({
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
 
-  const handleToggle = (e) => {
-    const fixedCnt = values.splitForm.reduce((prev, current) => {
+  const getNewTotal = (targetValue, index) =>
+    values.receipt.reduce((prev, curr, i) => {
+      if (i === index) {
+        return prev + targetValue;
+      }
+      return prev + Number(curr.price);
+    }, 0);
+
+  const getFixedSum = (targetValue, index) =>
+    values.splitForm.reduce((prev, curr, i) => {
+      console.log(prev);
+      if (curr.fixed) {
+        if (i === index) {
+          return prev + targetValue;
+        }
+        return prev + Number(curr.owned);
+      }
+      return prev;
+    }, 0);
+
+  const getFixedCnt = () =>
+    values.splitForm.reduce((prev, current) => {
       if (current.fixed) {
         return ++prev;
       }
       return prev;
     }, 0);
-    console.log(fixedCnt);
-    if (fixedCnt === values.splitForm.length - 1) {
+
+  const updateSplitForm = (targetValue, index) => {
+    // handleChange is async so we need to replace the price of index
+
+    const fixedSum = getFixedSum();
+    const notFixedSum = values.total - fixedSum;
+    const fixedCnt = getFixedCnt();
+    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
+    const newSplitForm = values.splitForm.map((data) =>
+      data.fixed
+        ? data
+        : {
+            ...data,
+            owned: Number(newSplit).toFixed(2)
+          }
+    );
+    setFieldValue('splitForm', newSplitForm);
+  };
+
+  const handleToggle = (e) => {
+    const fixedCnt = getFixedCnt();
+    if (!e.target.value && fixedCnt === values.splitForm.length - 1) {
       console.log('not all user can be fixed');
       return;
     }
     handleChange(e);
   };
+
   /**
    *
    * @param {*} e
@@ -70,45 +110,25 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
    * @returns
    */
   const handleOwnedChange = (e, index) => {
-    console.log({ targetValue: e.target.value });
+    const targetValue = Number(e.target.value);
     if (!values.splitForm[index].fixed) {
       // TODO: add a snack bar that says must be fixed to change
       console.log('must be fixed to change');
       return;
     }
-    if (e.target.value < 0 || !e.target.value) {
+    if (targetValue < 0 || !targetValue) {
       // TODO: add a snack bar saying "Invalid value can't be < 0 or null"
       console.log("Invalid value can't be < 0 or null");
       return;
     }
-    const fixedSum = values.splitForm.reduce((prev, curr, i) => {
-      if (curr.fixed) {
-        if (i === index) {
-          return prev + e.target.value;
-        }
-        return prev + curr.owned;
-      }
-      return prev;
-    }, 0);
-    const newSum = values.splitForm.reduce((prev, curr, i) => {
-      console.log(prev);
-      if (i === index) {
-        return Number(Number(prev) + Number(e.target.value));
-      }
-      return Number(Number(prev) + Number(curr.owned));
-    }, 0);
-    console.log({ newSum });
+    const fixedSum = getFixedSum(targetValue, index);
+    console.log({ fixedSum });
     if (fixedSum > values.total) {
       // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
       console.log('fixedSum > values.total');
       return;
     }
-    const fixedCnt = values.splitForm.reduce((prev, current) => {
-      if (current.fixed) {
-        return ++prev;
-      }
-      return prev;
-    }, 0);
+    const fixedCnt = getFixedCnt();
     const notFixedSum = values.total - fixedSum;
     const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
     console.log({ fixedCnt });
@@ -119,14 +139,14 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
         if (i === index) {
           return {
             ...data,
-            owned: Number(e.target.value).toFixed(2)
+            owned: targetValue.toFixed(2)
           };
         }
-        return { ...data };
+        return data;
       }
       return {
         ...data,
-        owned: Number(newSplit).toFixed(2)
+        owned: newSplit.toFixed(2)
       };
     });
     setFieldValue('splitForm', newSplitForm);
