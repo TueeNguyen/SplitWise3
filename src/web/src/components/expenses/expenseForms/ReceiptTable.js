@@ -112,7 +112,7 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
       return;
     }
 
-    const newTotal = getNewTotal(index, targetValue);
+    const newTotal = getNewTotal(targetValue, index);
     const fixedSum = getFixedSum();
 
     if (newTotal < fixedSum) {

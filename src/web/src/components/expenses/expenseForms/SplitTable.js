@@ -48,16 +48,10 @@ const useStyles = makeStyles((theme) => ({
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
 
-  const getNewTotal = (targetValue, index) =>
-    values.receipt.reduce((prev, curr, i) => {
-      if (i === index) {
-        return prev + targetValue;
-      }
-      return prev + Number(curr.price);
-    }, 0);
+  const getFixedSum = (targetValue, index, changedSplitForm) => {
+    const splitForm = changedSplitForm ? changedSplitForm : values.splitForm;
 
-  const getFixedSum = (targetValue, index) =>
-    values.splitForm.reduce((prev, curr, i) => {
+    return splitForm.reduce((prev, curr, i) => {
       console.log(prev);
       if (curr.fixed) {
         if (i === index) {
@@ -67,23 +61,32 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       }
       return prev;
     }, 0);
+  };
 
-  const getFixedCnt = () =>
-    values.splitForm.reduce((prev, current) => {
+  const getFixedCnt = (changedSplitForm) => {
+    const splitForm = changedSplitForm ? changedSplitForm : values.splitForm;
+
+    return splitForm.reduce((prev, current) => {
       if (current.fixed) {
         return ++prev;
       }
       return prev;
     }, 0);
+  };
 
-  const updateSplitForm = (targetValue, index) => {
-    // handleChange is async so we need to replace the price of index
+  const updateSplitForm = (index) => {
+    const changedSplitForm = values.splitForm.map((elem, i) => {
+      if (i === index) {
+        return { ...elem, fixed: false };
+      }
+      return elem;
+    });
 
-    const fixedSum = getFixedSum();
+    const fixedSum = getFixedSum(changedSplitForm);
     const notFixedSum = values.total - fixedSum;
-    const fixedCnt = getFixedCnt();
-    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
-    const newSplitForm = values.splitForm.map((data) =>
+    const fixedCnt = getFixedCnt(changedSplitForm);
+    const newSplit = notFixedSum / (changedSplitForm.length - fixedCnt);
+    const newSplitForm = changedSplitForm.map((data) =>
       data.fixed
         ? data
         : {
@@ -94,11 +97,14 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
     setFieldValue('splitForm', newSplitForm);
   };
 
-  const handleToggle = (e) => {
+  const handleToggle = (e, index) => {
     const fixedCnt = getFixedCnt();
-    if (!e.target.value && fixedCnt === values.splitForm.length - 1) {
+    if (e.target.checked && fixedCnt === values.splitForm.length - 1) {
       console.log('not all user can be fixed');
       return;
+    }
+    if (!e.target.checked) {
+      updateSplitForm(index);
     }
     handleChange(e);
   };
@@ -131,9 +137,6 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
     const fixedCnt = getFixedCnt();
     const notFixedSum = values.total - fixedSum;
     const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
-    console.log({ fixedCnt });
-    console.log({ notFixedSum });
-    console.log({ newSplit });
     const newSplitForm = values.splitForm.map((data, i) => {
       if (data.fixed) {
         if (i === index) {
@@ -186,7 +189,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
                     checked={values.splitForm[index].fixed}
                     value={values.splitForm[index].fixed}
                     name={`splitForm.${index}.fixed`}
-                    onChange={(e) => handleToggle(e)}
+                    onChange={(e) => handleToggle(e, index)}
                     type="checkbox"
                   />
                 </TableCell>
