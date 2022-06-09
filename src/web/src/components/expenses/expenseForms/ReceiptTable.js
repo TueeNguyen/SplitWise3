@@ -10,13 +10,10 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip,
   Typography
 } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
-import { useFormikContext } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -62,35 +59,85 @@ const useStyles = makeStyles((theme) => ({
 const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => {
   const classes = useStyles();
 
-  const updateTotal = (e, index) => {
-    const newTotal = values.receipt.reduce((prev, curr, i) => {
+  const getNewTotal = (targetValue, index) =>
+    values.receipt.reduce((prev, curr, i) => {
       if (i === index) {
-        return Number(prev + e.target.value);
+        return prev + targetValue;
       }
-      return Number(prev + curr.price);
+      return prev + Number(curr.price);
     }, 0);
+
+  const getFixedSum = () =>
+    values.splitForm.reduce((prev, curr) => {
+      if (curr.fixed) {
+        return prev + Number(curr.owned);
+      }
+      return prev;
+    }, 0);
+
+  const getFixecCnt = () =>
+    values.splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
+      }
+      return prev;
+    }, 0);
+
+  const updateTotal = (targetValue, index) => {
     // handleChange is async so we need to replace the price of index
+    const newTotal = getNewTotal(targetValue, index);
     setFieldValue('total', newTotal);
-    const newSplitForm = values.splitForm.map((data, i) => ({
-      ...data,
-      owned: Number(Number(newTotal / values.splitForm.length).toFixed(2))
-    }));
+
+    const fixedSum = getFixedSum();
+    const notFixedSum = newTotal - fixedSum;
+    const fixedCnt = getFixecCnt();
+    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
+    const newSplitForm = values.splitForm.map((data) =>
+      data.fixed
+        ? data
+        : {
+            ...data,
+            owned: Number(newSplit).toFixed(2)
+          }
+    );
     setFieldValue('splitForm', newSplitForm);
   };
 
+  // functions handling form events
   const handlePriceChange = (e, index) => {
-    if (!e.target.value || e.target.value < 0) {
-      e.target.value = 0;
+    const targetValue = Number(e.target.value);
+
+    if ((!targetValue && targetValue !== 0) || targetValue < 0) {
+      console.log("price of an item can't be null or < 0");
+      return;
+    }
+
+    const newTotal = getNewTotal(targetValue, index);
+    const fixedSum = getFixedSum();
+
+    if (newTotal < fixedSum) {
+      console.log('newTotal < fixedSum');
+      return;
     }
     handleChange(e);
-    updateTotal(e, index);
+    updateTotal(targetValue, index);
   };
 
   const addRemoveReceiptItem = (e, arrayHelper, index) => {
     const buttonName = e.target.name;
+
     if (buttonName === 'removeReceiptItem') {
+      const newTotal = getNewTotal(0, index);
+      const fixedSum = getFixedSum();
+
+      if (newTotal < fixedSum) {
+        // TODO: display error message
+        console.log("can't remove this item because some users have fixed owned amount");
+        return;
+      }
+
       arrayHelper(index);
-      updateTotal(e, index);
+      updateTotal(0, index);
     }
     if (buttonName === 'addReceiptItem') {
       arrayHelper({ item: '', price: 0, desc: '' });

@@ -12,7 +12,6 @@ import {
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 import { AntSwitch } from '../../../styles/styles';
-import { padding } from '@mui/system';
 
 const useStyles = makeStyles((theme) => ({
   user: {
@@ -48,33 +47,114 @@ const useStyles = makeStyles((theme) => ({
 
 const SplitTable = ({ values, handleChange, setFieldValue }) => {
   const classes = useStyles();
-  console.log(values);
-  const handleOwnedChange = (e, index) => {
-    if (!values.splitForm[index].fixed) {
-      // TODO: add a snack bar that says must be fixed to change
-      return;
-    }
-    if (e.target.value < 0 || !e.target.value) {
-      // TODO: add a snack bar saying "Invalid value can't be < 0 or null"
-      return;
-    }
-    const fixedOwnedSum = values.splitForm.reduce((prev, curr) => {
+
+  const getFixedSum = (targetValue, index, changedSplitForm) => {
+    const splitForm = changedSplitForm ? changedSplitForm : values.splitForm;
+
+    return splitForm.reduce((prev, curr, i) => {
+      console.log(prev);
       if (curr.fixed) {
-        return prev + curr.owned;
+        if (i === index) {
+          return prev + targetValue;
+        }
+        return prev + Number(curr.owned);
       }
       return prev;
     }, 0);
-    const newOwnedSum = values.splitForm.reduce((prev, curr, i) => {
-      if (i === index) {
-        return prev + e.target.value;
+  };
+
+  const getFixedCnt = (changedSplitForm) => {
+    const splitForm = changedSplitForm ? changedSplitForm : values.splitForm;
+
+    return splitForm.reduce((prev, current) => {
+      if (current.fixed) {
+        return ++prev;
       }
+      return prev;
+    }, 0);
+  };
+
+  const updateSplitForm = (index) => {
+    const changedSplitForm = values.splitForm.map((elem, i) => {
+      if (i === index) {
+        return { ...elem, fixed: false };
+      }
+      return elem;
     });
-    if (e.target.value > values.total - fixedOwnedSum) {
-      // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
+
+    const fixedSum = getFixedSum(changedSplitForm);
+    const notFixedSum = values.total - fixedSum;
+    const fixedCnt = getFixedCnt(changedSplitForm);
+    const newSplit = notFixedSum / (changedSplitForm.length - fixedCnt);
+    const newSplitForm = changedSplitForm.map((data) =>
+      data.fixed
+        ? data
+        : {
+            ...data,
+            owned: Number(newSplit).toFixed(2)
+          }
+    );
+    setFieldValue('splitForm', newSplitForm);
+  };
+
+  const handleToggle = (e, index) => {
+    const fixedCnt = getFixedCnt();
+    if (e.target.checked && fixedCnt === values.splitForm.length - 1) {
+      console.log('not all user can be fixed');
       return;
+    }
+    if (!e.target.checked) {
+      updateSplitForm(index);
     }
     handleChange(e);
   };
+
+  /**
+   *
+   * @param {*} e
+   * @param {*} index
+   * @returns
+   */
+  const handleOwnedChange = (e, index) => {
+    const targetValue = Number(e.target.value);
+    if (!values.splitForm[index].fixed) {
+      // TODO: add a snack bar that says must be fixed to change
+      console.log('must be fixed to change');
+      return;
+    }
+    if (targetValue < 0 || !targetValue) {
+      // TODO: add a snack bar saying "Invalid value can't be < 0 or null"
+      console.log("Invalid value can't be < 0 or null");
+      return;
+    }
+    const fixedSum = getFixedSum(targetValue, index);
+    console.log({ fixedSum });
+    if (fixedSum > values.total) {
+      // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
+      console.log('fixedSum > values.total');
+      return;
+    }
+    const fixedCnt = getFixedCnt();
+    const notFixedSum = values.total - fixedSum;
+    const newSplit = notFixedSum / (values.splitForm.length - fixedCnt);
+    const newSplitForm = values.splitForm.map((data, i) => {
+      if (data.fixed) {
+        if (i === index) {
+          return {
+            ...data,
+            owned: targetValue.toFixed(2)
+          };
+        }
+        return data;
+      }
+      return {
+        ...data,
+        owned: newSplit.toFixed(2)
+      };
+    });
+    setFieldValue('splitForm', newSplitForm);
+  };
+
   return (
     <div className={classes.tableWrapper}>
       <TableContainer className={classes.tableContainer} component={Paper}>
@@ -106,9 +186,10 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
                 </TableCell>
                 <TableCell className={classes.fixed}>
                   <AntSwitch
+                    checked={values.splitForm[index].fixed}
                     value={values.splitForm[index].fixed}
                     name={`splitForm.${index}.fixed`}
-                    onChange={handleChange}
+                    onChange={(e) => handleToggle(e, index)}
                     type="checkbox"
                   />
                 </TableCell>
