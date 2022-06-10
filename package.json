@@ -4,6 +4,7 @@
   "description": "A web app that allows you to split bills between friends",
   "scripts": {
     "start:fe": "cd src/web && npm run start",
+    "start:be": "cd src/api && npm run dev",
     "prepare": "husky install",
     "pre-commit": "pretty-quick --staged",
     "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\""

@@ -3,19 +3,23 @@ import TestingRouter from './routes/testing';
 import { Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
-const app: any = express();
 
+// initializing
+const app = express();
 const server = require('http').createServer(app);
-
 const io = new Server(server, {
   cors: {
     origin: '*'
   }
 });
 
+// configure express
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(bodyParser.json());
+
 const testingRouter = TestingRouter(io);
+
 app.use('/', testingRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -25,8 +29,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+// start server
 const PORT = process.env.PORT ?? 6060;
-io.on('connection', (socket) => {
-  console.log(socket.id);
-});
 server.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
