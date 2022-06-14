@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import TestingRouter from './routes/testing';
+import { router as userRouter } from './routes/user';
 import { Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
@@ -18,9 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
-const testingRouter = TestingRouter(io);
-
-app.use('/', testingRouter);
+app.use('/api/user', userRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error('not found');
