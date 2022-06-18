@@ -3,13 +3,13 @@ import { collection, doc, getDoc, query, setDoc, updateDoc } from 'firebase/fire
 import { User, IUser } from '../models/user';
 import { Expense, IExpense } from '../models/expense';
 
-const getExpenseById = async (id: string): Promise<IExpense> => {
+const getExpenseById = async (id: string): Promise<Expense> => {
   try {
-    const expenseRef = doc(db, 'Expenses', id);
-    const expenseSnap = await getDoc(expenseRef);
-    if (expenseSnap.exists()) {
-      const expenseObj = expenseSnap.data();
-      const expense = Expense.create(expenseObj);
+    const expenseDocRef = db.collection('Expenses').doc(id);
+    const expenseDocSnap = await expenseDocRef.get();
+
+    if (expenseDocSnap.exists) {
+      const expense: Expense = Expense.create(expenseDocSnap.data());
       return expense;
     } else {
       console.error(`Expense ${id} not found`);

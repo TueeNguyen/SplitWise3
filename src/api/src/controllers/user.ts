@@ -1,28 +1,60 @@
 import { db, auth } from '../db/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, getDoc, query, setDoc, updateDoc } from 'firebase/firestore';
+import { DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
+DocumentReference;
 import { User, IUser } from '../models/user';
 import { getExpenseById } from './expense';
 import { Expense } from '../models/expense';
+interface LooseObject {
+  [key: string]: any;
+}
 
-const createUser = async (username: string, email: string, password: string) => {
+const createUser = async (username: string, email: string, password: string): Promise<string> => {
   try {
-    const {
-      user: { uid }
-    } = await createUserWithEmailAndPassword(auth, email, password);
-    const user: IUser = new User(uid, email, username);
-    await setDoc(doc(db, 'Users', uid), Object.assign({}, user));
+    const { uid } = await auth.createUser({ email, password });
+    const user: User = new User(uid, email, username);
+    const usersDocRef = db.collection('Users').doc(uid);
+    await usersDocRef.create(Object.assign({}, user));
+
+    return `User ${uid} ${username} is created`;
   } catch (err) {
     console.error(err);
     throw err;
   }
 };
 
-const updateUser = async (updateObj: User) => {
+const updateUser = async (uid: string, username?: string, avatar?: string): Promise<string> => {
   try {
-    const { uid, username, avatar } = updateObj;
-    const userRef = doc(db, 'Users', uid);
-    await updateDoc(userRef, { username, avatar });
+    const updateObj: LooseObject = {};
+    console.log({ username, avatar });
+    if (username) {
+      updateObj.username = username;
+    } else if (avatar) {
+      updateObj.avatar = avatar;
+    } else {
+      throw 'No username or avatar specified to update';
+    }
+
+    const userDocRef = db.collection('Users').doc(uid);
+    const userDocSnapShot = await userExists(uid);
+    if (userDocSnapShot) {
+      await userDocRef.update(Object.assign({}, updateObj));
+      return `Updated user ${uid}`;
+    }
+    throw `User ${uid} doesn't exist`;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const userExists = async (uid: string): Promise<DocumentSnapshot | null> => {
+  try {
+    const userDocRef = db.collection('Users').doc(uid);
+    const docSnapShot = await userDocRef.get();
+    if (docSnapShot.exists) {
+      return docSnapShot;
+    }
+    return null;
   } catch (err) {
     console.error(err);
     throw err;
@@ -31,18 +63,15 @@ const updateUser = async (updateObj: User) => {
 
 const getUserByUid = async (uid: string): Promise<User> => {
   try {
-    const userRef = doc(db, 'Users', uid);
-    const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-      const { uid, username, email } = userSnap.data();
+    const userDocSnapShot = await userExists(uid);
+    if (userDocSnapShot) {
+      const { username, email } = userDocSnapShot.data() as User;
       const user: User = new User(uid, username, email);
       return user;
-    } else {
-      console.error(`User with ${uid} not found!`);
-      throw Error(`User with ${uid} not found!`);
     }
+    throw `User ${uid} doesn't exist`;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 };
@@ -60,4 +89,4 @@ const getUsersByExpenseId = async (expenseId: string): Promise<Array<User>> => {
   }
 };
 
-export { createUser, updateUser, getUsersByExpenseId, getUserByUid };
+export { createUser, updateUser };
