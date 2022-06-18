@@ -1,11 +1,11 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
-import { firebaseConfig } from '../fbconfig';
+import { cert, initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
+import { getStorage } from 'firebase-admin/storage';
+import firebaseConfig from './serviceAccount.json';
+import { credential, ServiceAccount } from 'firebase-admin';
 
-const app = initializeApp(firebaseConfig);
-
+const app = initializeApp({ credential: credential.cert(firebaseConfig as ServiceAccount) });
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
