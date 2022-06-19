@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import { router as userRouter } from './routes/user';
+import { router as expenseRouter } from './routes/expense';
 import { Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/user', userRouter);
+app.use('/api/expense', expenseRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error('not found');
