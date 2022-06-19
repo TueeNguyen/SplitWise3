@@ -1,15 +1,28 @@
-import { IUser } from './user';
+import { ReceiptForm } from './receiptForm';
+import { ReceiptImgForm } from './receiptImgForm';
+import { SplitForm } from './splitForm';
+import { User } from './user';
+import { UserRole } from './userRole';
 
 export interface IExpense {
   avatar: string;
   name: string;
   date: string;
+
+  total: number;
+  password: string;
+  userRoles?: Array<UserRole>;
+  id?: string;
+
+  userIds: Array<string>;
+  users?: Array<User>;
+
   receiptImgFormId: string;
   receiptFormId: string;
   splitFormId: string;
-  users: Array<IUser>;
-  total: number;
-  password: string;
+  receiptImgForm?: ReceiptImgForm;
+  receiptForm?: ReceiptForm;
+  splitForm?: SplitForm;
 }
 
 export class Expense implements IExpense {
@@ -19,20 +32,26 @@ export class Expense implements IExpense {
   receiptImgFormId: string;
   receiptFormId: string;
   splitFormId: string;
-  users: Array<IUser>;
+  userIds: Array<string>;
   total: number;
   password: string;
+  userRoles?: Array<UserRole>;
+  id?: string;
+  users?: Array<User>;
+  receiptImgForm?: ReceiptImgForm;
+  receiptForm?: ReceiptForm;
+  splitForm?: SplitForm;
 
   constructor(
-    avatar: string,
     name: string,
     date: string,
-    receiptImgFormId: string,
-    receiptFormId: string,
-    splitFormId: string,
-    users: Array<IUser>,
-    total: number,
-    password: string
+    avatar?: string,
+    receiptImgFormId?: string,
+    receiptFormId?: string,
+    splitFormId?: string,
+    userIds?: Array<string>,
+    total?: number,
+    password?: string
   ) {
     this.avatar = avatar || '';
     this.name = name || '';
@@ -40,31 +59,39 @@ export class Expense implements IExpense {
     this.receiptFormId = receiptFormId || '';
     this.receiptImgFormId = receiptImgFormId || '';
     this.splitFormId = splitFormId || '';
-    this.users = users || '';
+    this.userIds = userIds || [];
     this.total = total || 0;
     this.password = password || '';
   }
-
-  static create(expenseObj: any) {
+  set setId(id: string) {
+    this.id = id;
+  }
+  set setUserRoles(userRoles: Array<UserRole>) {
+    this.userRoles = userRoles;
+  }
+  set setUsers(users: Array<User>) {
+    this.users = users;
+  }
+  static create(expenseObj: Expense) {
     const {
       avatar,
+      date,
       name,
-      data,
       receiptFormId,
       receiptImgFormId,
       splitFormId,
-      users,
+      userIds,
       total,
       password
     } = expenseObj;
     return new Expense(
-      avatar,
       name,
-      data,
+      date,
+      avatar,
       receiptFormId,
       receiptImgFormId,
       splitFormId,
-      users,
+      userIds,
       total,
       password
     );

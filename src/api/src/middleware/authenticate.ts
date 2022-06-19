@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth } from '../db/firebase';
+import asyncHandler from 'express-async-handler';
 
-const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
+const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.body;
+
+  if (!authorization || !authorization.startsWith('Bearer')) {
+    res.status(401);
+    throw 'Missing or wrong authorization header, unauthorized!';
+  }
   const [, token] = authorization.split('Bearer ');
-  if (!authorization || !authorization.startsWith('Bearer') || token.length < 1) {
-    return res
-      .status(401)
-      .send({ message: `Missing or wrong authorization header, unauthorized!` });
+  if (token.length < 1) {
+    res.status(401);
+    throw 'Missing or wrong authorization header, unauthorized!';
   }
   try {
     const decodedToken = await auth.verifyIdToken(token);
@@ -16,9 +21,11 @@ const isAuthenticated = async (req: Request, res: Response, next: NextFunction) 
       uid: decodedToken.uid,
       email: decodedToken.email
     };
-    return next();
+    next();
   } catch (err) {
     console.error(err);
     throw err;
   }
-};
+});
+
+export { isAuthenticated };
