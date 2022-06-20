@@ -1,11 +1,12 @@
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ImgTable from './expenseForms/ImgTable';
 import SplitTable from './expenseForms/SplitTable';
 import ReceiptTable from './expenseForms/ReceiptTable';
-import { Form, Formik, FieldArray } from 'formik';
+import { Form, Formik, FieldArray, Field } from 'formik';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   container: {
@@ -29,63 +30,106 @@ const useStyles = makeStyles({
 
 const Expense = () => {
   const classes = useStyles();
-  const initialValues = {
-    receipt: [{ item: '', price: 0, desc: '' }],
+  const [expense, setExpense] = useState({});
+  const [initialValues, setInitialValues] = useState({
+    userRoles: [],
+    userIds: [],
+    users: [],
+
+    receiptImgFormId: '',
+    receiptFormId: '',
+    splitFormId: '',
+    receiptImgForm: [],
+    receiptForm: [],
+    splitForm: [],
     total: 0,
-    splitForm: [
-      { user: '', owned: 0, fixed: false, note: '' },
-      { user: '', owned: 0, fixed: false, note: '' },
-      { user: '', owned: 0, fixed: false, note: '' }
-    ]
-  };
+
+    avatar: '',
+    name: '',
+    date: '',
+    id: '',
+    password: ''
+  });
+  useEffect(() => {
+    (async () => {
+      const api_string = 'http://localhost:6060/api/expense/22ia7rlol4ly421b';
+      const {
+        data: { data }
+      } = await axios.get(api_string);
+      setExpense(data);
+    })();
+  }, []);
+  useEffect(() => {
+    if (Object.keys(expense).length > 0) {
+      const tempExpense = {
+        ...expense,
+        receiptForm: expense.receiptForm.data,
+        receiptImgForm: expense.receiptImgForm.data,
+        splitForm: expense.splitForm.data
+      };
+      setInitialValues(tempExpense);
+    }
+  }, [expense]);
+  useEffect(() => {
+    console.log(initialValues);
+  }, [initialValues]);
   return (
-    <div className={classes.container}>
-      <div className={classes.imgTable}>
-        <ImgTable />
-      </div>
-      <Formik initialValues={initialValues}>
-        {({ values, resetForm, handleChange, setFieldValue }) => (
-          <Form className={classes.expenseForm}>
-            <FieldArray name="receipt">
-              {({ push, remove }) => {
-                const props = {
-                  values,
-                  push,
-                  remove,
-                  handleChange,
-                  setFieldValue
-                };
-                return <ReceiptTable {...props} />;
-              }}
-            </FieldArray>
-            <FieldArray name="splitForm">
-              {({ push, remove }) => {
-                const props = {
-                  values,
-                  handleChange,
-                  setFieldValue
-                };
-                return <SplitTable {...props} />;
-              }}
-            </FieldArray>
-            <div className={classes.container}>
-              <Button
-                type="button"
-                startIcon={<RestartAltIcon fontSize="large" />}
-                variant="contained"
-                color="error"
-                className={classes.resetBtn}
-                onClick={() => {
-                  resetForm();
-                }}
-              >
-                Reset
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+    <>
+      {Object.keys(expense).length > 0 ? (
+        <div className={classes.container}>
+          <Formik initialValues={initialValues}>
+            {({ values, resetForm, handleChange, setFieldValue }) => (
+              <Form className={classes.expenseForm}>
+                <Field name="receiptImgForm">
+                  {({ form: { values, handleChange } }) => (
+                    <div className={classes.imgTable}>
+                      <ImgTable />
+                    </div>
+                  )}
+                </Field>
+
+                <FieldArray name="receipt">
+                  {({ push, remove }) => {
+                    const props = {
+                      values,
+                      push,
+                      remove,
+                      handleChange,
+                      setFieldValue
+                    };
+                    return <ReceiptTable {...props} />;
+                  }}
+                </FieldArray>
+                <FieldArray name="splitForm">
+                  {({ push, remove }) => {
+                    const props = {
+                      values,
+                      handleChange,
+                      setFieldValue
+                    };
+                    return <SplitTable {...props} />;
+                  }}
+                </FieldArray>
+                <div className={classes.container}>
+                  <Button
+                    type="button"
+                    startIcon={<RestartAltIcon fontSize="large" />}
+                    variant="contained"
+                    color="error"
+                    className={classes.resetBtn}
+                    onClick={() => {
+                      resetForm();
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      ) : null}
+    </>
   );
 };
 

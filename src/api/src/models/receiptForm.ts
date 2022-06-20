@@ -13,6 +13,9 @@ export class ReceiptFormElem implements IReceiptFormElem {
     this.price = price || 0;
     this.desc = desc || '';
   }
+  static createReceiptFormElemArray(array: Array<any>): Array<ReceiptFormElem> {
+    return array.map((elem) => new ReceiptFormElem(elem.item, elem.price, elem.desc));
+  }
 }
 
 export interface IReceiptForm {
@@ -28,6 +31,9 @@ export class ReceiptForm implements IReceiptForm {
 
   static create(receiptFormObj: ReceiptForm) {
     const { data } = receiptFormObj;
+    return new ReceiptForm(data);
+  }
+  static createFromArray(data: Array<ReceiptFormElem>) {
     return new ReceiptForm(data);
   }
 }

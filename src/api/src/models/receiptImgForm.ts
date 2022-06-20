@@ -10,6 +10,9 @@ export class ReceiptImgFormElem implements IReceiptImgFormElem {
     this.receiptImgUrl = receiptImgUrl || '';
     this.name = name || '';
   }
+  static createReceiptImgFormElemArray(array: Array<any>): Array<ReceiptImgFormElem> {
+    return array.map((elem) => new ReceiptImgFormElem(elem.receiptImgUrl, elem.name));
+  }
 }
 
 export interface IReceiptImgForm {
@@ -25,6 +28,9 @@ export class ReceiptImgForm implements IReceiptImgForm {
 
   static create(receiptImgFormObj: ReceiptImgForm): ReceiptImgForm {
     const { data } = receiptImgFormObj;
+    return new ReceiptImgForm(data);
+  }
+  static createFromArray(data: Array<ReceiptImgFormElem>) {
     return new ReceiptImgForm(data);
   }
 }

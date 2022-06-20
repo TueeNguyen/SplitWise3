@@ -6,12 +6,33 @@ import { FieldPath } from 'firebase-admin/firestore';
 import { User } from '../models/user';
 import { getUsers } from './user';
 import { getUserRolesByExpenseId } from './userRole';
+import { createSplitForm, getSplitForm, updateSplitForm } from './splitForm';
+import { SplitForm, SplitFormElem } from '../models/splitForm';
+import { createReceiptForm, getReceiptForm, updateReceiptForm } from './receiptForm';
+import { ReceiptFormElem } from '../models/receiptForm';
+import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from './receiptImgForm';
+import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 
 const createExpense = async (name: string, date: string, avatar?: string): Promise<string> => {
   try {
+    const [receiptImgFormId, receiptFormId, splitFormId] = await Promise.all([
+      createReceiptImgForm(),
+      createReceiptForm(),
+      createSplitForm()
+    ]);
     const id = uniqid();
     const expenseDocRef = db.collection('Expenses').doc(id);
-    const expense: Expense = new Expense(name, date, avatar);
+
+    //TODO: add owner user && respective userRole
+
+    const expense: Expense = new Expense(
+      name,
+      date,
+      avatar,
+      receiptImgFormId,
+      receiptFormId,
+      splitFormId
+    );
     expense.setId = id;
     await expenseDocRef.create({ ...expense });
     return `Expense ${name} created`;
@@ -23,8 +44,7 @@ const createExpense = async (name: string, date: string, avatar?: string): Promi
 /**
  *
  * @param id
- * @returns an extended instance of Expense that has **userRoles** and **users** array populated so front-end
- * doesn't have to call api to get userRoles
+ * @returns Expense object with extra fields **userRoles**, **users**
  */
 const getExpenseById = async (id: string): Promise<Expense> => {
   try {
@@ -40,6 +60,10 @@ const getExpenseById = async (id: string): Promise<Expense> => {
       // get and add users to expense
       expense.setUsers = await getUsers(expense.userIds);
 
+      expense.setReceiptImgForm = await getReceiptImgForm(expense.receiptImgFormId);
+      expense.setReceiptForm = await getReceiptForm(expense.receiptFormId);
+      expense.setSplitForm = await getSplitForm(expense.splitFormId);
+      console.log(expense);
       return expense;
     } else {
       console.error(`Expense ${id} not found`);
@@ -51,11 +75,25 @@ const getExpenseById = async (id: string): Promise<Expense> => {
   }
 };
 
-const updateExpense = async (id: string, expenseObj: Expense): Promise<string> => {
+const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
   try {
-    const expenseDocRef = db.collection('Expenses').doc(id);
-    const expense = Expense.create(expenseObj);
-    await expenseDocRef.update({ ...expense });
+    // need to update all the forms first
+    await updateSplitForm(
+      expenseObj.splitFormId,
+      SplitFormElem.createSplitFormElemArray(expenseObj.splitForm)
+    );
+    await updateReceiptForm(
+      expenseObj.receiptFormId,
+      ReceiptFormElem.createReceiptFormElemArray(expenseObj.receiptForm)
+    );
+    await updateReceiptImgForm(
+      expenseObj.receiptImgFormId,
+      ReceiptImgFormElem.createReceiptImgFormElemArray(expenseObj.receiptImgForm)
+    );
+
+    // const expenseDocRef = db.collection('Expenses').doc(id);
+    // const expense = Expense.create(expenseObj);
+    // await expenseDocRef.update({ ...expense });
     return 'Updated expense';
   } catch (err) {
     console.error(err);

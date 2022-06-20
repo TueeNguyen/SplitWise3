@@ -1,15 +1,16 @@
 import { db } from '../db/firebase';
 import uniqid from 'uniqid';
-import { ReceiptImgForm } from '../models/receiptImgForm';
+import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 
 const getReceiptImgFormRef = (id: string) => db.collection('ReceiptImgForms').doc(id);
 
-const createReceiptImgForm = async (): Promise<void> => {
+const createReceiptImgForm = async (): Promise<string> => {
   try {
     const receiptImgForm = new ReceiptImgForm();
     const id = uniqid();
     await getReceiptImgFormRef(id).create({ ...receiptImgForm });
     console.log(`Created receiptImgForm ${id}`);
+    return id;
   } catch (err) {
     console.error(err);
     throw err;
@@ -17,10 +18,10 @@ const createReceiptImgForm = async (): Promise<void> => {
 };
 const updateReceiptImgForm = async (
   id: string,
-  receiptImgFormObj: ReceiptImgForm
+  receiptImgFormElems: Array<ReceiptImgFormElem>
 ): Promise<void> => {
   try {
-    const receiptImgForm = ReceiptImgForm.create(receiptImgFormObj);
+    const receiptImgForm = ReceiptImgForm.createFromArray(receiptImgFormElems);
     await getReceiptImgFormRef(id).create({ ...receiptImgForm });
     console.log(`Updated receiptImgForm ${id}`);
   } catch (err) {
@@ -31,6 +32,7 @@ const updateReceiptImgForm = async (
 const getReceiptImgForm = async (id: string): Promise<ReceiptImgForm> => {
   try {
     const receiptImgForm = (await (await getReceiptImgFormRef(id).get()).data()) as ReceiptImgForm;
+    console.log(receiptImgForm);
     return receiptImgForm;
   } catch (err) {
     console.error(err);

@@ -1,22 +1,23 @@
 import uniqid from 'uniqid';
 import { db } from '../db/firebase';
-import { ReceiptForm } from '../models/receiptForm';
+import { ReceiptForm, ReceiptFormElem } from '../models/receiptForm';
 
 const getReceiptFormRef = (id: string) => db.collection('ReceiptForms').doc(id);
-const createReceiptForm = async () => {
+const createReceiptForm = async (): Promise<string> => {
   try {
     const receiptForm = new ReceiptForm();
     const id = uniqid();
     await getReceiptFormRef(id).create({ ...receiptForm });
     console.log(`Created receiptForm ${id}`);
+    return id;
   } catch (err) {
     console.error(err);
     throw err;
   }
 };
-const updateReceiptForm = async (id: string, receiptFormObj: ReceiptForm) => {
+const updateReceiptForm = async (id: string, receiptFormElems: Array<ReceiptFormElem>) => {
   try {
-    const receiptForm = ReceiptForm.create(receiptFormObj);
+    const receiptForm = ReceiptForm.createFromArray(receiptFormElems);
     await getReceiptFormRef(id).update({ ...receiptForm });
     console.log(`Updated receiptForm ${id}`);
   } catch (err) {
