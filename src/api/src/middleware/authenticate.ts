@@ -4,13 +4,14 @@ import asyncHandler from 'express-async-handler';
 import { getUserByUid } from '../controllers/user';
 
 const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const { authorization } = req.body;
+  const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer')) {
     res.status(401);
     throw 'Missing or wrong authorization header, unauthorized!';
   }
   const [, token] = authorization.split('Bearer ');
+  console.log(token);
   if (token.length < 1) {
     res.status(401);
     throw 'Missing or wrong authorization header, unauthorized!';

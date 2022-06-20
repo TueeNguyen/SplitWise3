@@ -5,7 +5,7 @@ import { isAuthenticated } from '../middleware/authenticate';
 
 const router = express.Router();
 
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const expense = await getExpenseById(id);
