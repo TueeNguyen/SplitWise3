@@ -72,7 +72,16 @@ export class Expense implements IExpense {
   set setUsers(users: Array<User>) {
     this.users = users;
   }
-  static create(expenseObj: Expense) {
+  set setReceiptForm(receiptForm: ReceiptForm) {
+    this.receiptForm = receiptForm;
+  }
+  set setReceiptImgForm(receiptImgForm: ReceiptImgForm) {
+    this.receiptImgForm = receiptImgForm;
+  }
+  set setSplitForm(splitForm: SplitForm) {
+    this.splitForm = splitForm;
+  }
+  static create(expenseObj: any) {
     const {
       avatar,
       date,
@@ -88,8 +97,8 @@ export class Expense implements IExpense {
       name,
       date,
       avatar,
-      receiptFormId,
       receiptImgFormId,
+      receiptFormId,
       splitFormId,
       userIds,
       total,

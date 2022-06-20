@@ -16,6 +16,9 @@ export class SplitFormElem implements ISplitFormElem {
     this.fixed = fixed || false;
     this.note = note || '';
   }
+  static createSplitFormElemArray(array: Array<any>): Array<SplitFormElem> {
+    return array.map((elem) => new SplitFormElem(elem.userId, elem.owned, elem.fixed, elem.note));
+  }
 }
 
 export interface ISplitForm {
@@ -30,6 +33,9 @@ export class SplitForm implements ISplitForm {
   }
   static create(splitFormObj: SplitForm) {
     const { data } = splitFormObj;
+    return new SplitForm(data);
+  }
+  static createFromArray(data: Array<SplitFormElem>) {
     return new SplitForm(data);
   }
 }

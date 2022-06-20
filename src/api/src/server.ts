@@ -4,7 +4,7 @@ import { router as expenseRouter } from './routes/expense';
 import { Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
-
+import cors from 'cors';
 // initializing
 const app = express();
 const server = require('http').createServer(app);
@@ -16,7 +16,7 @@ const io = new Server(server, {
 
 // configure express
 app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
 
 app.use('/api/user', userRouter);

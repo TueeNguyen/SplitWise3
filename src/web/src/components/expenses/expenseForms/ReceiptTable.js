@@ -156,12 +156,12 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
             </TableRow>
           </TableHead>
           <TableBody>
-            {values.receipt.map((data, index) => (
+            {values.receiptForm.map((data, index) => (
               <TableRow key={index}>
                 <TableCell className={classes.item}>
                   <TextField
-                    value={values.receipt[index].item}
-                    name={`receipt.${index}.item`}
+                    value={values.receiptForm[index].item}
+                    name={`receiptForm.${index}.item`}
                     onChange={handleChange}
                     type="text"
                     fullWidth
@@ -170,8 +170,8 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
 
                 <TableCell className={classes.price}>
                   <TextField
-                    value={values.receipt[index].price}
-                    name={`receipt.${index}.price`}
+                    value={values.receiptForm[index].price}
+                    name={`receiptForm.${index}.price`}
                     onChange={(e) => handlePriceChange(e, index)}
                     type="number"
                   />
@@ -187,8 +187,8 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
 
                 <TableCell className={classes.description}>
                   <TextField
-                    value={values.receipt[index].desc}
-                    name={`receipt.${index}.desc`}
+                    value={values.receiptForm[index].desc}
+                    name={`receiptForm.${index}.desc`}
                     onChange={handleChange}
                     type="text"
                     fullWidth

@@ -97,4 +97,4 @@ const getUsers = async (userIds: Array<string>, expenseId?: string): Promise<Arr
   }
 };
 
-export { createUser, updateUser, getUsers };
+export { createUser, updateUser, getUsers, getUserByUid };

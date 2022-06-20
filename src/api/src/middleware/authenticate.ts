@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { auth } from '../db/firebase';
 import asyncHandler from 'express-async-handler';
+import { getUserByUid } from '../controllers/user';
 
 const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { authorization } = req.body;
@@ -16,11 +17,8 @@ const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: N
   }
   try {
     const decodedToken = await auth.verifyIdToken(token);
-    res.locals = {
-      ...res.locals,
-      uid: decodedToken.uid,
-      email: decodedToken.email
-    };
+    const currentUser = await getUserByUid(decodedToken.uid);
+    res.locals = { ...res.locals, currentUser };
     next();
   } catch (err) {
     console.error(err);
