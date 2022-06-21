@@ -1,16 +1,16 @@
-import { DocumentReference } from 'firebase-admin/firestore';
 import { db } from '../db/firebase';
 import uniqid from 'uniqid';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
 
 const getSplitFormRef = (id: string) => db.collection('SplitForms').doc(id);
 
-const createSplitForm = async (): Promise<string> => {
+const createSplitForm = async (uid: string): Promise<string> => {
   try {
-    const splitForm = new SplitForm();
+    // const splitForm = SplitForm.createFromArray([new SplitFormElem(uid)]);
     const id = uniqid();
-    await getSplitFormRef(id).create({ ...splitForm });
-    console.log('Created Split form');
+    // creating like this because {...splitForm} makes FireStore unable to parse
+    await getSplitFormRef(id).create({ data: [{ ...new SplitFormElem(uid) }] });
+    console.log(`Created Split form ${id}`);
     return id;
   } catch (err) {
     console.error(err);

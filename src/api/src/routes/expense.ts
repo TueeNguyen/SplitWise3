@@ -14,10 +14,10 @@ router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
     return res.status(500).json({ message: err });
   }
 });
-router.post('/create', async (req: Request, res: Response) => {
+router.post('/create', isAuthenticated, async (req: Request, res: Response) => {
   const { name, date, avatar } = req.body;
   try {
-    const message = await createExpense(name, date, avatar);
+    const message = await createExpense(name, date, res.locals.uid, avatar);
     return res.status(200).json({ message });
   } catch (err) {
     return res.status(500).json({ message: err });

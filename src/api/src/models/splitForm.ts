@@ -10,7 +10,7 @@ export class SplitFormElem implements ISplitFormElem {
   fixed: Boolean;
   note: string;
 
-  constructor(userId: string, owned: Number, fixed: Boolean, note: string) {
+  constructor(userId: string, owned?: Number, fixed?: Boolean, note?: string) {
     this.userId = userId || '';
     this.owned = owned || 0;
     this.fixed = fixed || false;

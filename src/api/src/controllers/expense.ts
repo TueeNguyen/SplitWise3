@@ -1,11 +1,8 @@
 import { db } from '../db/firebase';
 import { Expense } from '../models/expense';
 import uniqid from 'uniqid';
-import { UserRole } from '../models/userRole';
-import { FieldPath } from 'firebase-admin/firestore';
-import { User } from '../models/user';
 import { getUsers } from './user';
-import { getUserRolesByExpenseId } from './userRole';
+import { createUserRole, getUserRolesByExpenseId } from './userRole';
 import { createSplitForm, getSplitForm, updateSplitForm } from './splitForm';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
 import { createReceiptForm, getReceiptForm, updateReceiptForm } from './receiptForm';
@@ -13,17 +10,32 @@ import { ReceiptFormElem } from '../models/receiptForm';
 import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from './receiptImgForm';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 
-const createExpense = async (name: string, date: string, avatar?: string): Promise<string> => {
+/**
+ * - Add res.locals.uid to userIds
+ * - Add a record to UserRoles document
+ * @param name
+ * @param date
+ * @param avatar
+ * @returns
+ */
+const createExpense = async (
+  name: string,
+  date: string,
+  uid: string,
+  avatar?: string
+): Promise<string> => {
   try {
     const [receiptImgFormId, receiptFormId, splitFormId] = await Promise.all([
       createReceiptImgForm(),
       createReceiptForm(),
-      createSplitForm()
+      createSplitForm(uid)
     ]);
+
     const id = uniqid();
     const expenseDocRef = db.collection('Expenses').doc(id);
 
-    //TODO: add owner user && respective userRole
+    //TODO: get userRoles
+    await createUserRole(uid, id);
 
     const expense: Expense = new Expense(
       name,
@@ -31,7 +43,8 @@ const createExpense = async (name: string, date: string, avatar?: string): Promi
       avatar,
       receiptImgFormId,
       receiptFormId,
-      splitFormId
+      splitFormId,
+      [uid]
     );
     expense.setId = id;
     await expenseDocRef.create({ ...expense });

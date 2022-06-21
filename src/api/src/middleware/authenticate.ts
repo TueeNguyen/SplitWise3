@@ -10,16 +10,18 @@ const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: N
     res.status(401);
     throw 'Missing or wrong authorization header, unauthorized!';
   }
+
   const [, token] = authorization.split('Bearer ');
-  console.log(token);
+
   if (token.length < 1) {
     res.status(401);
     throw 'Missing or wrong authorization header, unauthorized!';
   }
+
   try {
     const decodedToken = await auth.verifyIdToken(token);
     const currentUser = await getUserByUid(decodedToken.uid);
-    res.locals = { ...res.locals, currentUser };
+    res.locals = { ...res.locals, currentUser, uid: decodedToken.uid };
     next();
   } catch (err) {
     console.error(err);
