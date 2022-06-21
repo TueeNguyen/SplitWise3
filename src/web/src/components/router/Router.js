@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Home from '../../pages/home/Home';
 import Search from '../../pages/search/Search';
-import Expense from '../expenses/Expense';
+import Expense from '../expenses/expense/Expense';
+import LogIn from '../logIn/LogIn';
 import NavBar from '../navBar/NavBar';
 import Testing from '../testing/Testing';
 import UtilBar from '../utilBar/UtilBar';
@@ -12,6 +13,9 @@ const Router = () => {
     <BrowserRouter>
       <NavBar />
       <UtilBar />
+      <Route exact path="/login">
+        <LogIn />
+      </Route>
       <Route exact path="/expense/:id">
         <Expense />
       </Route>

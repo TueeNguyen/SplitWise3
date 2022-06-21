@@ -1,6 +1,6 @@
 import { Pagination } from '@mui/material';
 import React, { useState } from 'react';
-import ExpenseCard from './ExpenseCard';
+import ExpenseCard from './expense/ExpenseCard';
 import { makeStyles } from '@mui/styles';
 
 const testDatas = [
@@ -120,7 +120,7 @@ const useStyles = makeStyles({
   }
 });
 
-const ExpenseCards = () => {
+const Expenses = () => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState(testDatas.slice(page - 1, page * 10 - 1));
@@ -146,4 +146,4 @@ const ExpenseCards = () => {
     </div>
   );
 };
-export default ExpenseCards;
+export default Expenses;

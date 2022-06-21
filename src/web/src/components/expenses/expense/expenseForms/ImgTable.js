@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/system';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-import AddReceiptButton from '../../expenses/addReceiptImg/AddReceiptButton';
+import AddReceiptButton from '../addReceiptImg/AddReceiptButton';
 
 const useStyles = makeStyles({
   tableContainer: {
