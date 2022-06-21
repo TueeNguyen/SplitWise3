@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import ExpenseCards from '../../components/expenses/ExpenseCards';
+import Expenses from '../../components/expenses/Expenses';
 
 const useStyles = makeStyles({
   container: {
@@ -12,7 +12,7 @@ const Home = () => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <ExpenseCards />
+      <Expenses />
     </div>
   );
 };
