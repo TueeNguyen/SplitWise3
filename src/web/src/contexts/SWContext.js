@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
 export const SWContext = createContext({
-  loggedInUser: null,
+  loggedInUser: {},
   setLoggedInUser: () => {}
 });

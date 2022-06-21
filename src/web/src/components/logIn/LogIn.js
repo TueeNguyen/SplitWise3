@@ -3,6 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Form, Formik } from 'formik';
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { SWContext } from '../../contexts/SWContext';
 import { auth } from '../../firebase/firebase';
 
@@ -21,6 +22,7 @@ const useStyles = makeStyles({
 
 const LogIn = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { setLoggedInUser } = useContext(SWContext);
   const handleLogin = (values, setSubmitting) => {
     console.log(values);
@@ -28,7 +30,9 @@ const LogIn = () => {
     (async () => {
       try {
         const { user } = await signInWithEmailAndPassword(auth, values.email, values.password);
-        setLoggedInUser(user);
+        console.log(user);
+        setLoggedInUser({ accessToken: user.accessToken, uid: user.uid });
+        // history.push('/');
       } catch (err) {
         console.error(err);
       }
@@ -43,7 +47,7 @@ const LogIn = () => {
         {({ values, handleChange }) => (
           <Form>
             <Paper className={classes.logInPaper}>
-              <Typography>Login</Typography>
+              <Typography variant="h4">Login</Typography>
               <TextField
                 name="email"
                 value={values.email}
