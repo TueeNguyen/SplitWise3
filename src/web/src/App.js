@@ -1,16 +1,16 @@
 import './App.css';
 import Router from './components/router/Router';
-import { makeStyles } from '@mui/styles';
-import NavBar from './components/navBar/NavBar';
-import UtilBar from './components/utilBar/UtilBar';
 import { SWContext } from './contexts/SWContext';
 import { useEffect, useState } from 'react';
-import { auth } from './firebase/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import axiosInstance from './axios/axios';
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const value = { loggedInUser, setLoggedInUser };
-
+  useEffect(() => {
+    if (loggedInUser) {
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${loggedInUser.accessToken}`;
+    }
+  }, [loggedInUser]);
   return (
     <SWContext.Provider value={value}>
       <Router />
