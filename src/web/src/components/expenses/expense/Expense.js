@@ -6,7 +6,7 @@ import ImgTable from './expenseForms/ImgTable';
 import SplitTable from './expenseForms/SplitTable';
 import ReceiptTable from './expenseForms/ReceiptTable';
 import { Form, Formik, FieldArray, Field } from 'formik';
-import axios from 'axios';
+import axiosInstance from '../../../axios/axios';
 
 const useStyles = makeStyles({
   container: {
@@ -52,11 +52,12 @@ const Expense = () => {
   });
   useEffect(() => {
     (async () => {
-      const api_string = 'http://localhost:6060/api/expense/22ia7rlol4ly421b';
+      // our backend returns {data: jsonObject} so we need to destructure data once more
       const {
         data: { data }
-      } = await axios.get(api_string);
-      setExpense(data);
+      } = await axiosInstance.get('/expense/22ia7rlol4ly421b');
+      console.log(data);
+      // setExpense(data);
     })();
   }, []);
   useEffect(() => {
