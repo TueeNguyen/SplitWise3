@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
+import { SWContext } from '../../contexts/SWContext';
 import Home from '../../pages/home/Home';
 import Search from '../../pages/search/Search';
 import Expense from '../expenses/expense/Expense';
@@ -9,24 +10,29 @@ import Testing from '../testing/Testing';
 import UtilBar from '../utilBar/UtilBar';
 
 const Router = () => {
+  const { loggedInUser } = useContext(SWContext);
   return (
     <BrowserRouter>
-      <NavBar />
-      <UtilBar />
+      {loggedInUser ? (
+        <>
+          <NavBar />
+          <UtilBar />
+        </>
+      ) : null}
       <Route exact path="/login">
-        <LogIn />
+        {loggedInUser ? <Redirect to="/" /> : <LogIn />}
       </Route>
       <Route exact path="/expense/:id">
-        <Expense />
+        {loggedInUser ? <Expense /> : <Redirect to="/login" />}
       </Route>
       <Route exact path="/search">
-        <Search />
+        {loggedInUser ? <Search /> : <Redirect to="/login" />}
       </Route>
       <Route exact path="/testing">
-        <Testing />
+        {loggedInUser ? <Testing /> : <Redirect to="/login" />}
       </Route>
       <Route exact path="/">
-        <Home />
+        {loggedInUser ? <Home /> : <Redirect to="/login" />}
       </Route>
     </BrowserRouter>
   );
