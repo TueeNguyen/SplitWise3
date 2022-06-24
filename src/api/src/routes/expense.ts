@@ -1,36 +1,54 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import { createExpense, getExpenseById, updateExpense } from '../controllers/expense';
+import { Server } from 'socket.io';
+import { createExpense, getExpenseById, getExpenses, updateExpense } from '../controllers/expense';
 import { isAuthenticated } from '../middleware/authenticate';
+import { isAuthorized } from '../middleware/authorize';
 
 const router = express.Router();
 
-router.get('/:id', isAuthenticated, async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const expense = await getExpenseById(id);
-    return res.status(200).json({ data: expense });
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
-router.post('/create', isAuthenticated, async (req: Request, res: Response) => {
-  const { name, date, avatar } = req.body;
-  try {
-    const message = await createExpense(name, date, res.locals.uid, avatar);
-    return res.status(200).json({ message });
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
-router.put('/update', async (req: Request, res: Response) => {
-  const { id, expenseObj } = req.body;
-  try {
-    const message = await updateExpense(id, expenseObj);
-    return res.status(200).json({ message });
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
-});
+function ExpenseRouter(io: Server) {
+  router.get('/:id', isAuthenticated, isAuthorized, async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      const expense = await getExpenseById(id);
+      return res.status(200).json({ data: expense });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
 
-export { router };
+  router.get('/', isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const expenses = await getExpenses(res.locals.uid);
+      return res.status(200).json({ data: expenses });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
+
+  router.post('/create', isAuthenticated, async (req: Request, res: Response) => {
+    const { name, date, avatar } = req.body;
+    try {
+      const message = await createExpense(name, date, res.locals.uid, avatar);
+      io.emit(process.env.EXPENSE_CREATED || 'EXPENSE_CREATED');
+      return res.status(200).json({ message });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
+
+  router.put('/update', async (req: Request, res: Response) => {
+    const { id, expenseObj } = req.body;
+    try {
+      const message = await updateExpense(id, expenseObj);
+      return res.status(200).json({ message });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
+
+  return router;
+}
+
+export default ExpenseRouter;

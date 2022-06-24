@@ -1,8 +1,19 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
-import { createUser, updateUser } from '../controllers/user';
+import { createUser, getUserByUid, updateUser } from '../controllers/user';
+import { isAuthenticated } from '../middleware/authenticate';
 
 const router = express.Router();
+
+router.get('/:uid', isAuthenticated, async (req: Request, res: Response) => {
+  try {
+    const { uid } = req.params;
+    const user = await getUserByUid(uid);
+    return res.status(200).json({ data: user });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+});
 
 router.post('/create', async (req: Request, res: Response) => {
   const { username, email, password } = req.body;

@@ -28,4 +28,37 @@ const getUserRolesByExpenseId = async (expenseId: string) => {
   }
 };
 
-export { getUserRolesByExpenseId, createUserRole };
+const getUserRolesByUserId = async (userId: string) => {
+  try {
+    const userRolesSnapshot = await db
+      .collection('UserRoles')
+      .where('uid', '==', `${userId}`)
+      .get();
+    const userRoles: Array<UserRole> = [];
+    userRolesSnapshot.forEach((docSnapshot) => userRoles.push(docSnapshot.data() as UserRole));
+    return userRoles;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const isUserInExpense = async (userId: string, expenseId: string): Promise<boolean> => {
+  try {
+    const userRoleSnapshot = await db
+      .collection('UserRoles')
+      .where('uid', '==', `${userId}`)
+      .where('expenseId', '==', `${expenseId}`)
+      .get();
+
+    if (userRoleSnapshot.empty) {
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export { getUserRolesByExpenseId, createUserRole, getUserRolesByUserId, isUserInExpense };

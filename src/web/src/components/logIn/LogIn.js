@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Form, Formik } from 'formik';
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import axiosInstance from '../../axios/axios';
 import { SWContext } from '../../contexts/SWContext';
 import { auth } from '../../firebase/firebase';
 
@@ -30,8 +31,14 @@ const LogIn = () => {
     (async () => {
       try {
         const { user } = await signInWithEmailAndPassword(auth, values.email, values.password);
-        console.log(user);
-        setLoggedInUser({ accessToken: user.accessToken, uid: user.uid });
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
+        const {
+          data: { data }
+        } = await axiosInstance.get(`/user/${user.uid}`);
+        console.log(data);
+        localStorage.setItem('SW_accessToken', user.accessToken);
+        localStorage.setItem('SW_uid', user.uid);
+        setLoggedInUser(data);
         // history.push('/');
       } catch (err) {
         console.error(err);

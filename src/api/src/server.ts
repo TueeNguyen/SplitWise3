@@ -1,10 +1,12 @@
-import express, { Express } from 'express';
+import express from 'express';
 import { router as userRouter } from './routes/user';
-import { router as expenseRouter } from './routes/expense';
+import ExpenseRouter from './routes/expense';
 import { Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+require('dotenv').config();
+
 // initializing
 const app = express();
 const server = require('http').createServer(app);
@@ -18,6 +20,8 @@ const io = new Server(server, {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
+
+const expenseRouter = ExpenseRouter(io);
 
 app.use('/api/user', userRouter);
 app.use('/api/expense', expenseRouter);

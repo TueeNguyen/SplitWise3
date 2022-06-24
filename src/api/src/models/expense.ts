@@ -50,8 +50,8 @@ export class Expense implements IExpense {
     receiptFormId?: string,
     splitFormId?: string,
     userIds?: Array<string>,
-    total?: number,
-    password?: string
+    password?: string,
+    total?: number
   ) {
     this.avatar = avatar || '';
     this.name = name || '';
@@ -101,8 +101,8 @@ export class Expense implements IExpense {
       receiptFormId,
       splitFormId,
       userIds,
-      total,
-      password
+      password,
+      total
     );
   }
 }

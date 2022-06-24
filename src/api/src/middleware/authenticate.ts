@@ -23,8 +23,12 @@ const isAuthenticated = asyncHandler(async (req: Request, res: Response, next: N
     const currentUser = await getUserByUid(decodedToken.uid);
     res.locals = { ...res.locals, currentUser, uid: decodedToken.uid };
     next();
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
+    if (err.code === 'auth/id-token-expired') {
+      res.status(401);
+      throw 'Token expires';
+    }
     throw err;
   }
 });

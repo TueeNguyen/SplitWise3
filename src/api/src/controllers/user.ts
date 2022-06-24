@@ -1,6 +1,5 @@
 import { db, auth } from '../db/firebase';
 import { DocumentReference, DocumentSnapshot, FieldPath } from 'firebase-admin/firestore';
-DocumentReference;
 import { User } from '../models/user';
 import { getExpenseById } from './expense';
 import { Expense } from '../models/expense';

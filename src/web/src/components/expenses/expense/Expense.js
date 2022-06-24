@@ -7,7 +7,7 @@ import SplitTable from './expenseForms/SplitTable';
 import ReceiptTable from './expenseForms/ReceiptTable';
 import { Form, Formik, FieldArray, Field } from 'formik';
 import axiosInstance from '../../../axios/axios';
-
+import { useParams } from 'react-router-dom';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
@@ -29,6 +29,7 @@ const useStyles = makeStyles({
 });
 
 const Expense = () => {
+  const { id } = useParams();
   const classes = useStyles();
   const [expense, setExpense] = useState({});
   const [initialValues, setInitialValues] = useState({
@@ -50,16 +51,18 @@ const Expense = () => {
     id: '',
     password: ''
   });
+
   useEffect(() => {
     (async () => {
       // our backend returns {data: jsonObject} so we need to destructure data once more
       const {
         data: { data }
-      } = await axiosInstance.get('/expense/22ia7rlol4ly421b');
+      } = await axiosInstance.get(`/expense/${id}`);
       console.log(data);
       // setExpense(data);
     })();
-  }, []);
+  }, [id]);
+
   useEffect(() => {
     if (Object.keys(expense).length > 0) {
       const tempExpense = {

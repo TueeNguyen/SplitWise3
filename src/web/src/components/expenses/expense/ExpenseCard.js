@@ -28,21 +28,21 @@ const StyledExpenseCard = styled(Card)(({ theme }) => ({
   }
 }));
 
-const ExpenseCard = (data) => {
+const ExpenseCard = ({ data }) => {
   const history = useHistory();
   return (
-    <StyledExpenseCard onClick={() => history.push('/expense/1')}>
+    <StyledExpenseCard onClick={() => history.push(`/expense/${data.id}`)}>
       <CardMedia
         component="img"
         sx={{ objectFit: 'cover' }}
         height="70%"
-        image={data.data.img}
+        src={data.avatar}
         alt="Expense Img"
       />
       <Divider />
       <CardContent sx={{ textAlign: 'left', fontFamily: 'Roboto' }}>
-        <Typography variant="h5">{data.data.name}</Typography>
-        {data.data.date}
+        <Typography variant="h5">{data.name}</Typography>
+        {data.date}
       </CardContent>
     </StyledExpenseCard>
   );

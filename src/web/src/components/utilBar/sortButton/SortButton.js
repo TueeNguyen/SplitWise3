@@ -25,7 +25,7 @@ const SortButton = () => {
   const id = open ? 'menu-poper' : undefined;
   return (
     <div className={classes.sortButton}>
-      <Tooltip title="Sort" placement="right">
+      <Tooltip title="Sort" placement="bottom-start">
         <IconButton aria-describedby={id} type="button" onClick={handleClick}>
           <SortIcon />
         </IconButton>
