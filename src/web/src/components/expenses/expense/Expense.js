@@ -6,6 +6,7 @@ import ImgTable from './expenseForms/ImgTable';
 import SplitTable from './expenseForms/SplitTable';
 import ReceiptTable from './expenseForms/ReceiptTable';
 import { Form, Formik, FieldArray, Field } from 'formik';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import axiosInstance from '../../../axios/axios';
 import { useParams } from 'react-router-dom';
 const useStyles = makeStyles({
@@ -15,13 +16,15 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: '1em'
   },
+  bottomButtonsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1em',
+    justifyContent: 'space-between',
+    margin: '40px'
+  },
   expenseForm: {
     width: '100vw'
-  },
-  resetBtn: {
-    display: 'flex',
-    alignSelf: 'end',
-    margin: '0px 40px 20px 0px'
   },
   imgTable: {
     width: 'calc(100vw - 100px)'
@@ -114,18 +117,35 @@ const Expense = () => {
                     return <SplitTable {...props} />;
                   }}
                 </FieldArray>
-                <div className={classes.container}>
+
+                <div className={classes.bottomButtonsContainer}>
                   <Button
                     type="button"
                     startIcon={<RestartAltIcon fontSize="large" />}
                     variant="contained"
                     color="error"
-                    className={classes.resetBtn}
+                    id="resetBtn"
                     onClick={() => {
-                      resetForm();
+                      const reset = window.confirm('Do you want to reset the form?');
+                      if (reset) {
+                        resetForm();
+                      }
                     }}
                   >
                     Reset
+                  </Button>
+                  <Button
+                    type="button"
+                    startIcon={<SyncAltIcon fontSize="large" />}
+                    variant="contained"
+                    color="success"
+                    id="updateBtn"
+                    onClick={() => {
+                      // axios.put('/expense/:id')
+                      // io.on('formUpdated', call axios.get('expense/:id'))
+                    }}
+                  >
+                    Update
                   </Button>
                 </div>
               </Form>
