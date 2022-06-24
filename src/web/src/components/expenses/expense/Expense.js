@@ -32,26 +32,26 @@ const Expense = () => {
   const { id } = useParams();
   const classes = useStyles();
   const [expense, setExpense] = useState({});
-  const [initialValues, setInitialValues] = useState({
-    userRoles: [],
-    userIds: [],
-    users: [],
+  const [initialValues, setInitialValues] = useState(null);
+  // {
+  //   userRoles: [],
+  //   userIds: [],
+  //   users: [],
 
-    receiptImgFormId: '',
-    receiptFormId: '',
-    splitFormId: '',
-    receiptImgForm: [],
-    receiptForm: [],
-    splitForm: [],
-    total: 0,
+  //   receiptImgFormId: '',
+  //   receiptFormId: '',
+  //   splitFormId: '',
+  //   receiptImgForm: [],
+  //   receiptForm: [],
+  //   splitForm: [],
+  //   total: 0,
 
-    avatar: '',
-    name: '',
-    date: '',
-    id: '',
-    password: ''
-  });
-
+  //   avatar: '',
+  //   name: '',
+  //   date: '',
+  //   id: '',
+  //   password: ''
+  // }
   useEffect(() => {
     (async () => {
       // our backend returns {data: jsonObject} so we need to destructure data once more
@@ -59,7 +59,7 @@ const Expense = () => {
         data: { data }
       } = await axiosInstance.get(`/expense/${id}`);
       console.log(data);
-      // setExpense(data);
+      setExpense(data);
     })();
   }, [id]);
 
@@ -79,9 +79,9 @@ const Expense = () => {
   }, [initialValues]);
   return (
     <>
-      {Object.keys(expense).length > 0 ? (
+      {initialValues ? (
         <div className={classes.container}>
-          <Formik initialValues={initialValues}>
+          <Formik initialValues={initialValues} enableReinitialize>
             {({ values, resetForm, handleChange, setFieldValue }) => (
               <Form className={classes.expenseForm}>
                 <Field name="receiptImgForm">

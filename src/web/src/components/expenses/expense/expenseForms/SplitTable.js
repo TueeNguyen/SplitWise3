@@ -154,7 +154,18 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
     });
     setFieldValue('splitForm', newSplitForm);
   };
-
+  const renderUserTableCell = (uid) => {
+    const user = values.users.find((elem) => elem.userId === uid);
+    return (
+      <TableCell className={classes.user}>
+        <div className={classes.userInfo}>
+          <Avatar src={user.avatar} />
+          <span className={classes.name}>{user.username}</span>
+        </div>
+      </TableCell>
+    );
+  };
+  console.log(values.splitForm);
   return (
     <div className={classes.tableWrapper}>
       <TableContainer className={classes.tableContainer} component={Paper}>
@@ -170,12 +181,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
           <TableBody>
             {values.splitForm.map((data, index) => (
               <TableRow>
-                <TableCell className={classes.user}>
-                  <div className={classes.userInfo}>
-                    <Avatar src="https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d" />
-                    <span className={classes.name}> Tue</span>
-                  </div>
-                </TableCell>
+                {renderUserTableCell()}
                 <TableCell className={classes.owned}>
                   <TextField
                     value={values.splitForm[index].owned}
