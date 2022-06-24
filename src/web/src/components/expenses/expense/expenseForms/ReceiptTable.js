@@ -60,7 +60,7 @@ const ReceiptTable = ({ values, push, remove, handleChange, setFieldValue }) => 
   const classes = useStyles();
 
   const getNewTotal = (targetValue, index) =>
-    values.receipt.reduce((prev, curr, i) => {
+    values.receiptForm.reduce((prev, curr, i) => {
       if (i === index) {
         return prev + targetValue;
       }

@@ -92,7 +92,7 @@ const Expense = () => {
                   )}
                 </Field>
 
-                <FieldArray name="receipt">
+                <FieldArray name="receiptForm">
                   {({ push, remove }) => {
                     const props = {
                       values,
