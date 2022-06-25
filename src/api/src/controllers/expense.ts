@@ -3,14 +3,22 @@ import { Expense } from '../models/expense';
 import uniqid from 'uniqid';
 import { getUsers } from './user';
 import { createUserRole, getUserRolesByExpenseId, getUserRolesByUserId } from './userRole';
-import { createSplitForm, getSplitForm, updateSplitForm } from './splitForm';
+import { addNewUserToSplitForm, createSplitForm, getSplitForm, updateSplitForm } from './splitForm';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
 import { createReceiptForm, getReceiptForm, updateReceiptForm } from './receiptForm';
 import { ReceiptFormElem } from '../models/receiptForm';
 import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from './receiptImgForm';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
-import { DocumentReference, DocumentSnapshot, FieldPath } from 'firebase-admin/firestore';
-import { encryptPassword } from './password';
+import {
+  DocumentReference,
+  DocumentSnapshot,
+  FieldPath,
+  FieldValue
+} from 'firebase-admin/firestore';
+import { comparePassword, encryptPassword } from './password';
+
+const getExpenseRef = (id: string) => db.collection('Expenses').doc(id);
+
 /**
  * - Add res.locals.uid to userIds
  * - Add a record to UserRoles document
@@ -36,10 +44,11 @@ const createExpense = async (
     const expenseDocRef = db.collection('Expenses').doc(id);
 
     const password = uniqid.time();
+    console.log(`Password: ${password}`);
     const hashedPassword = await encryptPassword(password);
 
     //TODO: get userRoles
-    await createUserRole(uid, id);
+    await createUserRole(uid, id, 'Owner');
 
     const expense: Expense = new Expense(
       name,
@@ -66,6 +75,7 @@ const createExpense = async (
  */
 const getExpenseById = async (id: string): Promise<Expense> => {
   try {
+    console.log(id);
     const expenseDocRef = db.collection('Expenses').doc(id);
     const expenseDocSnap = await expenseDocRef.get();
 
@@ -138,6 +148,30 @@ const getExpenses = async (uid: string): Promise<Array<any>> => {
   }
 };
 
+const addUserToExpense = async (
+  uid: string,
+  expenseId: string,
+  password: string
+): Promise<void> => {
+  try {
+    const expense = await getExpenseById(expenseId);
+    if (expense.userIds.findIndex((userId) => uid === userId) > 0) {
+      throw 'Already in expense';
+    }
+    const passwordMatched = comparePassword(password, expense.password);
+    if (!passwordMatched) {
+      throw 'Wrong password';
+    }
+    const expenseRef = getExpenseRef(expenseId);
+    await expenseRef.update('userIds', FieldValue.arrayUnion(uid));
+    await createUserRole(uid, expenseId, 'Member');
+    await addNewUserToSplitForm(uid, expense.splitFormId);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const deleteExpense = async () => {
   // delete User roles
   // delete all forms
@@ -145,4 +179,4 @@ const deleteExpense = async () => {
   // socket emit deleted expense
 };
 
-export { getExpenseById, createExpense, updateExpense, getExpenses };
+export { getExpenseById, createExpense, updateExpense, getExpenses, addUserToExpense };

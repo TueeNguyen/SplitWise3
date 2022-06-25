@@ -1,5 +1,5 @@
 import { makeStyles } from '@mui/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ImgTable from './expenseForms/ImgTable';
@@ -9,6 +9,9 @@ import { Form, Formik, FieldArray, Field } from 'formik';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import axiosInstance from '../../../axios/axios';
 import { useParams } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
+import { SWContext } from '../../../contexts/SWContext';
+
 const useStyles = makeStyles({
   container: {
     display: 'flex',
@@ -36,6 +39,7 @@ const Expense = () => {
   const classes = useStyles();
   const [expense, setExpense] = useState({});
   const [initialValues, setInitialValues] = useState(null);
+  const { socket, toLogIn } = useContext(SWContext);
   // {
   //   userRoles: [],
   //   userIds: [],
@@ -56,30 +60,71 @@ const Expense = () => {
   //   password: ''
   // }
   useEffect(() => {
+    socket.once('USER_JOINED', (socketData) => {
+      if (socketData.expenseId === id) {
+        const { uid } = socketData;
+        (async () => {
+          try {
+            const {
+              data: { data }
+            } = await axiosInstance.get(`/expense/${id}`);
+
+            const newExpense = {
+              ...expense,
+              splitForm: {
+                data: [
+                  ...expense.splitForm.data,
+                  data.splitForm.data.find((elem) => elem.userId === uid)
+                ]
+              },
+              userIds: [...expense.userIds, uid],
+              userRoles: [...expense.userRoles, data.userRoles.find((elem) => elem.uid === uid)],
+              users: [...expense.users, data.users.find((elem) => elem.uid === uid)]
+            };
+            setExpense(newExpense);
+          } catch (err) {
+            if (err.response.status === 401) {
+              toLogIn();
+            }
+            console.error(err);
+          }
+        })();
+      }
+    });
+    return () => {
+      socket.off('USER_JOINED');
+    };
+  }, [expense]);
+
+  useEffect(() => {
     (async () => {
       // our backend returns {data: jsonObject} so we need to destructure data once more
-      const {
-        data: { data }
-      } = await axiosInstance.get(`/expense/${id}`);
-      console.log(data);
-      setExpense(data);
+      try {
+        const {
+          data: { data }
+        } = await axiosInstance.get(`/expense/${id}`);
+        setExpense(data);
+      } catch (err) {
+        if (err.response.status === 401) {
+          toLogIn();
+        }
+        console.error(err);
+      }
     })();
   }, [id]);
 
   useEffect(() => {
     if (Object.keys(expense).length > 0) {
-      const tempExpense = {
+      const restructuredExpense = {
         ...expense,
         receiptForm: expense.receiptForm.data,
         receiptImgForm: expense.receiptImgForm.data,
         splitForm: expense.splitForm.data
       };
-      setInitialValues(tempExpense);
+      setInitialValues(restructuredExpense);
     }
   }, [expense]);
-  useEffect(() => {
-    console.log(initialValues);
-  }, [initialValues]);
+
   return (
     <>
       {initialValues ? (

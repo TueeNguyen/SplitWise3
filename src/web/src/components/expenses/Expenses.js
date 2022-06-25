@@ -1,9 +1,10 @@
 import { Pagination } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ExpenseCard from './expense/ExpenseCard';
 import { makeStyles } from '@mui/styles';
 import axiosInstance from '../../axios/axios';
 import socketIOClient from 'socket.io-client';
+import { SWContext } from '../../contexts/SWContext';
 
 const useStyles = makeStyles({
   expenseContainer: {
@@ -20,19 +21,29 @@ const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState(expenses.slice(page - 1, page * 10 - 1));
-
-  const socket = socketIOClient('ws://localhost:6060');
-  socket.on('EXPENSE_CREATED', () => {
-    (async () => {
-      const {
-        data: { data }
-      } = await axiosInstance.get('/expense/');
-      setExpenses(data);
-    })();
-  });
+  const { socket, toLogIn } = useContext(SWContext);
+  useEffect(() => {
+    socket.on('EXPENSE_CREATED', () => {
+      (async () => {
+        try {
+          const {
+            data: { data }
+          } = await axiosInstance.get('/expense/');
+          setExpenses(data);
+        } catch (err) {
+          if (err.response.status === 401) {
+            toLogIn();
+          }
+          console.error(err);
+        }
+      })();
+    });
+    return () => {
+      socket.off('EXPENSE_CREATED');
+    };
+  }, []);
 
   const handleChange = (event, value) => {
-    console.log(value);
     setPage(value);
     setPaginatedData(expenses.slice((value - 1) * 10, value * 10 - 1));
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -46,6 +57,9 @@ const Expenses = () => {
         } = await axiosInstance.get('/expense/');
         setExpenses(data);
       } catch (err) {
+        if (err.response.status === 401) {
+          toLogIn();
+        }
         console.error(err);
       }
     })();

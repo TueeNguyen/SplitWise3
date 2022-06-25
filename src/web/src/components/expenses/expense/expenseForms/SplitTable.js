@@ -52,7 +52,6 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
     const splitForm = changedSplitForm ? changedSplitForm : values.splitForm;
 
     return splitForm.reduce((prev, curr, i) => {
-      console.log(prev);
       if (curr.fixed) {
         if (i === index) {
           return prev + targetValue;
@@ -128,7 +127,6 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       return;
     }
     const fixedSum = getFixedSum(targetValue, index);
-    console.log({ fixedSum });
     if (fixedSum > values.total) {
       // TODO: "Fixed owned amount can't not exceed total - sum of fixed owned amount"
       console.log('fixedSum > values.total');
@@ -155,7 +153,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
     setFieldValue('splitForm', newSplitForm);
   };
   const renderUserTableCell = (uid) => {
-    const user = values.users.find((elem) => elem.userId === uid);
+    const user = values.users.find((elem) => elem.uid === uid);
     return (
       <TableCell className={classes.user}>
         <div className={classes.userInfo}>
@@ -165,7 +163,6 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
       </TableCell>
     );
   };
-  console.log(values.splitForm);
   return (
     <div className={classes.tableWrapper}>
       <TableContainer className={classes.tableContainer} component={Paper}>
@@ -181,7 +178,7 @@ const SplitTable = ({ values, handleChange, setFieldValue }) => {
           <TableBody>
             {values.splitForm.map((data, index) => (
               <TableRow>
-                {renderUserTableCell()}
+                {renderUserTableCell(data.userId)}
                 <TableCell className={classes.owned}>
                   <TextField
                     value={values.splitForm[index].owned}
