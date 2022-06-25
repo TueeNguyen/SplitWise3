@@ -51,6 +51,7 @@ export class Expense implements IExpense {
     splitFormId?: string,
     userIds?: Array<string>,
     password?: string,
+    id?: string,
     total?: number
   ) {
     this.avatar =
@@ -93,9 +94,10 @@ export class Expense implements IExpense {
       splitFormId,
       userIds,
       total,
-      password
+      password,
+      id
     } = expenseObj;
-    return new Expense(
+    const expense = new Expense(
       name,
       date,
       avatar,
@@ -106,5 +108,7 @@ export class Expense implements IExpense {
       password,
       total
     );
+    expense.setId = id;
+    return expense;
   }
 }
