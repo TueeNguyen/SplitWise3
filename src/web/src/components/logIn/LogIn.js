@@ -26,7 +26,6 @@ const LogIn = () => {
   const history = useHistory();
   const { setLoggedInUser } = useContext(SWContext);
   const handleLogin = (values, setSubmitting) => {
-    console.log(values);
     setSubmitting(false);
     (async () => {
       try {
@@ -35,7 +34,6 @@ const LogIn = () => {
         const {
           data: { data }
         } = await axiosInstance.get(`/user/${user.uid}`);
-        console.log(data);
         localStorage.setItem('SW_accessToken', user.accessToken);
         localStorage.setItem('SW_uid', user.uid);
         setLoggedInUser(data);

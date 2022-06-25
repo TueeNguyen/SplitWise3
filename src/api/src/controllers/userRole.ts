@@ -1,11 +1,12 @@
 import { db } from '../db/firebase';
 import { UserRole } from '../models/userRole';
 import uniqid from 'uniqid';
-const createUserRole = async (uid: string, expenseId: string) => {
+
+const createUserRole = async (uid: string, expenseId: string, role: string) => {
   try {
     const id = uniqid();
     const userRoleDocRef = db.collection('UserRoles').doc(id);
-    const userRole = new UserRole(id, uid, 'Owner', expenseId);
+    const userRole = new UserRole(id, uid, `${role}`, expenseId);
     await userRoleDocRef.create({ ...userRole });
   } catch (err) {
     console.error(err);

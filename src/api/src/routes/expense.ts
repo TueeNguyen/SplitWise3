@@ -1,13 +1,32 @@
 import express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import { Server } from 'socket.io';
-import { createExpense, getExpenseById, getExpenses, updateExpense } from '../controllers/expense';
+import {
+  addUserToExpense,
+  createExpense,
+  getExpenseById,
+  getExpenses,
+  updateExpense
+} from '../controllers/expense';
 import { isAuthenticated } from '../middleware/authenticate';
 import { isAuthorized } from '../middleware/authorize';
 
 const router = express.Router();
 
 function ExpenseRouter(io: Server) {
+  router.put('/join/:id', isAuthenticated, async (req: Request, res: Response) => {
+    const { id: expenseId } = req.params;
+    const { password } = req.body;
+    const { uid } = res.locals;
+    try {
+      await addUserToExpense(uid, expenseId, password);
+      io.emit('USER_JOINED', { uid, expenseId });
+      return res.status(200).json({ message: `Added user ${uid} to expense ${expenseId}` });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
+
   router.get('/:id', isAuthenticated, isAuthorized, async (req: Request, res: Response) => {
     const { id } = req.params;
     try {

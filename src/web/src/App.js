@@ -3,10 +3,31 @@ import Router from './components/router/Router';
 import { SWContext } from './contexts/SWContext';
 import { useEffect, useState } from 'react';
 import axiosInstance from './axios/axios';
+import socketIOClient from 'socket.io-client';
 const App = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [appBlurring, setAppBlurring] = useState(false);
+  const [joinExpenseForm, setJoinExpenseForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const value = { loggedInUser, setLoggedInUser };
+
+  const socket = socketIOClient('ws://localhost:6060');
+
+  const toLogIn = () => {
+    setAppBlurring(false);
+    setJoinExpenseForm(false);
+    setLoggedInUser(false);
+  };
+
+  const providerValue = {
+    loggedInUser,
+    setLoggedInUser,
+    appBlurring,
+    setAppBlurring,
+    joinExpenseForm,
+    setJoinExpenseForm,
+    socket,
+    toLogIn
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('SW_accessToken');
@@ -22,13 +43,18 @@ const App = () => {
             setLoggedInUser(res.data.data);
           }
         } catch (err) {
+          if (err.response.status === 401) {
+            toLogIn();
+          }
           console.error(err.response);
         }
         setLoading(true);
       })();
     }
   }, []);
-  return <SWContext.Provider value={value}>{loading ? <Router /> : null}</SWContext.Provider>;
+  return (
+    <SWContext.Provider value={providerValue}>{loading ? <Router /> : null}</SWContext.Provider>
+  );
 };
 
 export default App;

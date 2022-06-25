@@ -1,6 +1,7 @@
 import { db } from '../db/firebase';
 import uniqid from 'uniqid';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const getSplitFormRef = (id: string) => db.collection('SplitForms').doc(id);
 
@@ -27,6 +28,18 @@ const updateSplitForm = async (id: string, splitFormElems: Array<SplitFormElem>)
     throw err;
   }
 };
+
+const addNewUserToSplitForm = async (uid: string, splitFormId: string) => {
+  try {
+    const splitFormElem = new SplitFormElem(uid, true);
+    await getSplitFormRef(splitFormId).update('data', FieldValue.arrayUnion({ ...splitFormElem }));
+    console.log(`Added ${uid} to SplitForm ${splitFormId}`);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const getSplitForm = async (id: string): Promise<SplitForm> => {
   try {
     const splitForm = (await (await getSplitFormRef(id).get()).data()) as SplitForm;
@@ -38,4 +51,4 @@ const getSplitForm = async (id: string): Promise<SplitForm> => {
 };
 const deleteSplitForm = async () => {};
 
-export { createSplitForm, getSplitForm, updateSplitForm };
+export { createSplitForm, getSplitForm, updateSplitForm, addNewUserToSplitForm };

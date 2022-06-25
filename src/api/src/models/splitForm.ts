@@ -10,14 +10,14 @@ export class SplitFormElem implements ISplitFormElem {
   fixed: Boolean;
   note: string;
 
-  constructor(userId: string, owned?: Number, fixed?: Boolean, note?: string) {
+  constructor(userId: string, fixed?: Boolean, owned?: Number, note?: string) {
     this.userId = userId || '';
     this.owned = owned || 0;
     this.fixed = fixed || false;
     this.note = note || '';
   }
   static createSplitFormElemArray(array: Array<any>): Array<SplitFormElem> {
-    return array.map((elem) => new SplitFormElem(elem.userId, elem.owned, elem.fixed, elem.note));
+    return array.map((elem) => new SplitFormElem(elem.userId, elem.fixed, elem.owned, elem.note));
   }
 }
 
