@@ -6,10 +6,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { makeStyles } from '@mui/styles';
 import { useHistory, useLocation } from 'react-router-dom';
 import SearchBar from './searchBar/SearchBar';
-import UserButton from './userButton/UserButton';
 import axiosInstance from '../../axios/axios';
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { SWContext } from '../../contexts/SWContext';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -27,7 +28,8 @@ const UtilBar = () => {
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();
-  const { setAppBlurring, setJoinExpenseForm, toLogIn } = useContext(SWContext);
+  const { setAppBlurring, setJoinExpenseForm, toLogIn, setShowExpenseSetting } =
+    useContext(SWContext);
   const createExpense = async () => {
     try {
       await axiosInstance.post('/expense/create', {
@@ -46,7 +48,16 @@ const UtilBar = () => {
   const renderSearch = () => <SearchBar />;
   const renderExpense = () => (
     <>
-      <UserButton />
+      <Tooltip title="Show expense setting" placement="bottom-start">
+        <IconButton
+          type="button"
+          onClick={() => {
+            setShowExpenseSetting(true);
+          }}
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Tooltip>
 
       <Tooltip title="Search" placement="bottom-start">
         <IconButton onClick={() => history.push('/search')}>

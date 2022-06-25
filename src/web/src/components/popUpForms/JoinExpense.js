@@ -6,6 +6,7 @@ import { SWContext } from '../../contexts/SWContext';
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from 'yup';
 import axiosInstance from '../../axios/axios';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   joinExpenseContainer: {
@@ -47,6 +48,7 @@ const useStyles = makeStyles({
 
 const JoinExpense = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { setAppBlurring, setJoinExpenseForm, toLogIn } = useContext(SWContext);
 
   const validationSchema = Yup.object().shape({
@@ -59,7 +61,7 @@ const JoinExpense = () => {
     password: ''
   };
 
-  const onClosePopup = () => {
+  const closePopup = () => {
     setAppBlurring(false);
     setJoinExpenseForm(false);
   };
@@ -67,11 +69,11 @@ const JoinExpense = () => {
   const handleSubmit = async (values, setSubmitting) => {
     setSubmitting(false);
     try {
-      const res = await axiosInstance.put(`/expense/join/${values.id.replace(/\s/g, '')}`, {
+      await axiosInstance.put(`/expense/join/${values.id.replace(/\s/g, '')}`, {
         password: values.password.replace(/\s/g, '')
       });
-      console.log(res);
-      // redirect to the group
+      closePopup();
+      history.push(`/expense/${values.id}`);
     } catch (err) {
       if (err.response.status === 401) {
         toLogIn();
@@ -112,7 +114,7 @@ const JoinExpense = () => {
             </Form>
           )}
         </Formik>
-        <IconButton className={classes.closeBtn} onClick={onClosePopup}>
+        <IconButton className={classes.closeBtn} onClick={closePopup}>
           <CloseIcon />
         </IconButton>
       </div>

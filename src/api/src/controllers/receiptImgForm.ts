@@ -32,7 +32,6 @@ const updateReceiptImgForm = async (
 const getReceiptImgForm = async (id: string): Promise<ReceiptImgForm> => {
   try {
     const receiptImgForm = (await (await getReceiptImgFormRef(id).get()).data()) as ReceiptImgForm;
-    console.log(receiptImgForm);
     return receiptImgForm;
   } catch (err) {
     console.error(err);

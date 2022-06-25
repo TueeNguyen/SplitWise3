@@ -8,7 +8,6 @@ import Expense from '../expenses/expense/Expense';
 import LogIn from '../logIn/LogIn';
 import NavBar from '../navBar/NavBar';
 import JoinExpense from '../popUpForms/JoinExpense';
-import Testing from '../testing/Testing';
 import UtilBar from '../utilBar/UtilBar';
 
 const Router = () => {
@@ -42,9 +41,6 @@ const Router = () => {
           </Route>
           <Route exact path="/search">
             {loggedInUser ? <Search /> : <Redirect to="/login" />}
-          </Route>
-          <Route exact path="/testing">
-            {loggedInUser ? <Testing /> : <Redirect to="/login" />}
           </Route>
           <Route exact path="/">
             {loggedInUser ? <Home /> : <Redirect to="/login" />}

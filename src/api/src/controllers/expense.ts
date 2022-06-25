@@ -9,13 +9,7 @@ import { createReceiptForm, getReceiptForm, updateReceiptForm } from './receiptF
 import { ReceiptFormElem } from '../models/receiptForm';
 import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from './receiptImgForm';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
-import {
-  DocumentReference,
-  DocumentSnapshot,
-  FieldPath,
-  FieldValue
-} from 'firebase-admin/firestore';
-import { comparePassword, encryptPassword } from './password';
+import { FieldPath, FieldValue } from 'firebase-admin/firestore';
 
 const getExpenseRef = (id: string) => db.collection('Expenses').doc(id);
 
@@ -44,8 +38,6 @@ const createExpense = async (
     const expenseDocRef = db.collection('Expenses').doc(id);
 
     const password = uniqid.time();
-    console.log(`Password: ${password}`);
-    const hashedPassword = await encryptPassword(password);
 
     //TODO: get userRoles
     await createUserRole(uid, id, 'Owner');
@@ -58,7 +50,7 @@ const createExpense = async (
       receiptFormId,
       splitFormId,
       [uid],
-      hashedPassword
+      password
     );
     expense.setId = id;
     await expenseDocRef.create({ ...expense });
@@ -75,7 +67,6 @@ const createExpense = async (
  */
 const getExpenseById = async (id: string): Promise<Expense> => {
   try {
-    console.log(id);
     const expenseDocRef = db.collection('Expenses').doc(id);
     const expenseDocSnap = await expenseDocRef.get();
 
@@ -91,7 +82,6 @@ const getExpenseById = async (id: string): Promise<Expense> => {
       expense.setReceiptImgForm = await getReceiptImgForm(expense.receiptImgFormId);
       expense.setReceiptForm = await getReceiptForm(expense.receiptFormId);
       expense.setSplitForm = await getSplitForm(expense.splitFormId);
-      console.log(expense);
       return expense;
     } else {
       console.error(`Expense ${id} not found`);
@@ -132,7 +122,6 @@ const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
 const getExpenses = async (uid: string): Promise<Array<any>> => {
   try {
     const userRoles = await getUserRolesByUserId(uid);
-    console.log(userRoles);
     const expenseIds = userRoles.map((data) => data.expenseId);
     const expenseSnapshot = await db
       .collection('Expenses')
@@ -140,7 +129,6 @@ const getExpenses = async (uid: string): Promise<Array<any>> => {
       .get();
     const expenses: any = [];
     expenseSnapshot.forEach((snapshot) => expenses.push(snapshot.data()));
-    console.log(expenses);
     return expenses;
   } catch (err) {
     console.error(err);
@@ -158,8 +146,7 @@ const addUserToExpense = async (
     if (expense.userIds.findIndex((userId) => uid === userId) > 0) {
       throw 'Already in expense';
     }
-    const passwordMatched = comparePassword(password, expense.password);
-    if (!passwordMatched) {
+    if (!(password === expense.password)) {
       throw 'Wrong password';
     }
     const expenseRef = getExpenseRef(expenseId);

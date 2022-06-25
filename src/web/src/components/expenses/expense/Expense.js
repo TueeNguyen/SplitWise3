@@ -11,6 +11,7 @@ import axiosInstance from '../../../axios/axios';
 import { useParams } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import { SWContext } from '../../../contexts/SWContext';
+import ExpenseSettingSideBar from './ExpenseSettingSideBar';
 
 const useStyles = makeStyles({
   container: {
@@ -128,75 +129,78 @@ const Expense = () => {
   return (
     <>
       {initialValues ? (
-        <div className={classes.container}>
-          <Formik initialValues={initialValues} enableReinitialize>
-            {({ values, resetForm, handleChange, setFieldValue }) => (
-              <Form className={classes.expenseForm}>
-                <Field name="receiptImgForm">
-                  {({ form: { values, handleChange } }) => (
-                    <div className={classes.imgTable}>
-                      <ImgTable />
-                    </div>
-                  )}
-                </Field>
+        <>
+          <div className={classes.container}>
+            <Formik initialValues={initialValues} enableReinitialize>
+              {({ values, resetForm, handleChange, setFieldValue }) => (
+                <Form className={classes.expenseForm}>
+                  <Field name="receiptImgForm">
+                    {({ form: { values, handleChange } }) => (
+                      <div className={classes.imgTable}>
+                        <ImgTable />
+                      </div>
+                    )}
+                  </Field>
 
-                <FieldArray name="receiptForm">
-                  {({ push, remove }) => {
-                    const props = {
-                      values,
-                      push,
-                      remove,
-                      handleChange,
-                      setFieldValue
-                    };
-                    return <ReceiptTable {...props} />;
-                  }}
-                </FieldArray>
-                <FieldArray name="splitForm">
-                  {({ push, remove }) => {
-                    const props = {
-                      values,
-                      handleChange,
-                      setFieldValue
-                    };
-                    return <SplitTable {...props} />;
-                  }}
-                </FieldArray>
+                  <FieldArray name="receiptForm">
+                    {({ push, remove }) => {
+                      const props = {
+                        values,
+                        push,
+                        remove,
+                        handleChange,
+                        setFieldValue
+                      };
+                      return <ReceiptTable {...props} />;
+                    }}
+                  </FieldArray>
+                  <FieldArray name="splitForm">
+                    {({ push, remove }) => {
+                      const props = {
+                        values,
+                        handleChange,
+                        setFieldValue
+                      };
+                      return <SplitTable {...props} />;
+                    }}
+                  </FieldArray>
 
-                <div className={classes.bottomButtonsContainer}>
-                  <Button
-                    type="button"
-                    startIcon={<RestartAltIcon fontSize="large" />}
-                    variant="contained"
-                    color="error"
-                    id="resetBtn"
-                    onClick={() => {
-                      const reset = window.confirm('Do you want to reset the form?');
-                      if (reset) {
-                        resetForm();
-                      }
-                    }}
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    type="button"
-                    startIcon={<SyncAltIcon fontSize="large" />}
-                    variant="contained"
-                    color="success"
-                    id="updateBtn"
-                    onClick={() => {
-                      // axios.put('/expense/:id')
-                      // io.on('formUpdated', call axios.get('expense/:id'))
-                    }}
-                  >
-                    Update
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
+                  <div className={classes.bottomButtonsContainer}>
+                    <Button
+                      type="button"
+                      startIcon={<RestartAltIcon fontSize="large" />}
+                      variant="contained"
+                      color="error"
+                      id="resetBtn"
+                      onClick={() => {
+                        const reset = window.confirm('Do you want to reset the form?');
+                        if (reset) {
+                          resetForm();
+                        }
+                      }}
+                    >
+                      Reset
+                    </Button>
+                    <Button
+                      type="button"
+                      startIcon={<SyncAltIcon fontSize="large" />}
+                      variant="contained"
+                      color="success"
+                      id="updateBtn"
+                      onClick={() => {
+                        // axios.put('/expense/:id')
+                        // io.on('formUpdated', call axios.get('expense/:id'))
+                      }}
+                    >
+                      Update
+                    </Button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+          <ExpenseSettingSideBar expenseId={expense.id} password={expense.password} />
+        </>
       ) : null}
     </>
   );

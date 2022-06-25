@@ -9,7 +9,7 @@ const App = () => {
   const [appBlurring, setAppBlurring] = useState(false);
   const [joinExpenseForm, setJoinExpenseForm] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [showExpenseSetting, setShowExpenseSetting] = useState(false);
   const socket = socketIOClient('ws://localhost:6060');
 
   const toLogIn = () => {
@@ -26,7 +26,9 @@ const App = () => {
     joinExpenseForm,
     setJoinExpenseForm,
     socket,
-    toLogIn
+    toLogIn,
+    showExpenseSetting,
+    setShowExpenseSetting
   };
 
   useEffect(() => {
