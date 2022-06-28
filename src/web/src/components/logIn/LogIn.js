@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 
 const LogIn = () => {
   const classes = useStyles();
-  const history = useHistory();
   const { setLoggedInUser } = useContext(SWContext);
   const handleLogin = (values, setSubmitting) => {
     setSubmitting(false);
@@ -37,7 +36,6 @@ const LogIn = () => {
         localStorage.setItem('SW_accessToken', user.accessToken);
         localStorage.setItem('SW_uid', user.uid);
         setLoggedInUser(data);
-        // history.push('/');
       } catch (err) {
         console.error(err);
       }
