@@ -60,41 +60,40 @@ const Expense = () => {
   //   id: '',
   //   password: ''
   // }
-  useEffect(() => {
-    socket.once('USER_JOINED', (socketData) => {
-      if (socketData.expenseId === id) {
-        const { uid } = socketData;
-        (async () => {
-          try {
-            const {
-              data: { data }
-            } = await axiosInstance.get(`/expense/${id}`);
+  const userJoinedHandler = (socketData) => {
+    if (socketData.expenseId === id) {
+      const { uid } = socketData;
+      (async () => {
+        try {
+          const {
+            data: { data }
+          } = await axiosInstance.get(`/expense/${id}`);
 
-            const newExpense = {
-              ...expense,
-              splitForm: {
-                data: [
-                  ...expense.splitForm.data,
-                  data.splitForm.data.find((elem) => elem.userId === uid)
-                ]
-              },
-              userIds: [...expense.userIds, uid],
-              userRoles: [...expense.userRoles, data.userRoles.find((elem) => elem.uid === uid)],
-              users: [...expense.users, data.users.find((elem) => elem.uid === uid)]
-            };
-            setExpense(newExpense);
-          } catch (err) {
-            if (err.response.status === 401) {
-              toLogIn();
-            }
-            console.error(err);
+          const newExpense = {
+            ...expense,
+            splitForm: {
+              data: [
+                ...expense.splitForm.data,
+                data.splitForm.data.find((elem) => elem.userId === uid)
+              ]
+            },
+            userIds: [...expense.userIds, uid],
+            userRoles: [...expense.userRoles, data.userRoles.find((elem) => elem.uid === uid)],
+            users: [...expense.users, data.users.find((elem) => elem.uid === uid)]
+          };
+          setExpense(newExpense);
+        } catch (err) {
+          if (err.response.status === 401) {
+            toLogIn();
           }
-        })();
-      }
-    });
-    return () => {
-      socket.off('USER_JOINED');
-    };
+          console.error(err);
+        }
+      })();
+    }
+  };
+  useEffect(() => {
+    socket.once('USER_JOINED', userJoinedHandler);
+    return socket.off('USER_JOINED', userJoinedHandler);
   }, [expense]);
 
   useEffect(() => {
