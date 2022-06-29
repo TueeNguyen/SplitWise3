@@ -1,4 +1,4 @@
-import { db } from '../db/firebase';
+import { db } from '../firebase/firebase';
 import uniqid from 'uniqid';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 

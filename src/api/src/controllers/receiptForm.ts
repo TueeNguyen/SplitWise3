@@ -1,5 +1,5 @@
 import uniqid from 'uniqid';
-import { db } from '../db/firebase';
+import { db } from '../firebase/firebase';
 import { ReceiptForm, ReceiptFormElem } from '../models/receiptForm';
 
 const getReceiptFormRef = (id: string) => db.collection('ReceiptForms').doc(id);

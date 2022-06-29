@@ -5,7 +5,9 @@ import { getStorage } from 'firebase-admin/storage';
 import firebaseConfig from './serviceAccount.json';
 import { credential, ServiceAccount } from 'firebase-admin';
 
-const app = initializeApp({ credential: credential.cert(firebaseConfig as ServiceAccount) });
+const app = initializeApp({
+  credential: credential.cert(firebaseConfig as ServiceAccount)
+});
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);

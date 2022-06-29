@@ -1,4 +1,4 @@
-import { db } from '../db/firebase';
+import { db } from '../firebase/firebase';
 import { UserRole } from '../models/userRole';
 import uniqid from 'uniqid';
 

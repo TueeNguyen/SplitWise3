@@ -61,6 +61,7 @@ const Expense = () => {
   //   password: ''
   // }
   const userJoinedHandler = (socketData) => {
+    console.log('hello');
     if (socketData.expenseId === id) {
       const { uid } = socketData;
       (async () => {
@@ -92,7 +93,7 @@ const Expense = () => {
     }
   };
   useEffect(() => {
-    socket.once('USER_JOINED', userJoinedHandler);
+    socket.once('USER_JOINED', (socketData) => userJoinedHandler(socketData));
     return socket.off('USER_JOINED', userJoinedHandler);
   }, [expense]);
 
