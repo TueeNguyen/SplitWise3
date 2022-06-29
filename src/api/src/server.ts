@@ -1,7 +1,8 @@
 import express from 'express';
 import { router as userRouter } from './routes/user';
+import { router as utilsRouter } from './routes/utils';
 import ExpenseRouter from './routes/expense';
-import { Server } from 'socket.io';
+import { Server as SocketServer } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -10,7 +11,8 @@ require('dotenv').config();
 // initializing
 const app = express();
 const server = require('http').createServer(app);
-const io = new Server(server, {
+const io = new SocketServer(server, {
+  path: '/socket.io',
   cors: {
     origin: '*'
   }
@@ -25,6 +27,7 @@ const expenseRouter = ExpenseRouter(io);
 
 app.use('/api/user', userRouter);
 app.use('/api/expense', expenseRouter);
+app.use('/api/utils', utilsRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error('not found');

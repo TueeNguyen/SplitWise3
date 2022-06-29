@@ -10,14 +10,17 @@ const App = () => {
   const [joinExpenseForm, setJoinExpenseForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showExpenseSetting, setShowExpenseSetting] = useState(false);
-  const socket = socketIOClient('ws://localhost:6060');
 
+  // const socket = socketIOClient('http://localhost:6060');
+  const socket = socketIOClient({ path: '/socket.io' });
+
+  socket.on('error', (err) => console.log(err));
+  socket.on('connect', () => console.log('connected'));
   const toLogIn = () => {
     setAppBlurring(false);
     setJoinExpenseForm(false);
     setLoggedInUser(false);
   };
-
   const providerValue = {
     loggedInUser,
     setLoggedInUser,
