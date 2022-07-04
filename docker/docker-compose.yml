@@ -1,11 +1,12 @@
 version: '3.4'
 services:
   nginx:
-    image: nginx:stable-alpine
+    container_name: 'sw-nginx'
+    build:
+      dockerfile: Dockerfile
+      context: ../nginx
     ports:
-      - 3000:80
-    volumes:
-      - ../config/nginx.conf:/etc/nginx/conf.d/default.conf
+      - 80:80
     depends_on:
       - api
       - web
@@ -13,14 +14,12 @@ services:
 
   web:
     container_name: 'web'
-    build: ../src/web
-    volumes:
-      - ../src/web/src:/app/src
+    build:
+      dockerfile: Dockerfile
+      context: '../src/web'
 
   api:
     container_name: 'api'
-    build: ../src/api
-    volumes:
-      - ../src/api/src:/app/src
-    ports:
-      - 6060:6060
+    build:
+      dockerfile: Dockerfile
+      context: '../src/api'
