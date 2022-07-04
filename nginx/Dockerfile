@@ -1,3 +1,10 @@
-FROM nginx:1.13 as chat-app-nginx-build
-WORKDIR /etc/nginx/conf.d/
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+FROM nginx
+
+EXPOSE 80
+
+RUN rm /usr/share/nginx/html/*
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Start nginx in the foreground to play nicely with Docker.
+CMD ["nginx", "-g", "daemon off;"]
