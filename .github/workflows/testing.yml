@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  testing: 
+  my_job: 
     name: test if arg is passed
     runs-on: ubuntu-latest
     steps:
