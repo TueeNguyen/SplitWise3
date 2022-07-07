@@ -9,7 +9,7 @@ on:
 
 jobs:
   my_job:
-    name: test if arg is passed
+    name: doing test if arg is passed
     runs-on: ubuntu-latest
     steps:
       shell: bash
