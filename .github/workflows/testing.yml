@@ -8,13 +8,11 @@ on:
       - master
 
 jobs:
-  my_job: 
+  my_job:
     name: test if arg is passed
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-      - env: 
+      shell: bash
+      env:
         TYPE: ${{ secrects.TYPE }}
-      run: 
-        bash ../../scripts/test.sh "$TYPE"
-        
+      run: bash ../../scripts/test.sh "$TYPE"
