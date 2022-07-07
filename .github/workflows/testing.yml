@@ -1,0 +1,20 @@
+name: Testing
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  testing: 
+    name: test if arg is passed
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+      - env: 
+        TYPE: ${{ secrects.TYPE }}
+      run: 
+        bash ../../scripts/test.sh "$TYPE"
+        
