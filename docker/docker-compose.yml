@@ -2,6 +2,7 @@ version: '3.4'
 services:
   nginx:
     container_name: 'nginx'
+    image: 'sw-nginx'
     build:
       dockerfile: Dockerfile
       context: ../nginx
@@ -14,12 +15,14 @@ services:
 
   web:
     container_name: 'web'
+    image: 'sw-web'
     build:
       dockerfile: Dockerfile
       context: '../src/web'
 
   api:
     container_name: 'api'
+    image: 'sw-api'
     build:
       dockerfile: Dockerfile
       context: '../src/api'

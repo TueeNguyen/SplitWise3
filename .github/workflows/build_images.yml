@@ -1,0 +1,54 @@
+name: Build images using docker-compose
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-images:
+    name: build images using docker-compose
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write 2 config files
+        uses: actions/checkout@v2
+        env:
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
+          WEB_PROJECT_ID: ${{ secrets.WEB_PROJECT_ID }}
+          WEB_STORAGE_BUCKET: ${{ secrets.WEB_STORAGE_BUCKET }}
+          WEB_MESSAGING_SENDER_ID: ${{ secrets.WEB_MESSAGING_SENDER_ID }}
+          WEB_APP_ID: ${{ secrets.WEB_APP_ID }}
+          WEB_MEASUREMENT_ID: ${{ secrets.WEB_MEASUREMENT_ID }}
+
+          ADMIN_TYPE: ${{ secrets.ADMIN_TYPE }}
+          ADMIN_PROJECT_ID: ${{ secrets.ADMIN_PROJECT_ID }}
+          ADMIN_PRIVATE_KEY_ID: ${{ secrets.ADMIN_PRIVATE_KEY_ID }}
+          ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
+          ADMIN_CLIENT_EMAIL: ${{ secrets.ADMIN_CLIENT_EMAIL }}
+          ADMIN_CLIENT_ID: ${{ secrets.ADMIN_CLIENT_ID }}
+          ADMIN_AUTH_URI: ${{ secrets.ADMIN_AUTH_URI }}
+          ADMIN_TOKEN_URI: ${{ secrets.ADMIN_TOKEN_URI }}
+          ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
+          ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.ADMIN_CLIENT_X509_CERT_URL }}
+
+        shell: bash
+        run: >
+          bash ${GITHUB_WORKSPACE}/scripts/write_config_files.sh
+          $WEB_API_KEY
+          $WEB_AUTH_DOMAIN
+          $WEB_PROJECT_ID
+          $WEB_STORAGE_BUCKET
+          $WEB_MESSAGING_SENDER_ID
+          $WEB_APP_ID
+          $WEB_MEASUREMENT_ID     
+          $ADMIN_TYPE
+          $ADMIN_PROJECT_ID
+          $ADMIN_PRIVATE_KEY_ID
+          $ADMIN_PRIVATE_KEY
+          $ADMIN_CLIENT_EMAIL
+          $ADMIN_CLIENT_ID
+          $ADMIN_AUTH_URI
+          $ADMIN_TOKEN_URI
+          $ADMIN_AUTH_PROVIDER_X509_CERT_URL
+          $ADMIN_CLIENT_X509_CERT_URL
