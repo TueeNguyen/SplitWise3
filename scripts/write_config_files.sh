@@ -47,23 +47,27 @@ echo "};" >> $FIREBASE_WEB_CONFIG_FILE
 echo "" >> $FIREBASE_WEB_CONFIG_FILE
 echo "module.exports = { firebaseConfig };" >> $FIREBASE_WEB_CONFIG_FILE
 
+echo "Finished writing to $FIREBASE_WEB_CONFIG_FILE"
+
 # Write firebase admin api config file 
-if [ -f $FIREBASE_WEB_CONFIG_FILE ]; then
-   rm $FIREBASE_WEB_CONFIG_FILE
-   echo "$FIREBASE_WEB_CONFIG_FILE is removed"
+if [ -f $FIREBASE_ADMIND_CONFIG_FILE ]; then
+   rm $FIREBASE_ADMIND_CONFIG_FILE
+   echo "$FIREBASE_ADMIND_CONFIG_FILE is removed"
 fi
 
-touch $FIREBASE_WEB_CONFIG_FILE
-echo "Created $FIREBASE_WEB_CONFIG_FILE"
+touch $FIREBASE_ADMIND_CONFIG_FILE
+echo "Created $FIREBASE_ADMIND_CONFIG_FILE"
 
-echo "const firebaseConfig = {" >> $FIREBASE_WEB_CONFIG_FILE
-echo " apiKey: '$1'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " authDomain: '$2'," >> $FIREBASE_WEB_CONFIG_FILE 
-echo " projectIdL: '$3'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " storageBucket: '$4'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " messagingSender: '$5'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " appId: '$6'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " measurementId: '$7'," >> $FIREBASE_WEB_CONFIG_FILE
-echo "};" >> $FIREBASE_WEB_CONFIG_FILE
-echo "" >> $FIREBASE_WEB_CONFIG_FILE
-echo "module.exports = { firebaseConfig };" >> $FIREBASE_WEB_CONFIG_FILE
+echo "const firebaseConfig = {" >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " apiKey: '$1'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " authDomain: '$2'," >> $FIREBASE_ADMIND_CONFIG_FILE 
+echo " projectIdL: '$3'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " storageBucket: '$4'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " messagingSender: '$5'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " appId: '$6'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo " measurementId: '$7'," >> $FIREBASE_ADMIND_CONFIG_FILE
+echo "};" >> $FIREBASE_ADMIND_CONFIG_FILE
+echo "" >> $FIREBASE_ADMIND_CONFIG_FILE
+echo "module.exports = { firebaseConfig };" >> $FIREBASE_ADMIND_CONFIG_FILE
+
+echo "Finished writing to $FIREBASE_ADMIND_CONFIG_FILE"
