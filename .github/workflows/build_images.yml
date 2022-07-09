@@ -10,6 +10,7 @@ jobs:
     name: build images using docker-compose
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Write 2 config files
         env:
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
