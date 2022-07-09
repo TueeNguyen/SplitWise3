@@ -23,7 +23,7 @@
 ##                          client_x590_cert_url,
 ##                         }
 
-export FIREBASE_WEB_CONFIG_FILE=./src/web/src/firebase/fbconfig2.js
+export FIREBASE_WEB_CONFIG_FILE=./src/web/src/firebase/fbconfig.js
 export FIREBASE_ADMIND_CONFIG_FILE=./src/api/src/firebase/serviceAccount.js
 
 # Write firebase web config file
