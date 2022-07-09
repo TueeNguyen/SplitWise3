@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Write 2 config files
+      - name: Use scripts/write_config_files.sh to write 2 firebase config files
         env:
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
@@ -52,3 +52,6 @@ jobs:
           $ADMIN_TOKEN_URI
           $ADMIN_AUTH_PROVIDER_X509_CERT_URL
           $ADMIN_CLIENT_X509_CERT_URL
+
+      - name: Build using docker-compose
+        run: docker-compose -f docker/docker-compose.yml build
