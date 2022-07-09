@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Write 2 config files
-        uses: actions/checkout@v2
         env:
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
           WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
