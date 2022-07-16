@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "sw-nginx",
-      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/sw-nginx",
+      "image": "477532042259.dkr.ecr.us-east-1.amazonaws.com/sw-nginx:033f525eca2e1cd822f07aa3aa3e44bca92c695f",
       "hostname": "sw-nginx",
       "essential": true,
       "memory": 300,
@@ -17,14 +17,14 @@
     },
     {
       "name": "sw-api",
-      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/sw-api",
+      "image": "477532042259.dkr.ecr.us-east-1.amazonaws.com/sw-api:033f525eca2e1cd822f07aa3aa3e44bca92c695f",
       "hostname": "sw-api",
       "essential": true,
       "memory": 200
     },
     {
       "name": "sw-web",
-      "image": "{$AWS_ACCOUNT_ID}.dkr.ecr.{$AWS_DEFAULT_REGION}.amazonaws.com/sw-nginx",
+      "image": "477532042259.dkr.ecr.us-east-1.amazonaws.com/sw-web:033f525eca2e1cd822f07aa3aa3e44bca92c695f",
       "hostname": "sw-web",
       "essential": true,
       "memory": 200

@@ -1,13 +1,20 @@
 name: Build images using docker-compose
 
 on:
-  push:
-    branches:
-      - master
+  workflow_call:
+    inputs:
+      IMAGE_TAG:
+        description: 'Github sha passed from deploy_to_ECR workflow'
+        required: true
+        type: string
+    secrets:
+      PRIVATE_REGISTRY:
+        description: 'Private registry name passed from deploy_to_ECR workflow'
+        required: true
 
 jobs:
-  build-images:
-    name: build images using docker-compose
+  build-and-push:
+    name: Build, tag and push images to ECR
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -53,5 +60,16 @@ jobs:
           $ADMIN_AUTH_PROVIDER_X509_CERT_URL
           $ADMIN_CLIENT_X509_CERT_URL
 
-      - name: Build using docker-compose
-        run: docker-compose -f docker/docker-compose.yml build
+      - name: Build and run containers using docker-compose
+        run: |
+          docker-compose -f docker/docker-compose.yml up -d --build
+          docker ps -a
+
+      - name: Tag images
+        env:
+          PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+          IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
+        run: |
+          docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
+          docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
+          docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG

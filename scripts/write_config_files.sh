@@ -24,7 +24,7 @@
 ##                         }
 
 export FIREBASE_WEB_CONFIG_FILE=./src/web/src/firebase/fbconfig.js
-export FIREBASE_ADMIND_CONFIG_FILE=./src/api/src/firebase/serviceAccount.js
+export FIREBASE_ADMIN_CONFIG_FILE=./src/api/src/firebase/serviceAccount.js
 
 # Write firebase web config file
 if [ -f $FIREBASE_WEB_CONFIG_FILE ]; then
@@ -50,24 +50,24 @@ echo "module.exports = { firebaseConfig };" >> $FIREBASE_WEB_CONFIG_FILE
 echo "Finished writing to $FIREBASE_WEB_CONFIG_FILE"
 
 # Write firebase admin api config file 
-if [ -f $FIREBASE_ADMIND_CONFIG_FILE ]; then
-   rm $FIREBASE_ADMIND_CONFIG_FILE
-   echo "$FIREBASE_ADMIND_CONFIG_FILE is removed"
+if [ -f $FIREBASE_ADMIN_CONFIG_FILE ]; then
+   rm $FIREBASE_ADMIN_CONFIG_FILE
+   echo "$FIREBASE_ADMIN_CONFIG_FILE is removed"
 fi
 
-touch $FIREBASE_ADMIND_CONFIG_FILE
-echo "Created $FIREBASE_ADMIND_CONFIG_FILE"
+touch $FIREBASE_ADMIN_CONFIG_FILE
+echo "Created $FIREBASE_ADMIN_CONFIG_FILE"
 
-echo "const firebaseConfig = {" >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " apiKey: '$1'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " authDomain: '$2'," >> $FIREBASE_ADMIND_CONFIG_FILE 
-echo " projectIdL: '$3'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " storageBucket: '$4'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " messagingSender: '$5'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " appId: '$6'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo " measurementId: '$7'," >> $FIREBASE_ADMIND_CONFIG_FILE
-echo "};" >> $FIREBASE_ADMIND_CONFIG_FILE
-echo "" >> $FIREBASE_ADMIND_CONFIG_FILE
-echo "module.exports = { firebaseConfig };" >> $FIREBASE_ADMIND_CONFIG_FILE
+echo "const firebaseConfig = {" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " apiKey: '$1'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " authDomain: '$2'," >> $FIREBASE_ADMIN_CONFIG_FILE 
+echo " projectIdL: '$3'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " storageBucket: '$4'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " messagingSender: '$5'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " appId: '$6'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo " measurementId: '$7'," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "};" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "module.exports = { firebaseConfig };" >> $FIREBASE_ADMIN_CONFIG_FILE
 
-echo "Finished writing to $FIREBASE_ADMIND_CONFIG_FILE"
+echo "Finished writing to $FIREBASE_ADMIN_CONFIG_FILE"

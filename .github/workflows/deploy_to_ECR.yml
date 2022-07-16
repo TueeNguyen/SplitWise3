@@ -1,32 +1,112 @@
-# name: Deploy to AWS ECR
+name: Deploy to AWS ECR
 
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
-# jobs:
-#   build-images:
-#     name: Build images
-#     runs-on: ubuntu-latest
+jobs:
+  # build-run-and-tag-images:
+  #   name: Build, run, tag images
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-#     steps:
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.ACTIONS_AWS_SECRET_ACCESS_KEY }}
-#           aws-region: us-east-1
+  deploy:
+    name: Log in AWS ECR
+    runs-on: ubuntu-latest
+    # needs: build-and-tag-images
 
-#       - name: Login to Amazon ECR Private
-#         id: login-ecr
-#         uses: aws-actions/amazon-ecr-login@v1
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
 
-#       - name: Build, tag, and push docker image to Amazon ECR
-#         env:
-#           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-#           REPOSITORY: splitwise
-#           IMAGE_TAG: ${{ github.sha }}
-#         run: |
-#           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-#           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      - name: Use scripts/write_config_files.sh to write 2 firebase config files
+        env:
+          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
+          WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
+          WEB_PROJECT_ID: ${{ secrets.WEB_PROJECT_ID }}
+          WEB_STORAGE_BUCKET: ${{ secrets.WEB_STORAGE_BUCKET }}
+          WEB_MESSAGING_SENDER_ID: ${{ secrets.WEB_MESSAGING_SENDER_ID }}
+          WEB_APP_ID: ${{ secrets.WEB_APP_ID }}
+          WEB_MEASUREMENT_ID: ${{ secrets.WEB_MEASUREMENT_ID }}
+
+          ADMIN_TYPE: ${{ secrets.ADMIN_TYPE }}
+          ADMIN_PROJECT_ID: ${{ secrets.ADMIN_PROJECT_ID }}
+          ADMIN_PRIVATE_KEY_ID: ${{ secrets.ADMIN_PRIVATE_KEY_ID }}
+          ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
+          ADMIN_CLIENT_EMAIL: ${{ secrets.ADMIN_CLIENT_EMAIL }}
+          ADMIN_CLIENT_ID: ${{ secrets.ADMIN_CLIENT_ID }}
+          ADMIN_AUTH_URI: ${{ secrets.ADMIN_AUTH_URI }}
+          ADMIN_TOKEN_URI: ${{ secrets.ADMIN_TOKEN_URI }}
+          ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
+          ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.ADMIN_CLIENT_X509_CERT_URL }}
+
+        shell: bash
+        run: >
+          bash ${GITHUB_WORKSPACE}/scripts/write_config_files.sh
+          $WEB_API_KEY
+          $WEB_AUTH_DOMAIN
+          $WEB_PROJECT_ID
+          $WEB_STORAGE_BUCKET
+          $WEB_MESSAGING_SENDER_ID
+          $WEB_APP_ID
+          $WEB_MEASUREMENT_ID     
+          $ADMIN_TYPE
+          $ADMIN_PROJECT_ID
+          $ADMIN_PRIVATE_KEY_ID
+          $ADMIN_PRIVATE_KEY
+          $ADMIN_CLIENT_EMAIL
+          $ADMIN_CLIENT_ID
+          $ADMIN_AUTH_URI
+          $ADMIN_TOKEN_URI
+          $ADMIN_AUTH_PROVIDER_X509_CERT_URL
+          $ADMIN_CLIENT_X509_CERT_URL
+
+      - name: Build and run containers using docker-compose
+        run: |
+          docker-compose -f docker/docker-compose.yml up -d --build
+          docker ps -a
+
+      - name: Tag images
+        env:
+          PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
+          docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
+          docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG
+
+      - name: Check running containers
+        run: docker ps -a
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR Private
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push images to ECR
+        env:
+          REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker push $REGISTRY/sw-nginx:$IMAGE_TAG
+          docker push $REGISTRY/sw-web:$IMAGE_TAG
+          docker push $REGISTRY/sw-api:$IMAGE_TAG
+
+      - name: Destroy docker containers
+        run: docker-compose down
+
+  # build-and-push:
+  #   needs: log-in
+  #   name: Build and push images to ECR
+
+  #   with:
+  #     IMAGE_TAG: ${{ github.sha }}
+  #   secrets:
+  #     REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
