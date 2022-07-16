@@ -28,5 +28,6 @@ jobs:
 
     uses: TueeNguyen/SplitWise3/.github/workflows/build_and_push_images.yml@master
     with:
-      REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
       IMAGE_TAG: ${{ github.sha }}
+    secrets:
+      REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}

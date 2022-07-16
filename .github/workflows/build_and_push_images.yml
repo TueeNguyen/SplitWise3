@@ -3,13 +3,14 @@ name: Build images using docker-compose
 on:
   workflow_call:
     inputs:
-      REGISTRY:
-        description: 'Registry name passed from deploy_to_ECR workflow'
+      IMAGE_TAG:
+        description: 'Github sha passed from deploy_to_ECR workflow'
         default: ''
         required: true
         type: string
-      IMAGE_TAG:
-        description: 'Github sha passed from deploy_to_ECR workflow'
+    secrets:
+      REGISTRY:
+        description: 'Registry name passed from deploy_to_ECR workflow'
         default: ''
         required: true
         type: string
@@ -68,7 +69,7 @@ jobs:
 
       - name: Tag images
         env:
-          REGISTRY: ${{ inputs.REGISTRY }}
+          REGISTRY: ${{ secrets.REGISTRY }}
           REPOSITORY: splitwise
           IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
         run: |
