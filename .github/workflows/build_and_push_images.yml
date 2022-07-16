@@ -5,15 +5,11 @@ on:
     inputs:
       IMAGE_TAG:
         description: 'Github sha passed from deploy_to_ECR workflow'
-        default: ''
         required: true
-        type: string
     secrets:
       REGISTRY:
         description: 'Registry name passed from deploy_to_ECR workflow'
-        default: ''
         required: true
-        type: string
 
 jobs:
   build-and-push:
