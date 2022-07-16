@@ -1,5 +1,4 @@
-name: Deploy to AWS ECR
-
+name: Build and push
 on:
   push:
     branches:
@@ -11,8 +10,8 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
 
-  deploy:
-    name: Log in AWS ECR
+  build-and-push:
+    name: Build and push to dockerhub
     runs-on: ubuntu-latest
     # needs: build-and-tag-images
 
@@ -69,30 +68,25 @@ jobs:
 
       - name: Tag images
         env:
-          PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+          REGISTRY: tuedockerid1107
           IMAGE_TAG: latest
         run: |
-          docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
-          docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
-          docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG
+          docker tag sw-nginx:latest $REGISTRY/sw-nginx:$IMAGE_TAG
+          docker tag sw-web:latest $REGISTRY/sw-web:$IMAGE_TAG
+          docker tag sw-api:latest $REGISTRY/sw-api:$IMAGE_TAG
 
-      - name: Check running containers
-        run: docker ps -a
+      - name: Check images
+        run: docker images
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
         with:
-          aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
-          aws-region: us-east-1
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Login to Amazon ECR Private
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Push images to ECR
+      - name: Push images to Dockerhub
         env:
-          REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+          REGISTRY: tuedockerid1107
           IMAGE_TAG: latest
         run: |
           docker push $REGISTRY/sw-nginx:$IMAGE_TAG
