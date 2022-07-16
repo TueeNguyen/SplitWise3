@@ -43,7 +43,7 @@ jobs:
 
         shell: bash
         run: >
-          bash ${GITHUB_WORKSPACE}/scripts/write_config_files.sh
+          bash ./scripts/write_config_files.sh
           $WEB_API_KEY
           $WEB_AUTH_DOMAIN
           $WEB_PROJECT_ID
@@ -54,7 +54,7 @@ jobs:
           $ADMIN_TYPE
           $ADMIN_PROJECT_ID
           $ADMIN_PRIVATE_KEY_ID
-          $ADMIN_PRIVATE_KEY
+          "$ADMIN_PRIVATE_KEY"
           $ADMIN_CLIENT_EMAIL
           $ADMIN_CLIENT_ID
           $ADMIN_AUTH_URI
@@ -62,45 +62,51 @@ jobs:
           $ADMIN_AUTH_PROVIDER_X509_CERT_URL
           $ADMIN_CLIENT_X509_CERT_URL
 
-      - name: Build and run containers using docker-compose
+      - name: Cat files
+        shell: bash
         run: |
-          docker-compose -f docker/docker-compose.yml up -d --build
-          docker ps -a
+          cat ./src/web/src/firebase/fbconfig.js 
+          cat ./src/api/src/firebase/serviceAccount.json
 
-      - name: Tag images
-        env:
-          PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
-          docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
-          docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG
+      # - name: Build and run containers using docker-compose
+      #   run: |
+      #     docker-compose -f docker/docker-compose.yml up -d --build
+      #     docker ps -a
 
-      - name: Check running containers
-        run: docker ps -a
+      # - name: Tag images
+      #   env:
+      #     PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
+      #     docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
+      #     docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
-          aws-region: us-east-1
+      # - name: Check running containers
+      #   run: docker ps -a
 
-      - name: Login to Amazon ECR Private
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
+      #     aws-region: us-east-1
 
-      - name: Push images to ECR
-        env:
-          REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker push $REGISTRY/sw-nginx:$IMAGE_TAG
-          docker push $REGISTRY/sw-web:$IMAGE_TAG
-          docker push $REGISTRY/sw-api:$IMAGE_TAG
+      # - name: Login to Amazon ECR Private
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Destroy docker containers
-        run: docker-compose down
+      # - name: Push images to ECR
+      #   env:
+      #     REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     docker push $REGISTRY/sw-nginx:$IMAGE_TAG
+      #     docker push $REGISTRY/sw-web:$IMAGE_TAG
+      #     docker push $REGISTRY/sw-api:$IMAGE_TAG
+
+      # - name: Destroy docker containers
+      #   run: docker-compose down
 
   # build-and-push:
   #   needs: log-in

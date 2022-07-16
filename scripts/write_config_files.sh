@@ -24,7 +24,7 @@
 ##                         }
 
 export FIREBASE_WEB_CONFIG_FILE=./src/web/src/firebase/fbconfig.js
-export FIREBASE_ADMIN_CONFIG_FILE=./src/api/src/firebase/serviceAccount.js
+export FIREBASE_ADMIN_CONFIG_FILE=./src/api/src/firebase/serviceAccount.json
 
 # Write firebase web config file
 if [ -f $FIREBASE_WEB_CONFIG_FILE ]; then
@@ -36,13 +36,13 @@ touch $FIREBASE_WEB_CONFIG_FILE
 echo "Created $FIREBASE_WEB_CONFIG_FILE"
 
 echo "const firebaseConfig = {" >> $FIREBASE_WEB_CONFIG_FILE
-echo " apiKey: '$1'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " authDomain: '$2'," >> $FIREBASE_WEB_CONFIG_FILE 
-echo " projectIdL: '$3'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " storageBucket: '$4'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " messagingSender: '$5'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " appId: '$6'," >> $FIREBASE_WEB_CONFIG_FILE
-echo " measurementId: '$7'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " apiKey: '${1}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " authDomain: '${2}'," >> $FIREBASE_WEB_CONFIG_FILE 
+echo " projectIdL: '${3}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " storageBucket: '${4}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " messagingSender: '${5}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " appId: '${6}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " measurementId: '${7}'," >> $FIREBASE_WEB_CONFIG_FILE
 echo "};" >> $FIREBASE_WEB_CONFIG_FILE
 echo "" >> $FIREBASE_WEB_CONFIG_FILE
 echo "module.exports = { firebaseConfig };" >> $FIREBASE_WEB_CONFIG_FILE
@@ -58,16 +58,17 @@ fi
 touch $FIREBASE_ADMIN_CONFIG_FILE
 echo "Created $FIREBASE_ADMIN_CONFIG_FILE"
 
-echo "const firebaseConfig = {" >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " apiKey: '$1'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " authDomain: '$2'," >> $FIREBASE_ADMIN_CONFIG_FILE 
-echo " projectIdL: '$3'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " storageBucket: '$4'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " messagingSender: '$5'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " appId: '$6'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo " measurementId: '$7'," >> $FIREBASE_ADMIN_CONFIG_FILE
-echo "};" >> $FIREBASE_ADMIN_CONFIG_FILE
-echo "" >> $FIREBASE_ADMIN_CONFIG_FILE
-echo "module.exports = { firebaseConfig };" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "{" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"type\": \"${8}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"project_id\": \"${9}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"private_key_id\": \"${10}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"private_key\": \"${11}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"client_email\": \"${12}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"client_id\": \"${13}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"auth_uri\": \"${14}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"token_uri\": \"${15}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"auth_provider_x509_cert_url\": \"${16}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "  \"client_x509_cert_url\": \"${17}\"" >> $FIREBASE_ADMIN_CONFIG_FILE
+echo "}" >> $FIREBASE_ADMIN_CONFIG_FILE
 
-echo "Finished writing to $FIREBASE_ADMIN_CONFIG_FILE"
+
