@@ -1,13 +1,22 @@
 name: Build images using docker-compose
 
 on:
-  push:
-    branches:
-      - master
+  workflow_call:
+    inputs:
+      REGISTRY:
+        description: 'Registry name passed from deploy_to_ECR workflow'
+        default: ''
+        required: true
+        type: string
+      IMAGE_TAG:
+        description: 'Github sha passed from deploy_to_ECR workflow'
+        default: ''
+        required: true
+        type: string
 
 jobs:
-  build-images:
-    name: build images using docker-compose
+  build-and-push:
+    name: Build, tag and push images to ECR
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -54,4 +63,19 @@ jobs:
           $ADMIN_CLIENT_X509_CERT_URL
 
       - name: Build using docker-compose
-        run: docker-compose -f docker/docker-compose.yml build
+        run: |
+          docker-compose -f docker/docker-compose.yml build
+
+      - name: Tag images
+        env:
+          REGISTRY: ${{ inputs.REGISTRY }}
+          REPOSITORY: splitwise
+          IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
+        run: |
+          docker tag sw-nginx:latest $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker tag sw-web:latest $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          docker tag sw-api:latest $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
+      - name: Push images to ECR
+        run: |
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
