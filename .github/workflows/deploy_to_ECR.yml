@@ -64,13 +64,13 @@ jobs:
 
       - name: Build and run containers using docker-compose
         run: |
-          docker-compose -f docker/docker-compose.yml up -d --build
-          docker ps -a
+          docker-compose -f ./docker/docker-compose.yml build
+          docker images
 
       - name: Tag images
         env:
           PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: latest
         run: |
           docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
           docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
@@ -93,7 +93,7 @@ jobs:
       - name: Push images to ECR
         env:
           REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: latest
         run: |
           docker push $REGISTRY/sw-nginx:$IMAGE_TAG
           docker push $REGISTRY/sw-web:$IMAGE_TAG
