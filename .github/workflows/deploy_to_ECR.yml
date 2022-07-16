@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build-images:
-    name: Build images
+  log-in:
+    name: Log in AWS ECR
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,13 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push images
+  build-and-push:
+    needs: log-in
+    name: Build and push images to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build and push images to ECR
         uses: TueeNguyen/SplitWise3/.github/workflows/build_and_push_images.yml@master
         with:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
