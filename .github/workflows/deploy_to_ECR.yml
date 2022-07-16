@@ -25,7 +25,6 @@ jobs:
   build-and-push:
     needs: log-in
     name: Build and push images to ECR
-    runs-on: ubuntu-latest
 
     uses: TueeNguyen/SplitWise3/.github/workflows/build_and_push_images.yml@master
     with:
