@@ -5,66 +5,22 @@ on:
       - master
 
 jobs:
+  build-and-push:
+    name: 'Build and push images to Dockerhub'
+    uses: TueeNguyen/SplitWise3/.github/workflows/prettier-ci.yml@master
   deploy:
-    name: Write secret files and deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out source code
+      - name: Checkout source code
         uses: actions/checkout@v2
-
-      - name: Use scripts/write_config_files.sh to write 2 firebase config files
-        env:
-          WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
-          WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
-          WEB_PROJECT_ID: ${{ secrets.WEB_PROJECT_ID }}
-          WEB_STORAGE_BUCKET: ${{ secrets.WEB_STORAGE_BUCKET }}
-          WEB_MESSAGING_SENDER_ID: ${{ secrets.WEB_MESSAGING_SENDER_ID }}
-          WEB_APP_ID: ${{ secrets.WEB_APP_ID }}
-          WEB_MEASUREMENT_ID: ${{ secrets.WEB_MEASUREMENT_ID }}
-
-          ADMIN_TYPE: ${{ secrets.ADMIN_TYPE }}
-          ADMIN_PROJECT_ID: ${{ secrets.ADMIN_PROJECT_ID }}
-          ADMIN_PRIVATE_KEY_ID: ${{ secrets.ADMIN_PRIVATE_KEY_ID }}
-          ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
-          ADMIN_CLIENT_EMAIL: ${{ secrets.ADMIN_CLIENT_EMAIL }}
-          ADMIN_CLIENT_ID: ${{ secrets.ADMIN_CLIENT_ID }}
-          ADMIN_AUTH_URI: ${{ secrets.ADMIN_AUTH_URI }}
-          ADMIN_TOKEN_URI: ${{ secrets.ADMIN_TOKEN_URI }}
-          ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
-          ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.ADMIN_CLIENT_X509_CERT_URL }}
-
-        shell: bash
-        run: >
-          bash ./scripts/write_config_files.sh
-          $WEB_API_KEY
-          $WEB_AUTH_DOMAIN
-          $WEB_PROJECT_ID
-          $WEB_STORAGE_BUCKET
-          $WEB_MESSAGING_SENDER_ID
-          $WEB_APP_ID
-          $WEB_MEASUREMENT_ID     
-          $ADMIN_TYPE
-          $ADMIN_PROJECT_ID
-          $ADMIN_PRIVATE_KEY_ID
-          "$ADMIN_PRIVATE_KEY"
-          $ADMIN_CLIENT_EMAIL
-          $ADMIN_CLIENT_ID
-          $ADMIN_AUTH_URI
-          $ADMIN_TOKEN_URI
-          $ADMIN_AUTH_PROVIDER_X509_CERT_URL
-          $ADMIN_CLIENT_X509_CERT_URL
-
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: SplitWise
-          environment_name: Splitwise3-env-4
-          version_label: ${{ github.sha }}
+          application_name: splitwise3
+          environment_name: Splitwise3-env
+          version_label: 12345
           region: us-east-1
-          deployment_package: deploy.zip
+          deployment_package: aws/docker-compose.yml
