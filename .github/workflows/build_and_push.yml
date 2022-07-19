@@ -2,7 +2,45 @@ name: Build and push docker images
 
 on:
   workflow_call:
-
+    secrets:
+      WEB_API_KEY:
+        required: true
+      WEB_AUTH_DOMAIN:
+        required: true
+      WEB_PROJECT_ID:
+        required: true
+      WEB_STORAGE_BUCKET:
+        required: true
+      WEB_MESSAGING_SENDER_ID:
+        required: true
+      WEB_APP_ID:
+        required: true
+      WEB_MEASUREMENT_ID:
+        required: true
+      ADMIN_TYPE:
+        required: true
+      ADMIN_PROJECT_ID:
+        required: true
+      ADMIN_PRIVATE_KEY_ID:
+        required: true
+      ADMIN_PRIVATE_KEY:
+        required: true
+      ADMIN_CLIENT_EMAIL:
+        required: true
+      ADMIN_CLIENT_ID:
+        required: true
+      ADMIN_AUTH_URI:
+        required: true
+      ADMIN_TOKEN_URI:
+        required: true
+      ADMIN_AUTH_PROVIDER_X509_CERT_URL:
+        required: true
+      ADMIN_CLIENT_X509_CERT_URL:
+        required: true
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
 jobs:
   build-and-push:
     name: Build, tag and push images to Dockerhub
@@ -59,11 +97,11 @@ jobs:
       - name: Tag images
         env:
           IMAGE_TAG: ${{ github.sha }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          REGISTRY: tuedockerid1107
         run: |
-          docker tag sw-nginx:latest $DOCKERHUB_USERNAME/sw-nginx:$IMAGE_TAG
-          docker tag sw-web:latest $DOCKERHUB_USERNAME/sw-web:$IMAGE_TAG
-          docker tag sw-api:latest $DOCKERHUB_USERNAME/sw-api:$IMAGE_TAG
+          docker tag sw-nginx:latest $REGISTRY/sw-nginx:$IMAGE_TAG
+          docker tag sw-web:latest $REGISTRY/sw-web:$IMAGE_TAG
+          docker tag sw-api:latest $REGISTRY/sw-api:$IMAGE_TAG
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -74,8 +112,8 @@ jobs:
       - name: Push images to DockerHub
         env:
           IMAGE_TAG: ${{ github.sha }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          REGISTRY: tuedockerid1107
         run: |
-          docker push $DOCKERHUB_USERNAME/sw-nginx:$IMAGE_TAG
-          docker push $DOCKERHUB_USERNAME/sw-web:$IMAGE_TAG
-          docker push $DOCKERHUB_USERNAME/sw-api:$IMAGE_TAG
+          docker push $REGISTRY/sw-nginx:$IMAGE_TAG
+          docker push $REGISTRY/sw-web:$IMAGE_TAG
+          docker push $REGISTRY/sw-api:$IMAGE_TAG
