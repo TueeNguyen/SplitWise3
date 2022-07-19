@@ -7,7 +7,7 @@ on:
 jobs:
   build-and-push:
     name: 'Build and push images to Dockerhub'
-    uses: TueeNguyen/SplitWise3/.github/workflows/prettier-ci.yml@master
+    uses: TueeNguyen/SplitWise3/.github/workflows/build_and_push.yml@master
   deploy:
     runs-on: ubuntu-latest
     steps:
