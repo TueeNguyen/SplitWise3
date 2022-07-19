@@ -1,20 +1,11 @@
-name: Build images using docker-compose
+name: Build and push docker images
 
 on:
   workflow_call:
-    inputs:
-      IMAGE_TAG:
-        description: 'Github sha passed from deploy_to_ECR workflow'
-        required: true
-        type: string
-    secrets:
-      PRIVATE_REGISTRY:
-        description: 'Private registry name passed from deploy_to_ECR workflow'
-        required: true
 
 jobs:
   build-and-push:
-    name: Build, tag and push images to ECR
+    name: Build, tag and push images to Dockerhub
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -62,14 +53,29 @@ jobs:
 
       - name: Build and run containers using docker-compose
         run: |
-          docker-compose -f docker/docker-compose.yml up -d --build
-          docker ps -a
+          docker-compose -f docker/docker-compose.yml -f docker/production.yml build
+          docker images
 
       - name: Tag images
         env:
-          PRIVATE_REGISTRY: ${{ secrets.PRIVATE_REGISTRY }}
-          IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
+          IMAGE_TAG: ${{ github.sha }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker tag sw-nginx:latest $PRIVATE_REGISTRY/sw-nginx:$IMAGE_TAG
-          docker tag sw-web:latest $PRIVATE_REGISTRY/sw-web:$IMAGE_TAG
-          docker tag sw-api:latest $PRIVATE_REGISTRY/sw-api:$IMAGE_TAG
+          docker tag sw-nginx:latest $DOCKERHUB_USERNAME/sw-nginx:$IMAGE_TAG
+          docker tag sw-web:latest $DOCKERHUB_USERNAME/sw-web:$IMAGE_TAG
+          docker tag sw-api:latest $DOCKERHUB_USERNAME/sw-api:$IMAGE_TAG
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push images to DockerHub
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          docker push $DOCKERHUB_USERNAME/sw-nginx:$IMAGE_TAG
+          docker push $DOCKERHUB_USERNAME/sw-web:$IMAGE_TAG
+          docker push $DOCKERHUB_USERNAME/sw-api:$IMAGE_TAG
