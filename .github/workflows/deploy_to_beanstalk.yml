@@ -36,6 +36,13 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Write new aws/docker-compose.yml
+        shell: bash
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          bash ${GITHUB_WORKSPACE}/scripts/write_aws_docker_compose.sh $SHA
+
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
