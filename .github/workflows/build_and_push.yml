@@ -69,6 +69,7 @@ jobs:
           ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.ADMIN_CLIENT_X509_CERT_URL }}
 
         shell: bash
+        # $ADMIN_PRIVATE_KEY in double quote "" because it's a long, white-spaced string
         run: >
           bash ${GITHUB_WORKSPACE}/scripts/write_config_files.sh
           $WEB_API_KEY
@@ -81,7 +82,7 @@ jobs:
           $ADMIN_TYPE
           $ADMIN_PROJECT_ID
           $ADMIN_PRIVATE_KEY_ID
-          $ADMIN_PRIVATE_KEY
+          "$ADMIN_PRIVATE_KEY"
           $ADMIN_CLIENT_EMAIL
           $ADMIN_CLIENT_ID
           $ADMIN_AUTH_URI
