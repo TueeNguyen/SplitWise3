@@ -38,7 +38,7 @@ echo "Created $FIREBASE_WEB_CONFIG_FILE"
 echo "const firebaseConfig = {" >> $FIREBASE_WEB_CONFIG_FILE
 echo " apiKey: '${1}'," >> $FIREBASE_WEB_CONFIG_FILE
 echo " authDomain: '${2}'," >> $FIREBASE_WEB_CONFIG_FILE 
-echo " projectIdL: '${3}'," >> $FIREBASE_WEB_CONFIG_FILE
+echo " projectId: '${3}'," >> $FIREBASE_WEB_CONFIG_FILE
 echo " storageBucket: '${4}'," >> $FIREBASE_WEB_CONFIG_FILE
 echo " messagingSender: '${5}'," >> $FIREBASE_WEB_CONFIG_FILE
 echo " appId: '${6}'," >> $FIREBASE_WEB_CONFIG_FILE
