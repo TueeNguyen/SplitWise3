@@ -4,7 +4,7 @@ file_content="version: '3.4'
 services:
   nginx:
     container_name: nginx
-    image: tuedockerid1107/sw-nginx:$1
+    image: 503112169699.dkr.ecr.us-east-1.amazonaws.com/sw-nginx:$1
     ports:
       - 80:80
     depends_on:
@@ -14,11 +14,13 @@ services:
 
   web:
     container_name: web
-    image: tuedockerid1107/sw-web:$1
+    image: 503112169699.dkr.ecr.us-east-1.amazonaws.com/sw-web:$1
+    restart: always
 
   api:
     container_name: api
-    image: tuedockerid1107/sw-api:$1
+    image: 503112169699.dkr.ecr.us-east-1.amazonaws.com/sw-api:$1
+    restart: always
 "
 
 echo "$file_content"

@@ -19,6 +19,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: '../src/web'
+    restart: always
 
   api:
     container_name: 'api'
@@ -26,3 +27,4 @@ services:
     build:
       dockerfile: Dockerfile
       context: '../src/api'
+    restart: always

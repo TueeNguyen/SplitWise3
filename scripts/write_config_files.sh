@@ -70,5 +70,3 @@ echo "  \"token_uri\": \"${15}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
 echo "  \"auth_provider_x509_cert_url\": \"${16}\"," >> $FIREBASE_ADMIN_CONFIG_FILE
 echo "  \"client_x509_cert_url\": \"${17}\"" >> $FIREBASE_ADMIN_CONFIG_FILE
 echo "}" >> $FIREBASE_ADMIN_CONFIG_FILE
-
-

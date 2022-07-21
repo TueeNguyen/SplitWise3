@@ -3,6 +3,10 @@ name: Build and push docker images
 on:
   workflow_call:
     secrets:
+      ACTIONS_AWS_ACCESS_KEY_ID:
+        required: true
+      ACTIONS_AWS_ACCESS_KEY:
+        required: true
       WEB_API_KEY:
         required: true
       WEB_AUTH_DOMAIN:
@@ -37,13 +41,9 @@ on:
         required: true
       ADMIN_CLIENT_X509_CERT_URL:
         required: true
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
 jobs:
   build-and-push:
-    name: Build, tag and push images to Dockerhub
+    name: Build, tag and push images to Amazon ECR
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -93,28 +93,33 @@ jobs:
       - name: Build and run containers using docker-compose
         run: |
           docker-compose -f docker/docker-compose.yml -f docker/production.yml build
-          docker images
 
-      - name: Tag images
+      - name: Tag ECR images
         env:
           IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: tuedockerid1107
+          REGISTRY: 503112169699.dkr.ecr.us-east-1.amazonaws.com
         run: |
           docker tag sw-nginx:latest $REGISTRY/sw-nginx:$IMAGE_TAG
           docker tag sw-web:latest $REGISTRY/sw-web:$IMAGE_TAG
           docker tag sw-api:latest $REGISTRY/sw-api:$IMAGE_TAG
+          docker images
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      - name: Push images to DockerHub
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push to Amazon ECR
         env:
           IMAGE_TAG: ${{ github.sha }}
-          REGISTRY: tuedockerid1107
+          REGISTRY: 503112169699.dkr.ecr.us-east-1.amazonaws.com
         run: |
           docker push $REGISTRY/sw-nginx:$IMAGE_TAG
-          docker push $REGISTRY/sw-web:$IMAGE_TAG
           docker push $REGISTRY/sw-api:$IMAGE_TAG
+          docker push $REGISTRY/sw-web:$IMAGE_TAG
