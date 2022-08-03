@@ -116,7 +116,7 @@ const JoinExpense = () => {
             </Form>
           )}
         </Formik>
-        <IconButton className={classes.closeBtn} onClick={setPopUpForm('')}>
+        <IconButton className={classes.closeBtn} onClick={() => setPopUpForm('')}>
           <CloseIcon />
         </IconButton>
       </div>
