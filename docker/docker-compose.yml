@@ -19,6 +19,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: '../src/web'
+    volumes:
+      - ../src/web/src:/app/src
     restart: always
 
   api:
