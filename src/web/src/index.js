@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material';
 import { ThemeProvider } from '@mui/styles';
-import theme from './styles/styles';
+import theme from './styles';
+import { AppProvider } from './providers';
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
       <React.StrictMode>
-        <App />
+        <AppProvider>
+          <App />
+        </AppProvider>
       </React.StrictMode>
     </ThemeProvider>
   </StyledEngineProvider>,
