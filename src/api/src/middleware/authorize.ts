@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { auth } from '../firebase/firebase';
+import { authAdmin } from '../firebase/firebase-admin';
 import asyncHandler from 'express-async-handler';
 import { getUserByUid } from '../controllers/user';
 import { getUserRolesByExpenseId, isUserInExpense } from '../controllers/userRole';

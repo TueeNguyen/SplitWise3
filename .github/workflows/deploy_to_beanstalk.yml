@@ -8,26 +8,6 @@ jobs:
   build-and-push:
     name: 'Build and push images to Dockerhub'
     uses: TueeNguyen/SplitWise3/.github/workflows/build_and_push.yml@master
-    secrets:
-      WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
-      WEB_AUTH_DOMAIN: ${{ secrets.WEB_AUTH_DOMAIN }}
-      WEB_PROJECT_ID: ${{ secrets.WEB_PROJECT_ID }}
-      WEB_STORAGE_BUCKET: ${{ secrets.WEB_STORAGE_BUCKET }}
-      WEB_MESSAGING_SENDER_ID: ${{ secrets.WEB_MESSAGING_SENDER_ID }}
-      WEB_APP_ID: ${{ secrets.WEB_APP_ID }}
-      WEB_MEASUREMENT_ID: ${{ secrets.WEB_MEASUREMENT_ID }}
-      ADMIN_TYPE: ${{ secrets.ADMIN_TYPE }}
-      ADMIN_PROJECT_ID: ${{ secrets.ADMIN_PROJECT_ID }}
-      ADMIN_PRIVATE_KEY_ID: ${{ secrets.ADMIN_PRIVATE_KEY_ID }}
-      ADMIN_PRIVATE_KEY: ${{ secrets.ADMIN_PRIVATE_KEY }}
-      ADMIN_CLIENT_EMAIL: ${{ secrets.ADMIN_CLIENT_EMAIL }}
-      ADMIN_CLIENT_ID: ${{ secrets.ADMIN_CLIENT_ID }}
-      ADMIN_AUTH_URI: ${{ secrets.ADMIN_AUTH_URI }}
-      ADMIN_TOKEN_URI: ${{ secrets.ADMIN_TOKEN_URI }}
-      ADMIN_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.ADMIN_AUTH_PROVIDER_X509_CERT_URL }}
-      ADMIN_CLIENT_X509_CERT_URL: ${{ secrets.ADMIN_CLIENT_X509_CERT_URL }}
-      ACTIONS_AWS_ACCESS_KEY_ID: ${{ secrets.ACTIONS_AWS_ACCESS_KEY_ID }}
-      ACTIONS_AWS_ACCESS_KEY: ${{ secrets.ACTIONS_AWS_ACCESS_KEY }}
 
   deploy:
     needs: build-and-push
@@ -41,7 +21,7 @@ jobs:
         env:
           SHA: ${{ github.sha }}
         run: |
-          bash ${GITHUB_WORKSPACE}/scripts/write_aws_docker_compose.sh $SHA
+          bash ./scripts/write_aws_docker_compose.sh $SHA
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
