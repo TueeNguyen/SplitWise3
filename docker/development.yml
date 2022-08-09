@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  web:
+    build:
+      args:
+        - REACT_APP_API_URL=http://localhost/api

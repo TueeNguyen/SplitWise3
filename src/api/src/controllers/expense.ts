@@ -1,4 +1,4 @@
-import { db } from '../firebase/firebase';
+import { dbAdmin } from '../firebase/firebase-admin';
 import { Expense } from '../models/expense';
 import uniqid from 'uniqid';
 import { getUsers } from './user';
@@ -11,7 +11,7 @@ import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from '.
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
 
-const getExpenseRef = (id: string) => db.collection('Expenses').doc(id);
+const getExpenseRef = (id: string) => dbAdmin.collection('Expenses').doc(id);
 
 /**
  * - Add res.locals.uid to userIds
@@ -35,7 +35,7 @@ const createExpense = async (
     ]);
 
     const id = uniqid();
-    const expenseDocRef = db.collection('Expenses').doc(id);
+    const expenseDocRef = dbAdmin.collection('Expenses').doc(id);
 
     const password = uniqid.time();
 
@@ -67,7 +67,7 @@ const createExpense = async (
  */
 const getExpenseById = async (id: string): Promise<Expense> => {
   try {
-    const expenseDocRef = db.collection('Expenses').doc(id);
+    const expenseDocRef = dbAdmin.collection('Expenses').doc(id);
     const expenseDocSnap = await expenseDocRef.get();
 
     if (expenseDocSnap.exists) {
@@ -109,7 +109,7 @@ const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
       ReceiptImgFormElem.createReceiptImgFormElemArray(expenseObj.receiptImgForm)
     );
 
-    // const expenseDocRef = db.collection('Expenses').doc(id);
+    // const expenseDocRef = dbAdmin.collection('Expenses').doc(id);
     // const expense = Expense.create(expenseObj);
     // await expenseDocRef.update({ ...expense });
     return 'Updated expense';
@@ -123,7 +123,7 @@ const getExpenses = async (uid: string): Promise<Array<any>> => {
   try {
     const userRoles = await getUserRolesByUserId(uid);
     const expenseIds = userRoles.map((data) => data.expenseId);
-    const expenseSnapshot = await db
+    const expenseSnapshot = await dbAdmin
       .collection('Expenses')
       .where(FieldPath.documentId(), 'in', expenseIds)
       .get();

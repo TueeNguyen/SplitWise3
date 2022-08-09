@@ -1,4 +1,4 @@
-import { db, auth } from '../firebase/firebase';
+import { dbAdmin, authAdmin } from '../firebase/firebase-admin';
 import { DocumentReference, DocumentSnapshot, FieldPath } from 'firebase-admin/firestore';
 import { User } from '../models/user';
 import { getExpenseById } from './expense';
@@ -9,9 +9,9 @@ interface LooseObject {
 
 const createUser = async (username: string, email: string, password: string): Promise<string> => {
   try {
-    const { uid } = await auth.createUser({ email, password });
+    const { uid } = await authAdmin.createUser({ email, password });
     const user: User = new User(uid, email, username);
-    const userDocRef = db.collection('Users').doc(uid);
+    const userDocRef = dbAdmin.collection('Users').doc(uid);
     await userDocRef.create(Object.assign({}, user));
 
     return `User ${uid} ${username} is created`;
@@ -33,7 +33,7 @@ const updateUser = async (uid: string, username?: string, avatar?: string): Prom
       throw 'No username or avatar specified to update';
     }
 
-    const userDocRef = db.collection('Users').doc(uid);
+    const userDocRef = dbAdmin.collection('Users').doc(uid);
     const userDocSnapShot = await userExists(uid);
     if (userDocSnapShot) {
       await userDocRef.update(Object.assign({}, updateObj));
@@ -48,7 +48,7 @@ const updateUser = async (uid: string, username?: string, avatar?: string): Prom
 
 const userExists = async (uid: string): Promise<DocumentSnapshot | null> => {
   try {
-    const userDocRef = db.collection('Users').doc(uid);
+    const userDocRef = dbAdmin.collection('Users').doc(uid);
     const docSnapShot = await userDocRef.get();
     if (docSnapShot.exists) {
       return docSnapShot;
@@ -78,7 +78,7 @@ const getUserByUid = async (uid: string): Promise<User> => {
 // TODO: prototype can be improved to indicate functionality
 const getUsers = async (userIds: Array<string>, expenseId?: string): Promise<Array<User>> => {
   try {
-    const usersSnapshot = await db
+    const usersSnapshot = await dbAdmin
       .collection('Users')
       .where(FieldPath.documentId(), 'in', userIds)
       .get();

@@ -1,11 +1,11 @@
-import { db } from '../firebase/firebase';
+import { dbAdmin } from '../firebase/firebase-admin';
 import { UserRole } from '../models/userRole';
 import uniqid from 'uniqid';
 
 const createUserRole = async (uid: string, expenseId: string, role: string) => {
   try {
     const id = uniqid();
-    const userRoleDocRef = db.collection('UserRoles').doc(id);
+    const userRoleDocRef = dbAdmin.collection('UserRoles').doc(id);
     const userRole = new UserRole(id, uid, `${role}`, expenseId);
     await userRoleDocRef.create({ ...userRole });
   } catch (err) {
@@ -16,7 +16,7 @@ const createUserRole = async (uid: string, expenseId: string, role: string) => {
 
 const getUserRolesByExpenseId = async (expenseId: string) => {
   try {
-    const userRolesSnapshot = await db
+    const userRolesSnapshot = await dbAdmin
       .collection('UserRoles')
       .where('expenseId', '==', `${expenseId}`)
       .get();
@@ -31,7 +31,7 @@ const getUserRolesByExpenseId = async (expenseId: string) => {
 
 const getUserRolesByUserId = async (userId: string) => {
   try {
-    const userRolesSnapshot = await db
+    const userRolesSnapshot = await dbAdmin
       .collection('UserRoles')
       .where('uid', '==', `${userId}`)
       .get();
@@ -46,7 +46,7 @@ const getUserRolesByUserId = async (userId: string) => {
 
 const isUserInExpense = async (userId: string, expenseId: string): Promise<boolean> => {
   try {
-    const userRoleSnapshot = await db
+    const userRoleSnapshot = await dbAdmin
       .collection('UserRoles')
       .where('uid', '==', `${userId}`)
       .where('expenseId', '==', `${expenseId}`)
