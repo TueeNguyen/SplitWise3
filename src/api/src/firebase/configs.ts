@@ -1,9 +1,7 @@
+require('dotenv').config();
+
 let adminCredentials = {}; // firebase-admin service account credentials
 let firebaseCredentials = {}; // firebase SDK configuration
-
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = 'development';
-}
 
 if (process.env.NODE_ENV === 'development') {
   adminCredentials = {

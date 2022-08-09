@@ -38,6 +38,7 @@ services:
       - FB_MESSAGING_SENDER_ID
       - FB_APP_ID
       - FB_MEASUREMENT_ID
+      - NODE_ENV
     restart: always
 "
 

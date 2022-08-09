@@ -4,4 +4,7 @@ services:
   web:
     build:
       args:
-        - REACT_APP_API_URL=http://splitwise3-env.eba-c2p5m8cm.us-east-1.elasticbeanstalk.com/api
+        - REACT_APP_API_URL=http://splitwise3.us-east-1.elasticbeanstalk.com/api
+  api:
+    environment:
+      - NODE_ENV=production
