@@ -1,15 +1,9 @@
-import { cert, initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { getAuth } from 'firebase-admin/auth';
-import { getStorage } from 'firebase-admin/storage';
-import firebaseConfig from './serviceAccount.json';
-import { credential, ServiceAccount } from 'firebase-admin';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { firebaseCredentials } from './configs';
 
-const app = initializeApp({
-  credential: credential.cert(firebaseConfig as ServiceAccount)
-});
-const db = getFirestore(app);
+const app = initializeApp(firebaseCredentials);
+
 const auth = getAuth(app);
-const storage = getStorage(app);
 
-export { db, auth, storage };
+export { auth };

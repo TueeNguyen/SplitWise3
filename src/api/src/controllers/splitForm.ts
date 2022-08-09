@@ -1,9 +1,9 @@
-import { db } from '../firebase/firebase';
+import { dbAdmin } from '../firebase/firebase-admin';
 import uniqid from 'uniqid';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
 import { FieldValue } from 'firebase-admin/firestore';
 
-const getSplitFormRef = (id: string) => db.collection('SplitForms').doc(id);
+const getSplitFormRef = (id: string) => dbAdmin.collection('SplitForms').doc(id);
 
 const createSplitForm = async (uid: string): Promise<string> => {
   try {

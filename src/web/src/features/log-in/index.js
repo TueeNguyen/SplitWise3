@@ -1,6 +1,5 @@
 import { Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Form, Formik } from 'formik';
 import React, { useContext } from 'react';
 
@@ -8,7 +7,6 @@ import React, { useContext } from 'react';
 
 import axiosInstance from '../../configs/axios';
 import { AppContext } from '../../providers';
-import { auth } from '../../configs/firebase/firebase';
 
 const useStyles = makeStyles({
   logInPaper: {
@@ -30,13 +28,30 @@ const LogIn = () => {
     setSubmitting(false);
     (async () => {
       try {
-        const { user } = await signInWithEmailAndPassword(auth, values.email, values.password);
-        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.accessToken}`;
+        const {
+          data: {
+            data: { accessToken, uid }
+          }
+        } = await axiosInstance.post(
+          `/user/login`,
+          {
+            email: values.email,
+            password: values.password
+          },
+          {
+            headers: {
+              Content: 'application/json'
+            }
+          }
+        );
+
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
         const {
           data: { data }
-        } = await axiosInstance.get(`/user/${user.uid}`);
-        localStorage.setItem('SW_accessToken', user.accessToken);
-        localStorage.setItem('SW_uid', user.uid);
+        } = await axiosInstance.get(`/user/${uid}`);
+        localStorage.setItem('SW_accessToken', accessToken);
+        localStorage.setItem('SW_uid', uid);
         setLoggedInUser(data);
       } catch (err) {
         console.error(err);

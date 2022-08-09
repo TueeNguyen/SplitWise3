@@ -1,8 +1,8 @@
 import uniqid from 'uniqid';
-import { db } from '../firebase/firebase';
+import { dbAdmin } from '../firebase/firebase-admin';
 import { ReceiptForm, ReceiptFormElem } from '../models/receiptForm';
 
-const getReceiptFormRef = (id: string) => db.collection('ReceiptForms').doc(id);
+const getReceiptFormRef = (id: string) => dbAdmin.collection('ReceiptForms').doc(id);
 const createReceiptForm = async (): Promise<string> => {
   try {
     const receiptForm = new ReceiptForm();
