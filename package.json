@@ -1,8 +1,8 @@
 {
   "name": "splitwise3",
   "workspaces": [
-    "./workspaces/api",
-    "./workspaces/web"
+    "./src/api",
+    "./src/web"
   ],
   "version": "1.0.0",
   "description": "A web app that allows you to split bills between friends",
