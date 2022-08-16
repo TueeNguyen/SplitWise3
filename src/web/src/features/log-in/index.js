@@ -1,7 +1,8 @@
 import { Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Form, Formik } from 'formik';
+import { ErrorMessage, Form, Formik } from 'formik';
 import React, { useContext } from 'react';
+import * as Yup from 'yup';
 
 // workspace imports
 
@@ -21,9 +22,15 @@ const useStyles = makeStyles({
   }
 });
 
+const LogInSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email required'),
+  password: Yup.string().min(6, 'Password must have at least 6 characters')
+});
+
 const LogIn = () => {
   const classes = useStyles();
   const { setLoggedInUser } = useContext(AppContext);
+
   const handleLogin = (values, setSubmitting) => {
     setSubmitting(false);
     (async () => {
@@ -58,28 +65,42 @@ const LogIn = () => {
       }
     })();
   };
+
+  // TODO: Create a non-expiry token to use instead of having credentials here
   return (
     <>
       <Formik
         initialValues={{ email: '1234@gmail.com', password: 'tuechinhlatue1' }}
+        validationSchema={LogInSchema}
         onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
       >
         {({ values, handleChange }) => (
           <Form>
             <Paper className={classes.logInPaper}>
               <Typography variant="h4">Login</Typography>
+
               <TextField
                 name="email"
                 value={values.email}
                 type="email"
                 onChange={handleChange}
               ></TextField>
+              <ErrorMessage
+                name="email"
+                render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+              />
+
               <TextField
                 name="password"
                 value={values.password}
                 type="password"
                 onChange={handleChange}
               ></TextField>
+              <ErrorMessage
+                name="password"
+                render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+              />
+
               <button type="submit">Login</button>
             </Paper>
           </Form>
