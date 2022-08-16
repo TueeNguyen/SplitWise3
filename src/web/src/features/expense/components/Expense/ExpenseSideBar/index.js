@@ -6,7 +6,7 @@ import { Drawer, Box, Typography, List, ListItem, ListItemButton, Tooltip } from
 import { AppContext } from '../../../../../providers';
 
 const ExpenseSideBar = ({ expenseId, password }) => {
-  const { showExpenseSetting, setShowExpenseSetting } = useContext(AppContext);
+  const { showExpenseSidebar, setShowExpenseSidebar } = useContext(AppContext);
   const sideBarElems = [
     { name: 'Copy expense id', data: expenseId, shortText: 'Id' },
     { name: 'Copy password', data: password, shortText: 'Password' }
@@ -15,9 +15,9 @@ const ExpenseSideBar = ({ expenseId, password }) => {
     <>
       <Drawer
         anchor="right"
-        open={showExpenseSetting}
+        open={showExpenseSidebar}
         onClose={() => {
-          setShowExpenseSetting(false);
+          setShowExpenseSidebar(false);
         }}
       >
         <Box p={2} width="250px" textAlign="center" role="presentation">

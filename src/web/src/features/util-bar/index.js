@@ -14,6 +14,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { AppContext } from '../../providers';
 import axiosInstance from '../../configs/axios';
 import { popUpFormNames } from '../../constants';
+import { UtilButton } from './components';
 // import SearchBar from './searchBar/SearchBar';
 // import SortButton from './sortButton/SortButton';
 
@@ -34,7 +35,7 @@ const UtilBar = () => {
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();
-  const { setPopUpForm, toLogIn, setShowExpenseSetting } = useContext(AppContext);
+  const { setPopUpForm, toLogIn, setShowExpenseSidebar } = useContext(AppContext);
   const createExpense = async () => {
     try {
       await axiosInstance.post('/expense/create', {
@@ -53,48 +54,38 @@ const UtilBar = () => {
   const renderSearch = () => null;
   const renderExpense = () => (
     <>
-      <Tooltip title="Show expense setting" placement="bottom-start">
-        <IconButton
-          type="button"
-          onClick={() => {
-            setShowExpenseSetting(true);
-          }}
-        >
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
+      {/* Exepnse side bar button */}
+      <UtilButton
+        tooltipTitle="Show expense setting"
+        onclickCallback={() => {
+          setShowExpenseSidebar(true);
+        }}
+      >
+        <SettingsIcon />
+      </UtilButton>
 
-      <Tooltip title="Search" placement="bottom-start">
-        <IconButton onClick={() => history.push('/search')}>
-          <SearchRoundedIcon />
-        </IconButton>
-      </Tooltip>
+      {/* Search button */}
+      <UtilButton tooltipTitle="Search" onclickCallback={() => history.push('/search')}>
+        <SearchRoundedIcon />
+      </UtilButton>
     </>
   );
   const renderHome = () => (
     <>
-      <Tooltip title="Join an expense" placement="left-end">
-        <IconButton
-          id="joinExpenseBtn"
-          onClick={() => {
-            setPopUpForm(popUpFormNames.JOIN_EXPENSE);
-          }}
-        >
-          <DoubleArrowIcon />
-        </IconButton>
-      </Tooltip>
+      {/* Join an expense button */}
+      <UtilButton
+        tooltipTitle="Join an expense"
+        onclickCallback={() => {
+          setPopUpForm(popUpFormNames.JOIN_EXPENSE);
+        }}
+      >
+        <DoubleArrowIcon />
+      </UtilButton>
 
-      <Tooltip title="Search" placement="bottom-start">
-        <IconButton onClick={() => history.push('/search')}>
-          <SearchRoundedIcon />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Add an expense" placement="left-end">
-        <IconButton onClick={createExpense}>
-          <AddCircleIcon />
-        </IconButton>
-      </Tooltip>
+      {/* Add an expense button */}
+      <UtilButton tooltipTitle="Add an expense" onclickCallback={createExpense}>
+        <AddCircleIcon />
+      </UtilButton>
 
       {/* <SortButton /> */}
     </>
