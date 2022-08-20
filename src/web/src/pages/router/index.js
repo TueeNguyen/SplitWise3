@@ -7,7 +7,7 @@ import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import { AppContext } from '../../providers';
 import Home from '../home';
 // import Search from '../search/Search';
-import { Expense, LogIn, NavBar, UtilBar } from '../../features';
+import { Expense, LogIn, NavBar, UtilBar, SignUp } from '../../features';
 
 const Router = () => {
   const { loggedInUser } = useContext(AppContext);
@@ -39,6 +39,9 @@ const Router = () => {
           </Route>
           <Route exact path="/">
             {loggedInUser ? <Home /> : <Redirect to="/login" />}
+          </Route>
+          <Route exact path="/sign-up">
+            {loggedInUser ? <Redirect to="/" /> : <SignUp />}
           </Route>
 
           {/* <Route exact path="/search">

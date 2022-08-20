@@ -1,6 +1,5 @@
 import { Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { NavLink } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
 import React, { useContext } from 'react';
 import * as Yup from 'yup';
@@ -20,25 +19,47 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: '10px',
     margin: '0 auto'
-  },
-  navLink: {
-    textDecoration: 'none'
   }
 });
 
-const LogInSchema = Yup.object().shape({
+const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email required'),
-  password: Yup.string().min(6, 'Password must have at least 6 characters')
+  username: Yup.string()
+    .min(4, 'Username must have at least 4 characters')
+    .required('Username required'),
+  password: Yup.string()
+    .min(6, 'Password must have at least 6 characters')
+    .required('Password required'),
+  confirmPassword: Yup.string()
+    .required('Confirm password required')
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
 });
 
-const LogIn = () => {
+const SignUp = () => {
   const classes = useStyles();
   const { setLoggedInUser } = useContext(AppContext);
 
-  const handleLogin = (values, setSubmitting) => {
+  const handleSignUp = (values, setSubmitting) => {
     setSubmitting(false);
     (async () => {
       try {
+        const {
+          data: { message }
+        } = await axiosInstance.post(
+          `/user/create`,
+          {
+            username: values.username,
+            email: values.email,
+            password: values.password
+          },
+          {
+            headers: {
+              Content: 'application/json'
+            }
+          }
+        );
+        console.log(message);
+
         const {
           data: {
             data: { accessToken, uid }
@@ -74,14 +95,19 @@ const LogIn = () => {
   return (
     <>
       <Formik
-        initialValues={{ email: '1234@gmail.com', password: 'tuechinhlatue1' }}
-        validationSchema={LogInSchema}
-        onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
+        initialValues={{
+          email: '1234@gmail.com',
+          username: 'Tue123',
+          password: 'tuechinhlatue1',
+          confirmPassword: 'tuechinhlatue1'
+        }}
+        validationSchema={SignUpSchema}
+        onSubmit={(values, { setSubmitting }) => handleSignUp(values, setSubmitting)}
       >
         {({ values, handleChange }) => (
           <Form>
             <Paper className={classes.logInPaper}>
-              <Typography variant="h4">Login</Typography>
+              <Typography variant="h4">Sign up</Typography>
 
               <TextField
                 name="email"
@@ -91,6 +117,17 @@ const LogIn = () => {
               ></TextField>
               <ErrorMessage
                 name="email"
+                render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+              />
+
+              <TextField
+                name="username"
+                value={values.username}
+                type="text"
+                onChange={handleChange}
+              ></TextField>
+              <ErrorMessage
+                name="username"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
 
@@ -105,14 +142,18 @@ const LogIn = () => {
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
 
-              <button type="submit">Login</button>
+              <TextField
+                name="confirmPassword"
+                value={values.confirmPassword}
+                type="password"
+                onChange={handleChange}
+              ></TextField>
+              <ErrorMessage
+                name="confirmPassword"
+                render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+              />
 
-              <Typography variant="body1">
-                Don't have an account?{' '}
-                <NavLink className={classes.navLink} to="/sign-up">
-                  Sign up
-                </NavLink>
-              </Typography>
+              <button type="submit">Register</button>
             </Paper>
           </Form>
         )}
@@ -121,4 +162,4 @@ const LogIn = () => {
   );
 };
 
-export { LogIn };
+export { SignUp };
