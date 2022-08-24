@@ -38,6 +38,7 @@ const SignUpSchema = Yup.object().shape({
 const SignUp = () => {
   const classes = useStyles();
   const { setLoggedInUser } = useContext(AppContext);
+  axiosInstance.defaults.headers.common['Content'] = 'application/json';
 
   const handleSignUp = (values, setSubmitting) => {
     setSubmitting(false);
@@ -45,37 +46,21 @@ const SignUp = () => {
       try {
         const {
           data: { message }
-        } = await axiosInstance.post(
-          `/user/create`,
-          {
-            username: values.username,
-            email: values.email,
-            password: values.password
-          },
-          {
-            headers: {
-              Content: 'application/json'
-            }
-          }
-        );
+        } = await axiosInstance.post(`/user/create`, {
+          username: values.username,
+          email: values.email,
+          password: values.password
+        });
         console.log(message);
 
         const {
           data: {
             data: { accessToken, uid }
           }
-        } = await axiosInstance.post(
-          `/user/login`,
-          {
-            email: values.email,
-            password: values.password
-          },
-          {
-            headers: {
-              Content: 'application/json'
-            }
-          }
-        );
+        } = await axiosInstance.post(`/user/login`, {
+          email: values.email,
+          password: values.password
+        });
 
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 
@@ -96,10 +81,10 @@ const SignUp = () => {
     <>
       <Formik
         initialValues={{
-          email: '1234@gmail.com',
-          username: 'Tue123',
-          password: 'tuechinhlatue1',
-          confirmPassword: 'tuechinhlatue1'
+          email: '',
+          username: '',
+          password: '',
+          confirmPassword: ''
         }}
         validationSchema={SignUpSchema}
         onSubmit={(values, { setSubmitting }) => handleSignUp(values, setSubmitting)}
@@ -113,6 +98,7 @@ const SignUp = () => {
                 name="email"
                 value={values.email}
                 type="email"
+                placeholder="jdoe@email.com"
                 onChange={handleChange}
               ></TextField>
               <ErrorMessage
@@ -124,6 +110,7 @@ const SignUp = () => {
                 name="username"
                 value={values.username}
                 type="text"
+                placeholder="JohnDoe123"
                 onChange={handleChange}
               ></TextField>
               <ErrorMessage
@@ -135,6 +122,7 @@ const SignUp = () => {
                 name="password"
                 value={values.password}
                 type="password"
+                placeholder="******"
                 onChange={handleChange}
               ></TextField>
               <ErrorMessage
@@ -146,6 +134,7 @@ const SignUp = () => {
                 name="confirmPassword"
                 value={values.confirmPassword}
                 type="password"
+                placeholder="******"
                 onChange={handleChange}
               ></TextField>
               <ErrorMessage
