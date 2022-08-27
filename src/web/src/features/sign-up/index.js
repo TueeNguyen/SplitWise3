@@ -98,6 +98,7 @@ const SignUp = () => {
                 name="email"
                 value={values.email}
                 type="email"
+                label="Email"
                 placeholder="jdoe@email.com"
                 onChange={handleChange}
               ></TextField>
@@ -110,7 +111,8 @@ const SignUp = () => {
                 name="username"
                 value={values.username}
                 type="text"
-                placeholder="JohnDoe123"
+                label="Username"
+                placeholder="JohnDoe1"
                 onChange={handleChange}
               ></TextField>
               <ErrorMessage
@@ -122,6 +124,7 @@ const SignUp = () => {
                 name="password"
                 value={values.password}
                 type="password"
+                label="Password"
                 placeholder="******"
                 onChange={handleChange}
               ></TextField>
@@ -134,6 +137,7 @@ const SignUp = () => {
                 name="confirmPassword"
                 value={values.confirmPassword}
                 type="password"
+                label="Confirm password"
                 placeholder="******"
                 onChange={handleChange}
               ></TextField>
