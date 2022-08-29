@@ -1,5 +1,6 @@
 import { Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { NavLink } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
 import React, { useContext } from 'react';
 import * as Yup from 'yup';
@@ -19,6 +20,9 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: '10px',
     margin: '0 auto'
+  },
+  navLink: {
+    textDecoration: 'none'
   }
 });
 
@@ -102,6 +106,13 @@ const LogIn = () => {
               />
 
               <button type="submit">Login</button>
+
+              <Typography variant="body1">
+                Don't have an account?{' '}
+                <NavLink className={classes.navLink} to="/sign-up">
+                  Sign up
+                </NavLink>
+              </Typography>
             </Paper>
           </Form>
         )}
