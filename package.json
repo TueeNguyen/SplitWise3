@@ -10,7 +10,9 @@
     "start:be": "cd src/api && npm run dev",
     "prepare": "husky install",
     "pre-commit": "pretty-quick --staged",
-    "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\""
+    "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\"",
+    "services:up": "docker-compose -f docker/docker-compose.yml -f docker/development.yml up --build -d",
+    "postinstall": "sh scripts/write_firebase_configs.sh"
   },
   "repository": {
     "type": "git",

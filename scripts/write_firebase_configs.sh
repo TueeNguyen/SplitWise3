@@ -9,13 +9,13 @@ file_content="
 
 "
 
-echo "$file_content"
-
-file_path="./src/api/src/fireabase/configs.ts"
-if [ -f $file_path ]; then
-   rm $file_path
-   echo "$file_path is removed"
+file_path="./src/api/src/firebase/configs.ts"
+if [ -f $file_path ]; 
+then
+  echo "$file_path exists, delete manually or edit this file instead"
+else
+  touch $file_path
+  echo "$file_content" >> $file_path
 fi
 
-touch $file_path
-echo "$file_content" >> $file_path
+
