@@ -13,12 +13,13 @@ import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../../providers';
 import axiosInstance from '../../../../configs/axios';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   joinExpenseContainer: {
     pointerEvents: 'auto',
     filter: 'blur(0)',
     position: 'absolute',
-    width: '50vw',
+    width: '95%',
+    maxWidth: '1024px',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -32,7 +33,10 @@ const useStyles = makeStyles({
     padding: '50px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '20px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '50px 10px'
+    }
   },
   closeBtn: {
     position: 'absolute',
@@ -49,7 +53,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     gap: '10px'
   }
-});
+}));
 
 const JoinExpense = () => {
   const classes = useStyles();

@@ -13,9 +13,12 @@ const App = () => {
   return (
     <AppProvider>
       {loading ? (
-        <RootLayout>
-          <Router />
-        </RootLayout>
+        <>
+          <RootLayout>
+            <Router />
+          </RootLayout>
+          <div></div>
+        </>
       ) : null}
     </AppProvider>
   );

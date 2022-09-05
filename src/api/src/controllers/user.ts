@@ -24,7 +24,6 @@ const createUser = async (username: string, email: string, password: string): Pr
 const updateUser = async (uid: string, username?: string, avatar?: string): Promise<string> => {
   try {
     const updateObj: LooseObject = {};
-    console.log({ username, avatar });
     if (username) {
       updateObj.username = username;
     } else if (avatar) {

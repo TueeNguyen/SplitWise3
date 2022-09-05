@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Button,
   IconButton,
@@ -7,6 +7,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   TextField,
@@ -14,34 +15,30 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
+import { ExpenseErrorContext } from '../../../../../providers/ExpenseErrorProvider';
 
 const useStyles = makeStyles((theme) => ({
   item: {
     minWidth: '400px'
   },
   removeItemBtn: {
-    visibility: 'hidden',
     color: 'red'
   },
   price: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    minWidth: '250px',
-    '&:hover': {
-      '& $removeItemBtn': {
-        visibility: 'visible'
-      }
-    }
+    minWidth: '250px'
   },
   description: {
     minWidth: '600px'
   },
-  tableWrapper: {
-    margin: '40px',
-    [theme.breakpoints.down('md')]: {
-      margin: '5px'
-    }
+  receiptForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    margin: '0 20px 20px 20px'
   },
   tableContainer: {
     maxHeight: '70vh',
@@ -49,16 +46,18 @@ const useStyles = makeStyles((theme) => ({
   },
   receiptUtil: {
     display: 'flex',
-    alignItems: 'center'
+    justifyContent: 'flex-end',
+    gap: '1rem'
   },
-  addItemBtn: {
-    marginLeft: 'auto'
+  totalContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end'
   }
 }));
 
-const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
+const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue, role }) => {
   const classes = useStyles();
-
+  const { appendErrors } = useContext(ExpenseErrorContext);
   const getNewTotal = (targetValue, index) =>
     values.receiptForm.reduce((prev, curr, i) => {
       if (i === index) {
@@ -108,7 +107,7 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
     const targetValue = Number(e.target.value);
 
     if ((!targetValue && targetValue !== 0) || targetValue < 0) {
-      console.log("price of an item can't be null or < 0");
+      appendErrors("Price of an item can't be empty or < 0");
       return;
     }
 
@@ -116,7 +115,9 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
     const fixedSum = getFixedSum();
 
     if (newTotal < fixedSum) {
-      console.log('newTotal < fixedSum');
+      appendErrors(
+        'The new total would be < than a the fixed sum. Total must always be >= the fixed sum'
+      );
       return;
     }
     handleChange(e);
@@ -131,11 +132,11 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
       const fixedSum = getFixedSum();
 
       if (newTotal < fixedSum) {
-        // TODO: display error message
-        console.log("can't remove this item because some users have fixed owned amount");
+        appendErrors(
+          `Can't remove item ${values.receiptForm[index].item} because removing would cause the new total to be < the fixed sum`
+        );
         return;
       }
-
       arrayHelper(index);
       updateTotal(0, index);
     }
@@ -145,7 +146,7 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
   };
 
   return (
-    <div className={classes.tableWrapper}>
+    <div className={classes.receiptForm}>
       <TableContainer className={classes.tableContainer} component={Paper}>
         <Table stickyHeader>
           <TableHead>
@@ -165,6 +166,9 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
                     onChange={handleChange}
                     type="text"
                     fullWidth
+                    InputProps={{
+                      readOnly: role !== 'Owner'
+                    }}
                   />
                 </TableCell>
 
@@ -174,15 +178,10 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
                     name={`receiptForm.${index}.price`}
                     onChange={(e) => handlePriceChange(e, index)}
                     type="number"
+                    InputProps={{
+                      readOnly: role !== 'Owner'
+                    }}
                   />
-                  <IconButton
-                    name="removeReceiptItem"
-                    className={classes.removeItemBtn}
-                    onClick={(e) => addRemoveReceiptItem(e, remove, index)}
-                  >
-                    {/* to preven clicking on the icon*/}
-                    <CloseIcon sx={{ pointerEvents: 'none' }} />
-                  </IconButton>
                 </TableCell>
 
                 <TableCell className={classes.description}>
@@ -192,25 +191,40 @@ const ReceiptForm = ({ values, push, remove, handleChange, setFieldValue }) => {
                     onChange={handleChange}
                     type="text"
                     fullWidth
+                    InputProps={{
+                      readOnly: role !== 'Owner'
+                    }}
                   />
                 </TableCell>
+                {role === 'Owner' && (
+                  <TableCell>
+                    <IconButton
+                      name="removeReceiptItem"
+                      className={classes.removeItemBtn}
+                      onClick={(e) => addRemoveReceiptItem(e, remove, index)}
+                    >
+                      {/* to preven clicking on the icon*/}
+                      <CloseIcon sx={{ pointerEvents: 'none' }} />
+                    </IconButton>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <br />
-
       <div className={classes.receiptUtil}>
         <Typography variant="h4">Total: {values.total}</Typography>
-        <Button
-          name="addReceiptItem"
-          className={classes.addItemBtn}
-          variant="outlined"
-          onClick={(e) => addRemoveReceiptItem(e, push)}
-        >
-          Add receipt item
-        </Button>
+        {role === 'Owner' && (
+          <Button
+            name="addReceiptItem"
+            className={classes.addItemBtn}
+            variant="outlined"
+            onClick={(e) => addRemoveReceiptItem(e, push)}
+          >
+            Add receipt item
+          </Button>
+        )}
       </div>
     </div>
   );

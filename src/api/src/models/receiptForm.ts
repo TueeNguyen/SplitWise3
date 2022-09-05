@@ -16,6 +16,9 @@ export class ReceiptFormElem implements IReceiptFormElem {
   static createReceiptFormElemArray(array: Array<any>): Array<ReceiptFormElem> {
     return array.map((elem) => new ReceiptFormElem(elem.item, elem.price, elem.desc));
   }
+  converter() {
+    return { item: this.item, price: this.price, desc: this.desc };
+  }
 }
 
 export interface IReceiptForm {
@@ -35,5 +38,8 @@ export class ReceiptForm implements IReceiptForm {
   }
   static createFromArray(data: Array<ReceiptFormElem>) {
     return new ReceiptForm(data);
+  }
+  converter() {
+    return { data: this.data.map((receiptFormElem) => receiptFormElem.converter()) };
   }
 }

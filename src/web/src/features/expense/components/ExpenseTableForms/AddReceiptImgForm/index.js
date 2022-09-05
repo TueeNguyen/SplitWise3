@@ -1,8 +1,9 @@
 import { TextField, Popover, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
+import { AppContext } from '../../../../../providers';
+import { popUpFormNames } from '../../../../../constants';
 const useStyles = makeStyles({
   addReceiptForm: {
     padding: '1em',
@@ -60,37 +61,15 @@ const AddReceiptImgForm = () => {
 };
 
 const AddReceiptImgButton = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const open = Boolean(anchorEl);
-  const id = open ? 'add-receipt-img-form' : undefined;
+  const { setPopUpForm } = useContext(AppContext);
   return (
-    <div>
-      <Button aria-describedby={id} type="button" onClick={handleClick} variant="outlined">
-        Add Receipt Image
-      </Button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center'
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-      >
-        <AddReceiptImgForm />
-      </Popover>
-    </div>
+    <Button
+      type="button"
+      variant="outlined"
+      onClick={() => setPopUpForm(popUpFormNames.ADD_RECEIPT_IMG)}
+    >
+      Add Receipt Image
+    </Button>
   );
 };
 

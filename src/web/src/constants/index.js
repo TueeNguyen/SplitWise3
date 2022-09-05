@@ -1,1 +1,10 @@
-export { popUpFormNames } from './pop-up-forms-name';
+export const popUpFormNames = {
+  JOIN_EXPENSE: 'JOIN_EXPENSE_FORM',
+  ADD_RECEIPT_IMG: 'ADD_RECEIPT_IMG_FORM'
+};
+
+export const SOCKET_EVENTS = {
+  EXPENSE_CREATED: 'EXPENSE_CREATED',
+  EXPENSE_UPDATED: 'EXPENSE_UPDATED',
+  USER_JOINED_EXPENSE: 'USER_JOINED_EXPENSE'
+};

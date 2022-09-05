@@ -21,7 +21,6 @@ router.post('/login', async (req: Request, res: Response) => {
   try {
     // TODO: create login func and put it into auth route and auth controller
     const { email, password } = req.body;
-    console.log(email, password);
     const { user } = await signInWithEmailAndPassword(auth, email, password);
     const accessToken = await user.getIdToken();
     return res.status(200).json({ data: { accessToken, uid: user.uid } });

@@ -10,6 +10,7 @@ import {
 } from '../controllers/expense';
 import { isAuthenticated } from '../middleware/authenticate';
 import { isAuthorized } from '../middleware/authorize';
+import { SOCKET_EVENTS } from '../constants';
 
 const router = express.Router();
 
@@ -20,7 +21,7 @@ function ExpenseRouter(io: Server) {
     const { uid } = res.locals;
     try {
       await addUserToExpense(uid, expenseId, password);
-      io.emit('USER_JOINED', { uid, expenseId });
+      io.emit(SOCKET_EVENTS.USER_JOINED_EXPENSE, { uid, expenseId });
       return res.status(200).json({ message: `Added user ${uid} to expense ${expenseId}` });
     } catch (err) {
       return res.status(500).json({ message: err });
@@ -50,7 +51,7 @@ function ExpenseRouter(io: Server) {
     const { name, date, avatar } = req.body;
     try {
       const message = await createExpense(name, date, res.locals.uid, avatar);
-      io.emit(process.env.EXPENSE_CREATED || 'EXPENSE_CREATED');
+      io.emit(SOCKET_EVENTS.EXPENSE_CREATED);
       return res.status(200).json({ message });
     } catch (err) {
       return res.status(500).json({ message: err });
@@ -61,6 +62,7 @@ function ExpenseRouter(io: Server) {
     const { id, expenseObj } = req.body;
     try {
       const message = await updateExpense(id, expenseObj);
+      io.emit(SOCKET_EVENTS.EXPENSE_UPDATED);
       return res.status(200).json({ message });
     } catch (err) {
       return res.status(500).json({ message: err });
