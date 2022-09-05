@@ -6,13 +6,16 @@ import { StyledEngineProvider } from '@mui/material';
 import { ThemeProvider } from '@mui/styles';
 import theme from './styles';
 import { AppProvider } from './providers';
+import { ExpenseErrorProvider } from './providers/ExpenseErrorProvider';
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
       <React.StrictMode>
         <AppProvider>
-          <App />
+          <ExpenseErrorProvider>
+            <App />
+          </ExpenseErrorProvider>
         </AppProvider>
       </React.StrictMode>
     </ThemeProvider>

@@ -38,7 +38,6 @@ const SignUpSchema = Yup.object().shape({
 const SignUp = () => {
   const classes = useStyles();
   const { setLoggedInUser } = useContext(AppContext);
-  axiosInstance.defaults.headers.common['Content'] = 'application/json';
 
   const handleSignUp = (values, setSubmitting) => {
     setSubmitting(false);

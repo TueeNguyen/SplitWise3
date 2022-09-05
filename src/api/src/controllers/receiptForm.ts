@@ -1,6 +1,7 @@
 import uniqid from 'uniqid';
 import { dbAdmin } from '../firebase/firebase-admin';
 import { ReceiptForm, ReceiptFormElem } from '../models/receiptForm';
+import { isEqual } from 'lodash';
 
 const getReceiptFormRef = (id: string) => dbAdmin.collection('ReceiptForms').doc(id);
 const createReceiptForm = async (): Promise<string> => {
@@ -18,8 +19,13 @@ const createReceiptForm = async (): Promise<string> => {
 const updateReceiptForm = async (id: string, receiptFormElems: Array<ReceiptFormElem>) => {
   try {
     const receiptForm = ReceiptForm.createFromArray(receiptFormElems);
-    await getReceiptFormRef(id).update({ ...receiptForm });
-    console.log(`Updated receiptForm ${id}`);
+    const oldReceiptForm = await getReceiptForm(id);
+    if (isEqual(oldReceiptForm, receiptForm.converter())) {
+      console.log(`receiptForm ${id} is the same`);
+    } else {
+      await getReceiptFormRef(id).update(receiptForm.converter());
+      console.log(`Updated receiptForm ${id}`);
+    }
   } catch (err) {
     console.error(err);
     throw err;

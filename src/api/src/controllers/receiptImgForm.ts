@@ -1,7 +1,7 @@
 import { dbAdmin } from '../firebase/firebase-admin';
 import uniqid from 'uniqid';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
-
+import { isEqual } from 'lodash';
 const getReceiptImgFormRef = (id: string) => dbAdmin.collection('ReceiptImgForms').doc(id);
 
 const createReceiptImgForm = async (): Promise<string> => {
@@ -22,8 +22,13 @@ const updateReceiptImgForm = async (
 ): Promise<void> => {
   try {
     const receiptImgForm = ReceiptImgForm.createFromArray(receiptImgFormElems);
-    await getReceiptImgFormRef(id).create({ ...receiptImgForm });
-    console.log(`Updated receiptImgForm ${id}`);
+    const oldReceiptImgForm = await getReceiptImgForm(id);
+    if (isEqual(oldReceiptImgForm, receiptImgForm.converter())) {
+      console.log(`receiptImgForm ${id} is the same`);
+    } else {
+      await getReceiptImgFormRef(id).update({ ...receiptImgForm });
+      console.log(`Updated receiptImgForm ${id}`);
+    }
   } catch (err) {
     console.error(err);
     throw err;

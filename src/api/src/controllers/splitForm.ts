@@ -2,7 +2,7 @@ import { dbAdmin } from '../firebase/firebase-admin';
 import uniqid from 'uniqid';
 import { SplitForm, SplitFormElem } from '../models/splitForm';
 import { FieldValue } from 'firebase-admin/firestore';
-
+import { isEqual } from 'lodash';
 const getSplitFormRef = (id: string) => dbAdmin.collection('SplitForms').doc(id);
 
 const createSplitForm = async (uid: string): Promise<string> => {
@@ -21,8 +21,13 @@ const createSplitForm = async (uid: string): Promise<string> => {
 const updateSplitForm = async (id: string, splitFormElems: Array<SplitFormElem>): Promise<void> => {
   try {
     const splitForm = SplitForm.createFromArray(splitFormElems);
-    await getSplitFormRef(id).create({ ...splitForm });
-    console.log('Updated Split form');
+    const oldSplitForm = await getSplitForm(id);
+    if (isEqual(oldSplitForm, splitForm.converter())) {
+      console.log(`Split form ${id} is the same`);
+    } else {
+      await getSplitFormRef(id).update(splitForm.converter());
+      console.log(`Updated Split form ${id}`);
+    }
   } catch (err) {
     console.error(err);
     throw err;

@@ -7,22 +7,36 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
 import { styled } from '@mui/system';
-import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-
+import { Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 // workspace imports
 
 import { AddReceiptImgButton } from '../AddReceiptImgForm';
 
 const useStyles = makeStyles({
   tableContainer: {
-    width: 'calc(100vw - 100px)',
-    border: 'solid 1px',
-    margin: '20px 0'
+    border: 'solid 1px'
   },
   addReceiptButton: {
+    justifySelf: 'flex-end'
+  },
+  receiptImgForm: {
     display: 'flex',
-    width: 'calc(100vw - 100px)',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    margin: '0 20px 20px 20px',
+    gap: '0.5rem'
+  },
+  buttonContainer: {
+    display: 'flex',
     justifyContent: 'flex-end'
+  },
+  removeImgBtn: {
+    position: 'absolute',
+    color: 'red',
+    background: 'white',
+    top: -10,
+    right: -10
   }
 });
 
@@ -34,19 +48,19 @@ const StyledCard = styled(Card)(({ theme }) => ({
   boxShadow: '0px 3px 6px #C0C0C0',
   transition: 'transform 0.4s',
   '&:hover': {
-    transform: 'scale(1.1)',
-    boxShadow: '0px 3px 6px #A2A2A2'
-  }
+    boxShadow: '0px 6px 12px #A2A2A2'
+  },
+  position: 'relative'
 }));
 
 const datas = [
   'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg'
 ];
 
-const ReceiptImgForm = () => {
+const ReceiptImgForm = ({ role }) => {
   const classes = useStyles();
   return (
-    <>
+    <div className={classes.receiptImgForm}>
       <TableContainer className={classes.tableContainer} component={Paper}>
         <Table aria-label="simple table">
           <TableBody>
@@ -54,6 +68,10 @@ const ReceiptImgForm = () => {
               {datas.map((data, index) => (
                 <TableCell key={index}>
                   <StyledCard>
+                    <IconButton name="removeReceiptItem" className={classes.removeImgBtn}>
+                      {/* to preven clicking on the icon*/}
+                      <CloseIcon sx={{ pointerEvents: 'none' }} />
+                    </IconButton>
                     <CardMedia
                       component="img"
                       sx={{ objectFit: 'cover' }}
@@ -70,10 +88,12 @@ const ReceiptImgForm = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className={classes.addReceiptButton}>
-        <AddReceiptImgButton />
-      </div>
-    </>
+      {role === 'Owner' && (
+        <div className={classes.buttonContainer}>
+          <AddReceiptImgButton className={classes.addReceiptButton} />
+        </div>
+      )}
+    </div>
   );
 };
 

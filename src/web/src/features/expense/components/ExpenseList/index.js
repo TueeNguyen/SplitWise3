@@ -7,6 +7,7 @@ import { makeStyles } from '@mui/styles';
 import { ExpenseCard } from './ExpenseCard';
 import axiosInstance from '../../../../configs/axios';
 import { AppContext } from '../../../../providers';
+import { SOCKET_EVENTS } from '../../../../constants';
 
 const useStyles = makeStyles({
   expenseContainer: {
@@ -25,7 +26,7 @@ const ExpenseList = () => {
   const [paginatedData, setPaginatedData] = useState(expenses.slice(page - 1, page * 10 - 1));
   const { socket, toLogIn } = useContext(AppContext);
   useEffect(() => {
-    socket.on('EXPENSE_CREATED', () => {
+    socket.on(SOCKET_EVENTS.EXPENSE_CREATED, () => {
       (async () => {
         try {
           const {
@@ -41,7 +42,7 @@ const ExpenseList = () => {
       })();
     });
     return () => {
-      socket.off('EXPENSE_CREATED');
+      socket.off(SOCKET_EVENTS.EXPENSE_CREATED);
     };
   }, []);
 
