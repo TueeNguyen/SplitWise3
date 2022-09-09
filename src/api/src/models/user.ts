@@ -17,6 +17,6 @@ export class User implements IUser {
     this.username = username;
     this.avatar =
       avatar ||
-      'https://firebasestorage.googleapis.com/v0/b/splitwise3-e6c96.appspot.com/o/st%2Csmall%2C507x507-pad%2C600x600%2Cf8f8f8.jpg?alt=media&token=0a008fd2-283b-4c13-aa0c-3f08ab869a45';
+      'https://firebasestorage.googleapis.com/v0/b/splitwise3-e6c96.appspot.com/o/geniuses-in-kids-shows.jpg?alt=media&token=a73018cb-ea34-43f2-9dce-1715ca02d6ab';
   }
 }

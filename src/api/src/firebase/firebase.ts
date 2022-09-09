@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { firebaseCredentials } from './configs';
+import { getStorage } from 'firebase/storage';
 
 let appCredentials = {};
 
@@ -28,5 +29,6 @@ if (process.env.NODE_ENV === 'production') {
 const app = initializeApp(appCredentials);
 
 const auth = getAuth(app);
+const storage = getStorage(app);
 
-export { auth };
+export { auth, storage };

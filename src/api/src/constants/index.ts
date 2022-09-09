@@ -4,4 +4,6 @@ const SOCKET_EVENTS = {
   USER_JOINED_EXPENSE: 'USER_JOINED_EXPENSE'
 };
 
+const IMAGE_TYPES = {};
+
 export { SOCKET_EVENTS };

@@ -36,7 +36,6 @@ const NavBar = () => {
   const { loggedInUser } = useContext(AppContext);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    console.log('ay');
   };
   const handleClose = () => {
     setAnchorEl(null);

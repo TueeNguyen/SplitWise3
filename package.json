@@ -12,7 +12,7 @@
     "pre-commit": "pretty-quick --staged",
     "prettier-check": "prettier --check \"./**/*.{md,json,html,css,js,yml}\"",
     "services:up": "docker-compose -f docker/docker-compose.yml -f docker/development.yml up --build -d",
-    "postinstall": "sh scripts/write_firebase_configs.sh"
+    "postinstall": "bash scripts/write_firebase_configs.sh"
   },
   "repository": {
     "type": "git",
