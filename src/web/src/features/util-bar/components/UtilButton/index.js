@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import React from 'react';
 
 const UtilButton = ({
@@ -9,7 +9,9 @@ const UtilButton = ({
 }) => {
   return (
     <Tooltip title={tooltipTitle} placement={tooltipPlacement}>
-      <IconButton onClick={onclickCallback}>{children}</IconButton>
+      <Button variant="outlined" onClick={onclickCallback}>
+        {children}
+      </Button>
     </Tooltip>
   );
 };

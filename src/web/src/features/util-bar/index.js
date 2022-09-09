@@ -65,9 +65,9 @@ const UtilBar = () => {
       </UtilButton>
 
       {/* Search button */}
-      <UtilButton tooltipTitle="Search" onclickCallback={() => history.push('/search')}>
+      {/* <UtilButton tooltipTitle="Search" onclickCallback={() => history.push('/search')}>
         <SearchRoundedIcon />
-      </UtilButton>
+      </UtilButton> */}
     </>
   );
   const renderHome = () => (
@@ -79,9 +79,10 @@ const UtilBar = () => {
           setPopUpForm(popUpFormNames.JOIN_EXPENSE);
         }}
       >
+        Join &nbsp;
         <svg
           width="35"
-          height="23  "
+          height="23"
           viewBox="0 0 27 15"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -100,9 +101,10 @@ const UtilBar = () => {
         tooltipTitle="Add an expense"
         onclickCallback={() => setPopUpForm(popUpFormNames.ADD_EXPENSE)}
       >
+        Add
         <svg
           width="35"
-          height="35"
+          height="23"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

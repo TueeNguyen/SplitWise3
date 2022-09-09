@@ -40,8 +40,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 20px 20px 20px'
   },
   tableContainer: {
-    maxHeight: '70vh',
-    border: 'solid 1px'
+    maxHeight: '70vh'
   },
   receiptUtil: {
     display: 'flex',

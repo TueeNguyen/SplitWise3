@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
     gap: '0.5rem'
   },
   tableContainer: {
-    maxHeight: '80vh',
-    border: 'solid 1px'
+    maxHeight: '80vh'
   }
 }));
 

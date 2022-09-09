@@ -79,6 +79,7 @@ const AddReceiptImg = () => {
   return (
     <Paper className={classes.addReceiptImg} elevation={5}>
       <div className={classes.formWrapper}>
+        <h2>Add a receipt image</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

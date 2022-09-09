@@ -93,6 +93,7 @@ const AddExpense = () => {
   return (
     <Paper className={classes.addReceiptImg} elevation={5}>
       <div className={classes.formWrapper}>
+        <h2>Add an expense</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

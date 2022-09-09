@@ -98,7 +98,7 @@ const ReceiptImgForm = ({ values, role, setFieldValue }) => {
 
   return (
     <div className={classes.receiptImgForm}>
-      <Paper elevation={5} className={classes.carousel}>
+      <Paper className={classes.carousel}>
         {values.receiptImgForm.map((receiptImgFormElem, index) => (
           <div className={classes.slide}>
             <StyledCard>
