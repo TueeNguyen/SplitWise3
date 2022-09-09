@@ -16,6 +16,7 @@ jobs:
 
       - name: Build and run containers using docker-compose
         run: |
+          bash scripts/write_firebase_configs.sh
           docker-compose -f docker/docker-compose.yml -f docker/production.yml build
 
       - name: Tag images for Dockerhub
