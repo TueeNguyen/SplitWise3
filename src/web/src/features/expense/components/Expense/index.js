@@ -67,6 +67,10 @@ const Expense = () => {
   //   password: ''
   // }
   const handleUpdate = async (values) => {
+    const update = window.confirm('Do you want to update the form?');
+    if (!update) {
+      return;
+    }
     const formData = new FormData();
     values.receiptImgForm.forEach((elem) => {
       if (elem.hasOwnProperty('receiptImg')) formData.append(elem.name, elem.receiptImg);
