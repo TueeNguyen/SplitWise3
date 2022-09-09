@@ -1,3 +1,4 @@
+import uniqid from 'uniqid';
 export interface IReceiptImgFormElem {
   receiptImgUrl: string;
   name: string;
@@ -25,7 +26,7 @@ export interface IReceiptImgForm {
 export class ReceiptImgForm implements IReceiptImgForm {
   data: Array<ReceiptImgFormElem>;
 
-  constructor(data: Array<ReceiptImgFormElem> = []) {
+  constructor(data: Array<ReceiptImgFormElem> = [], id: string = '') {
     this.data = data;
   }
 
@@ -36,7 +37,22 @@ export class ReceiptImgForm implements IReceiptImgForm {
   static createFromArray(data: Array<ReceiptImgFormElem>) {
     return new ReceiptImgForm(data);
   }
+  static createFromObject(receiptImgFormObj: any): ReceiptImgForm {
+    const { data } = receiptImgFormObj;
+    const receiptImgForm = new ReceiptImgForm(
+      ReceiptImgFormElem.createReceiptImgFormElemArray(data)
+    );
+    return receiptImgForm;
+  }
+  removeReceiptImgFormElem(receiptImgUrl: string) {
+    const removeIndex = this.data.findIndex((elem) => elem.receiptImgUrl === receiptImgUrl);
+    this.data.splice(removeIndex, 1);
+  }
+  addReceiptImgFormElem(receiptImgUrl: string, name: string) {
+    const receiptImgFormElem = new ReceiptImgFormElem(receiptImgUrl, name);
+    this.data.push(receiptImgFormElem);
+  }
   converter() {
-    return { data: this.data.map((receiptImgForm) => receiptImgForm.converter()) };
+    return { data: this.data.map((receiptImgFormElem) => receiptImgFormElem.converter()) };
   }
 }

@@ -1,11 +1,13 @@
 import express from 'express';
 import { router as userRouter } from './routes/user';
 import { router as utilsRouter } from './routes/utils';
+import { router as storageRouter } from './routes/storage';
 import ExpenseRouter from './routes/expense';
 import { Server as SocketServer } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 require('dotenv').config();
 
 // initializing
@@ -22,12 +24,14 @@ const io = new SocketServer(server, {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({ origin: '*' }));
 app.use(bodyParser.json());
+app.use(fileUpload());
 
 const expenseRouter = ExpenseRouter(io);
 
 app.use('/api/user', userRouter);
 app.use('/api/expense', expenseRouter);
 app.use('/api/utils', utilsRouter);
+app.use('/api/storage', storageRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error('not found');

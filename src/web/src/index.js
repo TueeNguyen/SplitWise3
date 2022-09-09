@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/styles';
 import theme from './styles';
 import { AppProvider } from './providers';
 import { ExpenseErrorProvider } from './providers/ExpenseErrorProvider';
+import { PopupFormProvider } from './providers/PopupFormProvider';
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
@@ -14,7 +15,9 @@ ReactDOM.render(
       <React.StrictMode>
         <AppProvider>
           <ExpenseErrorProvider>
-            <App />
+            <PopupFormProvider>
+              <App />
+            </PopupFormProvider>
           </ExpenseErrorProvider>
         </AppProvider>
       </React.StrictMode>

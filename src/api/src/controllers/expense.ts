@@ -92,7 +92,9 @@ const getExpenseById = async (id: string): Promise<Expense> => {
     throw err;
   }
 };
-
+const checkNewImage = (expenseObj: any) => {
+  expenseObj.receiptImgForm.every((elem: any) => elem.hasOwnProperty('receiptImg'));
+};
 const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
   try {
     // need to update all the forms first
@@ -104,6 +106,8 @@ const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
       expenseObj.receiptFormId,
       ReceiptFormElem.createReceiptFormElemArray(expenseObj.receiptForm)
     );
+
+    // Not needed since client will call '/epxense/receiptImg/update' to upload any new image and update
     await updateReceiptImgForm(
       expenseObj.receiptImgFormId,
       ReceiptImgFormElem.createReceiptImgFormElemArray(expenseObj.receiptImgForm)

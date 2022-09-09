@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,11 +12,11 @@ import CloseIcon from '@mui/icons-material/Close';
 // workspace imports
 
 import { AddReceiptImgButton } from '../AddReceiptImgForm';
+import { AppContext } from '../../../../../providers';
+import { PopupFormContext } from '../../../../../providers/PopupFormProvider';
+import { popUpFormNames } from '../../../../../constants';
 
 const useStyles = makeStyles({
-  tableContainer: {
-    border: 'solid 1px'
-  },
   addReceiptButton: {
     justifySelf: 'flex-end'
   },
@@ -37,6 +37,15 @@ const useStyles = makeStyles({
     background: 'white',
     top: -10,
     right: -10
+  },
+  carousel: {
+    width: '100%',
+    overflow: 'auto',
+    whiteSpace: 'nowrap'
+  },
+  slide: {
+    display: 'inline-block',
+    margin: '10px'
   }
 });
 
@@ -53,41 +62,67 @@ const StyledCard = styled(Card)(({ theme }) => ({
   position: 'relative'
 }));
 
-const datas = [
-  'https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg'
-];
-
-const ReceiptImgForm = ({ role }) => {
+const ReceiptImgForm = ({ values, role, setFieldValue }) => {
+  const { popUpForm, setPopUpForm } = useContext(AppContext);
+  const { data, setError } = useContext(PopupFormContext);
   const classes = useStyles();
+
+  const removeReceiptImgElem = (receiptImgFormElem) => {
+    const removeIndex = values.receiptImgForm.findIndex(
+      (elem) => elem.name === receiptImgFormElem.name
+    );
+    const newReceiptImgElem = [...values.receiptImgForm];
+    newReceiptImgElem.splice(removeIndex, 1);
+    console.log(newReceiptImgElem);
+    setFieldValue('receiptImgForm', newReceiptImgElem);
+  };
+
+  useEffect(() => {
+    if (data && popUpForm === popUpFormNames.ADD_RECEIPT_IMG) {
+      const nameExists = values.receiptImgForm.findIndex((elem) => elem.name === data.name);
+
+      console.log(values.receiptImgForm, nameExists);
+      if (nameExists !== -1) {
+        setError({ target: 'name', message: `${data.name} already exists` });
+        return;
+      } else {
+        setError({});
+      }
+      const imgUrl = URL.createObjectURL(data.receiptImg);
+      const receiptImgFormData = { ...data, receiptImgUrl: imgUrl };
+      console.log(receiptImgFormData);
+      setFieldValue('receiptImgForm', [...values.receiptImgForm, receiptImgFormData]);
+      setPopUpForm('');
+    }
+  }, [data]);
+
   return (
     <div className={classes.receiptImgForm}>
-      <TableContainer className={classes.tableContainer} component={Paper}>
-        <Table aria-label="simple table">
-          <TableBody>
-            <TableRow>
-              {datas.map((data, index) => (
-                <TableCell key={index}>
-                  <StyledCard>
-                    <IconButton name="removeReceiptItem" className={classes.removeImgBtn}>
-                      {/* to preven clicking on the icon*/}
-                      <CloseIcon sx={{ pointerEvents: 'none' }} />
-                    </IconButton>
-                    <CardMedia
-                      component="img"
-                      sx={{ objectFit: 'cover' }}
-                      image={data}
-                      alt="Expense Img"
-                    />
-                    <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
-                      <Typography variant="body">Receipt</Typography>
-                    </CardContent>
-                  </StyledCard>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Paper elevation={5} className={classes.carousel}>
+        {values.receiptImgForm.map((receiptImgFormElem, index) => (
+          <div className={classes.slide}>
+            <StyledCard>
+              <IconButton
+                name="removeReceiptItem"
+                className={classes.removeImgBtn}
+                onClick={() => removeReceiptImgElem(receiptImgFormElem)}
+              >
+                {/* to preven clicking on the icon*/}
+                <CloseIcon sx={{ pointerEvents: 'none' }} />
+              </IconButton>
+              <CardMedia
+                component="img"
+                sx={{ objectFit: 'contain' }}
+                image={receiptImgFormElem.receiptImgUrl}
+                alt="Expense Img"
+              />
+              <CardContent sx={{ textAlign: 'center', fontFamily: 'Roboto' }}>
+                <Typography variant="body">{receiptImgFormElem.name}</Typography>
+              </CardContent>
+            </StyledCard>
+          </div>
+        ))}
+      </Paper>
       {role === 'Owner' && (
         <div className={classes.buttonContainer}>
           <AddReceiptImgButton className={classes.addReceiptButton} />

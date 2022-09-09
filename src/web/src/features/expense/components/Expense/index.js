@@ -66,6 +66,37 @@ const Expense = () => {
   //   id: '',
   //   password: ''
   // }
+  const handleUpdate = async (values) => {
+    const formData = new FormData();
+    values.receiptImgForm.forEach((elem) => {
+      if (elem.hasOwnProperty('receiptImg')) formData.append(elem.name, elem.receiptImg);
+    });
+    formData.append('receiptImgFormId', values.receiptImgFormId);
+    const response = await axiosInstance.put('/expense/receiptImg/update', formData, {
+      headers: { Content: 'multipart/form-data' }
+    });
+    const expenseObj = { ...values };
+    if (response.status === 200) {
+      const {
+        data: { data: name_n_urls }
+      } = response;
+      console.log(name_n_urls);
+      name_n_urls.forEach((elem) => {
+        const pos_index = expenseObj.receiptImgForm.findIndex(
+          (receiptImgFormElem) => receiptImgFormElem.name === elem.name
+        );
+        console.log(pos_index, elem.receiptImgUrl);
+        if (pos_index > -1) {
+          expenseObj.receiptImgForm[pos_index].receiptImgUrl = elem.receiptImgUrl;
+        }
+      });
+    }
+    console.log(expenseObj);
+    await axiosInstance.put('expense/update', {
+      id: expense.id,
+      expenseObj: values
+    });
+  };
   const userJoinedHandler = (socketData) => {
     if (socketData.expenseId === id) {
       const { uid } = socketData;
@@ -150,7 +181,9 @@ const Expense = () => {
                   <Field name="receiptImgForm">
                     {() => {
                       const props = {
-                        role: getUserRole(loggedInUser.uid).role
+                        values,
+                        role: getUserRole(loggedInUser.uid).role,
+                        setFieldValue
                       };
                       return (
                         <div className={classes.imgTable}>
@@ -208,12 +241,7 @@ const Expense = () => {
                         variant="contained"
                         color="success"
                         id="updateBtn"
-                        onClick={async () => {
-                          await axiosInstance.put('/expense/update', {
-                            id: expense.id,
-                            expenseObj: values
-                          });
-                        }}
+                        onClick={() => handleUpdate(values)}
                       >
                         Update
                       </Button>

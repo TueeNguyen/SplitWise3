@@ -1,12 +1,16 @@
 import { TextField, IconButton, Button, Paper } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from 'yup';
 import { AppContext } from '../../../../providers';
-import { PopupFormContext } from '../../../../providers/PopupFormProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dayjs } from 'dayjs';
+import axiosInstance from '../../../../configs/axios';
 
 const useStyles = makeStyles((theme) => ({
   addReceiptImg: {
@@ -55,27 +59,37 @@ const useStyles = makeStyles((theme) => ({
     gap: '10px'
   }
 }));
-const AddReceiptImg = () => {
+const AddExpense = () => {
   const { setPopUpForm } = useContext(AppContext);
-  const { error, setError, setData } = useContext(PopupFormContext);
   const classes = useStyles();
   const imgInput = useRef();
   const [fileName, setFileName] = useState('');
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Receipt name is required'),
-    receiptImg: Yup.mixed().required('A receipt image is required')
+    date: Yup.date().required('Date is required')
   });
 
   const initialValues = {
     name: '',
-    receiptImg: null
+    avatar: null,
+    date: ''
   };
-  const handleSubmit = (values) => {
-    console.log(values);
-    setData(values);
+  const handleSubmit = async (values, setSubmitting) => {
+    const formData = new FormData();
+    formData.append('expenseAvatar', values.avatar);
+    formData.append('name', values.name);
+    const date = `${values.date.$d.getUTCDate()}-${
+      values.date.$d.getUTCMonth() + 1
+    }-${values.date.$d.getUTCFullYear()}`;
+    console.log(date);
+    formData.append('date', date);
+    await axiosInstance.post('/expense/create', formData, {
+      headers: {
+        Content: 'multipart/form-data'
+      }
+    });
   };
-
   return (
     <Paper className={classes.addReceiptImg} elevation={5}>
       <div className={classes.formWrapper}>
@@ -84,7 +98,7 @@ const AddReceiptImg = () => {
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
         >
-          {({ values, touched, handleChange, setFieldValue }) => (
+          {({ values, handleChange, setFieldValue }) => (
             <Form className={classes.form}>
               <TextField
                 label="Name"
@@ -96,16 +110,13 @@ const AddReceiptImg = () => {
                 name="name"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
-              {error && error.target === 'name' && touched.name ? (
-                <div style={{ color: 'red' }}>{error.message}</div>
-              ) : null}
               <div className={classes.addReceiptImgWrapper}>
                 <Button onClick={() => imgInput.current.click()} size="small" variant="outlined">
                   <AddPhotoAlternateIcon />
                 </Button>
                 <p className={classes.fileName}>{fileName}</p>
               </div>
-              <Field name="receiptImg">
+              <Field name="avatar">
                 {() => (
                   <>
                     <input
@@ -116,16 +127,33 @@ const AddReceiptImg = () => {
                       onChange={(e) => {
                         const file = e.target.files[0];
                         setFileName(file.name);
-                        setFieldValue('receiptImg', file);
+                        setFieldValue('avatar', file);
                       }}
                     />
                   </>
                 )}
               </Field>
               <ErrorMessage
-                name="receiptImg"
+                name="avatar"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
+              <Field name="date">
+                {() => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      inputFormat="DD-MM-YYYY"
+                      label="Date"
+                      value={values.date}
+                      onChange={(newDate) => {
+                        console.log(newDate);
+                        console.log(newDate.$d.getDate());
+                        setFieldValue('date', newDate);
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider>
+                )}
+              </Field>
               <Button color="success" variant="contained" type="submit">
                 Add
               </Button>
@@ -140,4 +168,4 @@ const AddReceiptImg = () => {
   );
 };
 
-export { AddReceiptImg };
+export { AddExpense };

@@ -56,7 +56,7 @@ export class Expense implements IExpense {
   ) {
     this.avatar =
       avatar ||
-      'https://firebasestorage.googleapis.com/v0/b/splitwise3-e6c96.appspot.com/o/st%2Csmall%2C507x507-pad%2C600x600%2Cf8f8f8.jpg?alt=media&token=0a008fd2-283b-4c13-aa0c-3f08ab869a45';
+      'https://firebasestorage.googleapis.com/v0/b/splitwise3-e6c96.appspot.com/o/mr-crabs-dollar-sign-eyes%20(1).jpg?alt=media&token=4c06b504-4514-4b06-ad50-f96f7d75f8b7';
     this.name = name || '';
     this.date = date || '';
     this.receiptFormId = receiptFormId || '';

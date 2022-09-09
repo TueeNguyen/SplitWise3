@@ -11,7 +11,9 @@ import {
 import { isAuthenticated } from '../middleware/authenticate';
 import { isAuthorized } from '../middleware/authorize';
 import { SOCKET_EVENTS } from '../constants';
-
+import { upload } from '../middleware/storage';
+import { uploadImage, uploadReceiptImgs } from '../controllers/storage';
+import { UploadedFile } from 'express-fileupload';
 const router = express.Router();
 
 function ExpenseRouter(io: Server) {
@@ -47,12 +49,26 @@ function ExpenseRouter(io: Server) {
     }
   });
 
-  router.post('/create', isAuthenticated, async (req: Request, res: Response) => {
-    const { name, date, avatar } = req.body;
+  router.post('/create', isAuthenticated, upload, async (req: Request, res: Response) => {
+    const { name, date } = req.body;
+    const avatar = res.locals.imageUrl;
     try {
       const message = await createExpense(name, date, res.locals.uid, avatar);
       io.emit(SOCKET_EVENTS.EXPENSE_CREATED);
       return res.status(200).json({ message });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  });
+
+  router.put('/receiptImg/update', async (req: Request, res: Response) => {
+    try {
+      if (!req.files || Object.keys(req.files).length === 0) {
+        console.log('No new images/files are uploaded');
+        return res.status(204).json({ message: 'No new images/files are uploaded' });
+      }
+      const name_n_urls = await uploadReceiptImgs(req.files, req.body.receiptImgFormId);
+      return res.status(200).json({ data: name_n_urls });
     } catch (err) {
       return res.status(500).json({ message: err });
     }

@@ -96,7 +96,10 @@ const UtilBar = () => {
       </UtilButton>
 
       {/* Add an expense button */}
-      <UtilButton tooltipTitle="Add an expense" onclickCallback={createExpense}>
+      <UtilButton
+        tooltipTitle="Add an expense"
+        onclickCallback={() => setPopUpForm(popUpFormNames.ADD_EXPENSE)}
+      >
         <svg
           width="35"
           height="35"
