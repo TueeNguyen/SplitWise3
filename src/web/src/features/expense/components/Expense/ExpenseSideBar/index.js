@@ -43,7 +43,7 @@ const ExpenseSideBar = ({ expense }) => {
             {sideBarElems.map((elem, index) => (
               <ListItem key={elem.name} disablePadding>
                 <Tooltip title={elem.name} placement="top">
-                  <ListItemButton onClick={() => window.navigator.clipboard.writeText(elem.data)}>
+                  <ListItemButton onClick={() => navigator.clipboard.writeText(elem.data)}>
                     {elem.shortText}: {elem.data}
                   </ListItemButton>
                 </Tooltip>
