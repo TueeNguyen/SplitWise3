@@ -8,22 +8,23 @@ The repo tries to follow monorepo structure. Most of the code will be in `src/` 
 
 # Features and roadmap (to be added)
 
-# How to run this locally: 
+# How to run this locally:
 
-- `npm install` at root 
-- After installing, `src/api/src/firebase/configs.ts` will be created (this is where you add your Firebase credentials) which looks like this 
+- `npm install` at root
+- After installing, `src/api/src/firebase/configs.ts` will be created (this is where you add your Firebase credentials) which looks like this
 
 ```ts
-  const adminCredentials = {
-    // TODO: add firebase admin credentials here, you also need to convert JSON file to Javascript Object
-  };
-  const firebaseCredentials = {
-    // TODO: add firebase SDK credentials here
-  };
-  export { adminCredentials, firebaseCredentials };
+const adminCredentials = {
+  // TODO: add firebase admin credentials here, you also need to convert JSON file to Javascript Object
+};
+const firebaseCredentials = {
+  // TODO: add firebase SDK credentials here
+};
+export { adminCredentials, firebaseCredentials };
 ```
 
-Next, you **must** have: 
+Next, you **must** have:
+
 - Firebase SDK credentials
 - Firebase Admin or Service Account credentials
 
@@ -50,20 +51,24 @@ You can follow this official guide: https://firebase.google.com/docs/web/setup
 
 # How to run this locally (continue):
 
-## Normal way: 
+## Normal way:
+
 - `cd src/api`
-- `npm run dev` 
+- `npm run dev`
 - `cd ../web`
 - `npm run start`
 
-## Docker: 
-You need `Docker` and `docker-compose` in your system
-- `npm run services:up` 
+## Docker:
 
-## For fun: 
-Join my expense: 
+You need `Docker` and `docker-compose` in your system
+
+- `npm run services:up`
+
+## For fun:
+
+Join my expense:
+
 - expenseId: 22ia71590l7tx7019
 - password: l7tx701a
 
 To communicate easier, please join Discord: https://discord.gg/fz7RtW3AVM
-
