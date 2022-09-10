@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ProfilePopover = () => {
   const classes = useStyles();
-  const { loggedInUser } = useContext(AppContext);
+  const { loggedInUser, logout } = useContext(AppContext);
   return (
     <List className={classes.profilePopover} elevation={5}>
       <ListItem disablePadding>
@@ -44,7 +44,7 @@ const ProfilePopover = () => {
           <ListItemIcon sx={{ paddingLeft: '10px' }}>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText primary="Log out" />
+          <ListItemText primary="Log out" onClick={() => logout()} />
         </ListItemButton>
       </ListItem>
     </List>

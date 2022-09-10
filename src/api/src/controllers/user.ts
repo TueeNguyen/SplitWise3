@@ -77,12 +77,15 @@ const getUserByUid = async (uid: string): Promise<User> => {
 // TODO: prototype can be improved to indicate functionality
 const getUsers = async (userIds: Array<string>, expenseId?: string): Promise<Array<User>> => {
   try {
-    const usersSnapshot = await dbAdmin
-      .collection('Users')
-      .where(FieldPath.documentId(), 'in', userIds)
-      .get();
     const users: Array<User> = [];
-    usersSnapshot.forEach((docSnapshot) => users.push(docSnapshot.data() as User));
+    while (userIds) {
+      const batch = userIds.splice(0, 10);
+      const usersSnapshot = await dbAdmin
+        .collection('Users')
+        .where(FieldPath.documentId(), 'in', [...batch])
+        .get();
+      usersSnapshot.forEach((docSnapshot) => users.push(docSnapshot.data() as User));
+    }
     return users;
     // const expense: Expense = await getExpenseById(expenseId);
     // const { userIds: expenseUsers } = expense;

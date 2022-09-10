@@ -35,7 +35,7 @@ const UtilBar = () => {
   const classes = useStyles();
   const history = useHistory();
   const { pathname } = useLocation();
-  const { setPopUpForm, toLogIn, setShowExpenseSidebar } = useContext(AppContext);
+  const { setPopUpForm, logout, setShowExpenseSidebar } = useContext(AppContext);
   const createExpense = async () => {
     try {
       await axiosInstance.post('/expense/create', {
@@ -46,7 +46,7 @@ const UtilBar = () => {
       });
     } catch (err) {
       if (err.response.status === 401) {
-        toLogIn();
+        logout();
       }
       console.error(err);
     }

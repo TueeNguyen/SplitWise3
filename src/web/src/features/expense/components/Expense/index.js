@@ -45,7 +45,7 @@ const Expense = () => {
   const classes = useStyles();
   const [expense, setExpense] = useState({});
   const [initialValues, setInitialValues] = useState(null);
-  const { socket, toLogIn, loggedInUser } = useContext(AppContext);
+  const { socket, logout, loggedInUser } = useContext(AppContext);
   const { showError } = useContext(ExpenseErrorContext);
   // {
   //   userRoles: [],
@@ -122,7 +122,7 @@ const Expense = () => {
           setExpense(newExpense);
         } catch (err) {
           if (err.response.status === 401) {
-            toLogIn();
+            logout();
           }
           console.error(err);
         }
@@ -140,7 +140,7 @@ const Expense = () => {
       setExpense(data);
     } catch (err) {
       if (err.response.status === 401) {
-        toLogIn();
+        logout();
       }
       console.error(err);
     }

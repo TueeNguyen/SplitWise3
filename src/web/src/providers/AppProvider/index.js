@@ -17,11 +17,10 @@ const AppProvider = ({ children }) => {
   socket.on('error', (err) => console.log(err));
   socket.on('connect', () => console.log('connected'));
 
-  const toLogIn = () => {
+  const logout = () => {
     setPopUpForm('');
     setLoggedInUser(false);
   };
-
   useEffect(() => {
     const token = localStorage.getItem('SW_accessToken');
     const uid = localStorage.getItem('SW_uid');
@@ -37,7 +36,7 @@ const AppProvider = ({ children }) => {
           }
         } catch (err) {
           if (err.response.status === 401) {
-            toLogIn();
+            logout();
           }
           console.error(err.response);
         }
@@ -58,7 +57,7 @@ const AppProvider = ({ children }) => {
         popUpForm,
         setPopUpForm,
         socket,
-        toLogIn,
+        logout,
         showExpenseSidebar,
         setShowExpenseSidebar
       }}

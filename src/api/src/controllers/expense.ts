@@ -130,12 +130,15 @@ const getExpenses = async (uid: string): Promise<Array<any>> => {
   try {
     const userRoles = await getUserRolesByUserId(uid);
     const expenseIds = userRoles.map((data) => data.expenseId);
-    const expenseSnapshot = await dbAdmin
-      .collection('Expenses')
-      .where(FieldPath.documentId(), 'in', expenseIds)
-      .get();
     const expenses: any = [];
-    expenseSnapshot.forEach((snapshot) => expenses.push(snapshot.data()));
+    while (expenseIds.length > 0) {
+      const batch = expenseIds.splice(0, 10);
+      const expenseSnapshot = await dbAdmin
+        .collection('Expenses')
+        .where(FieldPath.documentId(), 'in', [...batch])
+        .get();
+      expenseSnapshot.forEach((snapshot) => expenses.push(snapshot.data()));
+    }
     return expenses;
   } catch (err) {
     console.error(err);

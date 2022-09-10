@@ -24,7 +24,7 @@ const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState(expenses.slice(page - 1, page * 10 - 1));
-  const { socket, toLogIn } = useContext(AppContext);
+  const { socket, logout } = useContext(AppContext);
   useEffect(() => {
     socket.on(SOCKET_EVENTS.EXPENSE_CREATED, () => {
       (async () => {
@@ -35,7 +35,7 @@ const ExpenseList = () => {
           setExpenses(data);
         } catch (err) {
           if (err.response.status === 401) {
-            toLogIn();
+            logout();
           }
           console.error(err);
         }
@@ -61,7 +61,7 @@ const ExpenseList = () => {
         setExpenses(data);
       } catch (err) {
         if (err.response.status === 401) {
-          toLogIn();
+          logout();
         }
         console.error(err);
       }

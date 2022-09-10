@@ -2,7 +2,7 @@ import { Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import * as Yup from 'yup';
 
 // workspace imports
@@ -34,11 +34,13 @@ const LogInSchema = Yup.object().shape({
 const LogIn = () => {
   const classes = useStyles();
   const { setLoggedInUser } = useContext(AppContext);
+  const [error, setError] = useState(null);
 
   const handleLogin = (values, setSubmitting) => {
     setSubmitting(false);
     (async () => {
       try {
+        setError(null);
         const {
           data: {
             data: { accessToken, uid }
@@ -65,6 +67,7 @@ const LogIn = () => {
         localStorage.setItem('SW_uid', uid);
         setLoggedInUser(data);
       } catch (err) {
+        setError(err);
         console.error(err);
       }
     })();
@@ -103,6 +106,11 @@ const LogIn = () => {
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
               <button type="submit">Login</button>* You can login as public user to see the site
+              {error && (
+                <div style={{ color: 'red' }}>
+                  {error?.response?.data?.message?.code && error.response.data.message.code}
+                </div>
+              )}
               <Typography variant="body1">
                 Don't have an account?{' '}
                 <NavLink className={classes.navLink} to="/sign-up">

@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const JoinExpense = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { setPopUpForm, toLogIn } = useContext(AppContext);
+  const { setPopUpForm, logout } = useContext(AppContext);
 
   const validationSchema = Yup.object().shape({
     id: Yup.string().required("id is required to find an expense, 99% it's 15 characters"),
@@ -82,7 +82,7 @@ const JoinExpense = () => {
       history.push(`/expense/${values.id}`);
     } catch (err) {
       if (err.response.status === 401) {
-        toLogIn();
+        logout();
       }
       console.error(err);
     }
