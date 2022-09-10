@@ -72,7 +72,6 @@ const AddReceiptImg = () => {
     receiptImg: null
   };
   const handleSubmit = (values) => {
-    console.log(values);
     setData(values);
   };
 

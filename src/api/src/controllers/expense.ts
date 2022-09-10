@@ -10,6 +10,7 @@ import { ReceiptFormElem } from '../models/receiptForm';
 import { createReceiptImgForm, getReceiptImgForm, updateReceiptImgForm } from './receiptImgForm';
 import { ReceiptImgForm, ReceiptImgFormElem } from '../models/receiptImgForm';
 import { FieldPath, FieldValue } from 'firebase-admin/firestore';
+import { LooseObject } from '../models/util';
 
 const getExpenseRef = (id: string) => dbAdmin.collection('Expenses').doc(id);
 
@@ -71,7 +72,7 @@ const getExpenseById = async (id: string): Promise<Expense> => {
     const expenseDocSnap = await expenseDocRef.get();
 
     if (expenseDocSnap.exists) {
-      const expense: Expense = Expense.create(expenseDocSnap.data() as Expense);
+      const expense: Expense = Expense.create(expenseDocSnap.data() as LooseObject);
 
       // get and add userRoles to expense
       expense.setUserRoles = await getUserRolesByExpenseId(id);
@@ -113,9 +114,11 @@ const updateExpense = async (id: string, expenseObj: any): Promise<string> => {
       ReceiptImgFormElem.createReceiptImgFormElemArray(expenseObj.receiptImgForm)
     );
 
-    // const expenseDocRef = dbAdmin.collection('Expenses').doc(id);
-    // const expense = Expense.create(expenseObj);
-    // await expenseDocRef.update({ ...expense });
+    const expenseDocRef = dbAdmin.collection('Expenses').doc(id);
+    const expense = Expense.create(expenseObj);
+
+    await expenseDocRef.update({ ...expense });
+    console.log(`Updated expense ${id}`);
     return 'Updated expense';
   } catch (err) {
     console.error(err);

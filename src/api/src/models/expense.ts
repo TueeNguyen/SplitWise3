@@ -51,8 +51,8 @@ export class Expense implements IExpense {
     splitFormId?: string,
     userIds?: Array<string>,
     password?: string,
-    id?: string,
-    total?: number
+    total?: number,
+    id?: string
   ) {
     this.avatar =
       avatar ||

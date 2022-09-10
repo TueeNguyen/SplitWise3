@@ -91,6 +91,7 @@ const JoinExpense = () => {
   return (
     <Paper className={classes.joinExpenseContainer} elevation={5}>
       <div className={classes.innerContainer}>
+        <h2>Join an expense</h2>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
