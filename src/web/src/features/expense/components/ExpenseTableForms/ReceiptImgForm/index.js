@@ -73,15 +73,12 @@ const ReceiptImgForm = ({ values, role, setFieldValue }) => {
     );
     const newReceiptImgElem = [...values.receiptImgForm];
     newReceiptImgElem.splice(removeIndex, 1);
-    console.log(newReceiptImgElem);
     setFieldValue('receiptImgForm', newReceiptImgElem);
   };
 
   useEffect(() => {
     if (data && popUpForm === popUpFormNames.ADD_RECEIPT_IMG) {
       const nameExists = values.receiptImgForm.findIndex((elem) => elem.name === data.name);
-
-      console.log(values.receiptImgForm, nameExists);
       if (nameExists !== -1) {
         setError({ target: 'name', message: `${data.name} already exists` });
         return;
@@ -90,7 +87,6 @@ const ReceiptImgForm = ({ values, role, setFieldValue }) => {
       }
       const imgUrl = URL.createObjectURL(data.receiptImg);
       const receiptImgFormData = { ...data, receiptImgUrl: imgUrl };
-      console.log(receiptImgFormData);
       setFieldValue('receiptImgForm', [...values.receiptImgForm, receiptImgFormData]);
       setPopUpForm('');
     }

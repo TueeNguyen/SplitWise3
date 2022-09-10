@@ -84,18 +84,15 @@ const Expense = () => {
       const {
         data: { data: name_n_urls }
       } = response;
-      console.log(name_n_urls);
       name_n_urls.forEach((elem) => {
         const pos_index = expenseObj.receiptImgForm.findIndex(
           (receiptImgFormElem) => receiptImgFormElem.name === elem.name
         );
-        console.log(pos_index, elem.receiptImgUrl);
         if (pos_index > -1) {
           expenseObj.receiptImgForm[pos_index].receiptImgUrl = elem.receiptImgUrl;
         }
       });
     }
-    console.log(expenseObj);
     await axiosInstance.put('expense/update', {
       id: expense.id,
       expenseObj: values

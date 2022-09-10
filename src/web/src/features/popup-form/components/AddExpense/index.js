@@ -82,13 +82,15 @@ const AddExpense = () => {
     const date = `${values.date.$d.getUTCDate()}-${
       values.date.$d.getUTCMonth() + 1
     }-${values.date.$d.getUTCFullYear()}`;
-    console.log(date);
+
     formData.append('date', date);
-    await axiosInstance.post('/expense/create', formData, {
+    const response = await axiosInstance.post('/expense/create', formData, {
       headers: {
         Content: 'multipart/form-data'
       }
     });
+    console.log(response);
+    setPopUpForm('');
   };
   return (
     <Paper className={classes.addReceiptImg} elevation={5}>
@@ -146,8 +148,6 @@ const AddExpense = () => {
                       label="Date"
                       value={values.date}
                       onChange={(newDate) => {
-                        console.log(newDate);
-                        console.log(newDate.$d.getDate());
                         setFieldValue('date', newDate);
                       }}
                       renderInput={(params) => <TextField {...params} />}
@@ -161,7 +161,7 @@ const AddExpense = () => {
             </Form>
           )}
         </Formik>
-        <IconButton className={classes.closeBtn} onClick={() => setPopUpForm('')}>
+        <IconButton className={classes.closeBtn}>
           <CloseIcon />
         </IconButton>
       </div>
