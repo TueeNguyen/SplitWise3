@@ -74,7 +74,7 @@ const LogIn = () => {
   return (
     <>
       <Formik
-        initialValues={{ email: '1234@gmail.com', password: 'tuechinhlatue1' }}
+        initialValues={{ email: 'public_user@gmail.com', password: '123456789' }}
         validationSchema={LogInSchema}
         onSubmit={(values, { setSubmitting }) => handleLogin(values, setSubmitting)}
       >
@@ -82,7 +82,6 @@ const LogIn = () => {
           <Form>
             <Paper className={classes.logInPaper}>
               <Typography variant="h4">Login</Typography>
-
               <TextField
                 name="email"
                 value={values.email}
@@ -93,7 +92,6 @@ const LogIn = () => {
                 name="email"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
-
               <TextField
                 name="password"
                 value={values.password}
@@ -104,9 +102,7 @@ const LogIn = () => {
                 name="password"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
-
-              <button type="submit">Login</button>
-
+              <button type="submit">Login</button>* You can login as public user to see the site
               <Typography variant="body1">
                 Don't have an account?{' '}
                 <NavLink className={classes.navLink} to="/sign-up">
