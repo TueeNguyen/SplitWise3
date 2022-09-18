@@ -78,7 +78,7 @@ const getUserByUid = async (uid: string): Promise<User> => {
 const getUsers = async (userIds: Array<string>, expenseId?: string): Promise<Array<User>> => {
   try {
     const users: Array<User> = [];
-    while (userIds) {
+    while (userIds.length > 0) {
       const batch = userIds.splice(0, 10);
       const usersSnapshot = await dbAdmin
         .collection('Users')
