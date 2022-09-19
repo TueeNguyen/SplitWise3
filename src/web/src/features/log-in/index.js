@@ -1,4 +1,4 @@
-import { Paper, TextField, Typography } from '@mui/material';
+import { Button, Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 import { ErrorMessage, Form, Formik } from 'formik';
@@ -10,21 +10,27 @@ import * as Yup from 'yup';
 import axiosInstance from '../../configs/axios';
 import { AppContext } from '../../providers';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   logInPaper: {
-    width: '50vw',
+    padding: '2rem 0',
+    width: '90%',
     height: '120%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '10px',
-    margin: '0 auto'
+    margin: '0 auto',
+    transform: 'translate(0, 50%)',
+    border: 'solid 1px green'
   },
-  navLink: {
-    textDecoration: 'none'
+  textField: {
+    width: '80%',
+    [theme.breakpoints.down('md')]: {
+      width: '95%'
+    }
   }
-});
+}));
 
 const LogInSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email required'),
@@ -90,6 +96,7 @@ const LogIn = () => {
                 value={values.email}
                 type="email"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="email"
@@ -100,22 +107,23 @@ const LogIn = () => {
                 value={values.password}
                 type="password"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="password"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
-              <button type="submit">Login</button>* You can login as public user to see the site
+              <Button type="submit" variant="contained">
+                Login
+              </Button>
+              <span>* You can login as public user to see the site</span>
               {error && (
                 <div style={{ color: 'red' }}>
                   {error?.response?.data?.message?.code && error.response.data.message.code}
                 </div>
               )}
               <Typography variant="body1">
-                Don't have an account?{' '}
-                <NavLink className={classes.navLink} to="/sign-up">
-                  Sign up
-                </NavLink>
+                Don't have an account? <NavLink to="/sign-up">Sign up</NavLink>
               </Typography>
             </Paper>
           </Form>

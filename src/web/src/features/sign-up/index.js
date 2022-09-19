@@ -1,7 +1,8 @@
-import { Paper, TextField, Typography } from '@mui/material';
+import { Button, Paper, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ErrorMessage, Form, Formik } from 'formik';
 import React, { useContext } from 'react';
+import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
 
 // workspace imports
@@ -9,18 +10,27 @@ import * as Yup from 'yup';
 import axiosInstance from '../../configs/axios';
 import { AppContext } from '../../providers';
 
-const useStyles = makeStyles({
-  logInPaper: {
-    width: '50vw',
+const useStyles = makeStyles((theme) => ({
+  signupPaper: {
+    padding: '2rem 0',
+    width: '90%',
     height: '120%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     gap: '10px',
-    margin: '0 auto'
+    margin: '0 auto',
+    transform: 'translate(0, 50%)',
+    border: 'solid 1px green'
+  },
+  textField: {
+    width: '80%',
+    [theme.breakpoints.down('md')]: {
+      width: '95%'
+    }
   }
-});
+}));
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email required'),
@@ -90,7 +100,7 @@ const SignUp = () => {
       >
         {({ values, handleChange }) => (
           <Form>
-            <Paper className={classes.logInPaper}>
+            <Paper className={classes.signupPaper}>
               <Typography variant="h4">Sign up</Typography>
 
               <TextField
@@ -100,6 +110,7 @@ const SignUp = () => {
                 label="Email"
                 placeholder="jdoe@email.com"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="email"
@@ -113,6 +124,7 @@ const SignUp = () => {
                 label="Username"
                 placeholder="JohnDoe1"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="username"
@@ -126,6 +138,7 @@ const SignUp = () => {
                 label="Password"
                 placeholder="******"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="password"
@@ -139,13 +152,22 @@ const SignUp = () => {
                 label="Confirm password"
                 placeholder="******"
                 onChange={handleChange}
+                className={classes.textField}
               ></TextField>
               <ErrorMessage
                 name="confirmPassword"
                 render={(msg) => <div style={{ color: 'red' }}>{msg}</div>}
               />
 
-              <button type="submit">Register</button>
+              <Button type="submit" variant="contained">
+                Register
+              </Button>
+              <Typography variant="body1">
+                Have an account?{' '}
+                <NavLink className={classes.navLink} to="/login">
+                  Log in
+                </NavLink>
+              </Typography>
             </Paper>
           </Form>
         )}

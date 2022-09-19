@@ -26,7 +26,8 @@ const useStyles = makeStyles({
     alignItems: 'center',
     gap: '1em',
     position: 'relative',
-    margin: '20px 0'
+    margin: '20px 0',
+    padding: '1rem 0'
   },
   bottomButtonsContainer: {
     display: 'flex',
